@@ -1,10 +1,10 @@
-import 'package:dedo/constants/colors.dart';
-import 'package:dedo/constants/sizes.dart';
+import 'package:dedo/utils/constants/colors.dart';
+import 'package:dedo/utils/constants/sizes.dart';
 import 'package:dedo/utils/helper_functions.dart';
 import 'package:flutter/material.dart';
 
-class AAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const AAppBar({
+class DAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const DAppBar({
     super.key,
     this.title,
     this.showBackArrow = false,

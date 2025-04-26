@@ -1,4 +1,6 @@
+import 'package:dedo/utils/constants/text.dart';
 import 'package:dedo/screens/home.dart';
+import 'package:dedo/utils/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -10,6 +12,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Dedo To Do App', home: const HomePage());
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      themeMode: ThemeMode.system,
+      theme: DAppTheme.lightTheme,
+      darkTheme: DAppTheme.darkTheme,
+      title: DTexts.appName,
+      home: const HomePage(),
+    );
   }
 }
