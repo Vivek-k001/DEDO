@@ -1,5 +1,6 @@
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:dedo/bloc/theme/theme_bloc.dart';
+import 'package:dedo/screens/add_task.dart';
 import 'package:dedo/utils/constants/colors.dart';
 import 'package:dedo/utils/constants/sizes.dart';
 import 'package:dedo/utils/constants/text.dart';
@@ -17,7 +18,10 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       appBar: DAppBar(
-        title: Text(DTexts.appName),
+        title: Text(
+          DTexts.appName,
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         actions: [
           /// Theme Switcher
           BlocBuilder<ThemeBloc, ThemeMode>(
@@ -43,7 +47,11 @@ class HomePage extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed:
+            () => DHelperFunctions.navigateToScreen(
+              context,
+              const AddTaskScreen(),
+            ),
         tooltip: "Add Task",
         child: const Icon(Icons.add),
       ),
@@ -59,12 +67,12 @@ class HomePage extends StatelessWidget {
                   children: [
                     Text(
                       DHelperFunctions.formatDate(DateTime.now()),
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                    Text(
-                      "Today",
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
+                    // Text(
+                    //   "Today",
+                    //   style: Theme.of(context).textTheme.headlineSmall,
+                    // ),
                   ],
                 ),
                 // DButton(
