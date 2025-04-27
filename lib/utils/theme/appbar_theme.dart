@@ -6,7 +6,7 @@ class DAppbarTheme {
 
   // Light Theme For Appbar
   static const lightAppbarTheme = AppBarTheme(
-    elevation: 0,
+    elevation: 2,
     centerTitle: false,
     scrolledUnderElevation: 0,
     backgroundColor: Colors.transparent,
@@ -22,7 +22,7 @@ class DAppbarTheme {
 
   // Dark Theme For Appbar
   static const darkAppbarTheme = AppBarTheme(
-    elevation: 0,
+    elevation: 2,
     centerTitle: false,
     scrolledUnderElevation: 0,
     backgroundColor: Colors.transparent,

@@ -1,4 +1,4 @@
-import 'package:dedo/bloc/theme_bloc.dart';
+import 'package:dedo/bloc/theme/theme_bloc.dart';
 import 'package:dedo/utils/constants/text.dart';
 import 'package:dedo/screens/home.dart';
 import 'package:dedo/utils/theme/theme.dart';
