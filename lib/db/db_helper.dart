@@ -1,3 +1,4 @@
+import 'package:dedo/models/task_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DBHelper {
@@ -36,7 +37,7 @@ class DBHelper {
     }
   }
 
-  static Future<int> insert(Task? task) async {
+  static Future<int> insert(TaskModel? task) async {
     print("Insert function called");
     if (_db == null) {
       throw Exception("Database is not initialized");

@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.dedo"
-    compileSdk = 33
+    compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
 
     compileOptions {
@@ -41,7 +41,7 @@ android {
 }
 
 dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
 
 flutter {

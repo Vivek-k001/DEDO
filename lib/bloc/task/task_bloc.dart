@@ -1,6 +1,5 @@
 import 'package:dedo/db/db_helper.dart';
 import 'package:dedo/models/task_model.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'task_event.dart';
@@ -8,25 +7,13 @@ part 'task_state.dart';
 
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
   TaskBloc() : super(TaskInitial()) {
-    on<LoadTasks>((event, emit) async {
-      emit(TaskLoading());
-      try {
-        final rawTasks = await DBHelper.query();
-        final tasks = rawTasks.map((task) => TaskModel.fromJson(task)).toList();
-        emit(TaskLoaded(tasks));
-      } catch (e) {
-        emit(TaskError(e.toString()));
-      }
-    });
-
-    on<AddTask>((event, emit) async {
+    on<AddTaskEvent>((event, emit) async {
       emit(TaskLoading());
       try {
         final taskId = await DBHelper.insert(event.task);
         emit(TaskSuccess(taskId));
-        add(LoadTasks());
       } catch (e) {
-        emit(TaskError(e.toString()));
+        emit(TaskFailure(e.toString()));
       }
     });
   }

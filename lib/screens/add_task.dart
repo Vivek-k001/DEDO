@@ -1,4 +1,5 @@
-import 'package:dedo/controllers/task_controller.dart';
+import 'package:dedo/bloc/task/task_bloc.dart';
+import 'package:dedo/models/task_model.dart';
 import 'package:dedo/utils/constants/colors.dart';
 import 'package:dedo/utils/constants/sizes.dart';
 import 'package:dedo/widgets/appbar.dart';
@@ -287,7 +288,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   }
 
   void _addTaskToBloc(BuildContext context) {
-    final task = Task(
+    final task = TaskModel(
       note: _noteController.text,
       title: _titleController.text,
       date: DateFormat.yMd().format(_selectedDate),
