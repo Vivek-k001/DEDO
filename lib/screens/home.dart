@@ -102,7 +102,10 @@ class HomePage extends StatelessWidget {
                 width: 80,
                 initialSelectedDate: DateTime.now(),
                 selectionColor: DColors.primary,
-                selectedTextColor: Colors.white,
+                selectedTextColor:
+                    DHelperFunctions.isDarkMode(context)
+                        ? DColors.lightGrey
+                        : DColors.darkGrey,
                 dateTextStyle: Theme.of(context).textTheme.headlineSmall!,
                 dayTextStyle: Theme.of(context).textTheme.bodyMedium!,
                 monthTextStyle: Theme.of(context).textTheme.bodySmall!,

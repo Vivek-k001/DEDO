@@ -1,11 +1,12 @@
-import 'package:dedo/controllers/task_controller.dart';
-import 'package:dedo/models/taskmodel.dart';
-import 'package:dedo/utils/constants/colors.dart';
+import 'package:dedo/bloc/task/task_bloc.dart';
+import 'package:dedo/models/task_model.dart';
 import 'package:dedo/utils/constants/sizes.dart';
 import 'package:dedo/widgets/appbar.dart';
 import 'package:dedo/widgets/button.dart';
 import 'package:dedo/widgets/text_form_field.dart';
+import 'package:dedo/utils/helper_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
@@ -17,11 +18,10 @@ class AddTaskScreen extends StatefulWidget {
 }
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
-  final TaskController _taskController = Get.put();
   final _titleController = TextEditingController();
   final _noteController = TextEditingController();
 
-  DateTime _selectedDate = DateTime.now();
+  String _selectedDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
 
   String _startTime = DateFormat('hh:mm a').format(DateTime.now());
 
@@ -33,7 +33,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   List<int> remindList = [5, 10, 15, 20];
 
   String _selectedRepeat = 'None';
-
   List<String> repeatList = ["None", "Daily", "Weakly", "Monthly"];
 
   int _selectedColor = 0;
@@ -84,8 +83,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   );
 
                   setState(() {
-                    _selectedDate = pickerDate ?? DateTime.now();
-                    Text(DateFormat('dd/MM/yyyy').format(_selectedDate));
+                    _selectedDate = DateFormat(
+                      'dd/MM/yyyy',
+                    ).format(pickerDate ?? DateTime.now());
                   });
                 },
               ),
@@ -159,14 +159,17 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       remindList.map<DropdownMenuItem<String>>((int value) {
                         return DropdownMenuItem<String>(
                           value: value.toString(),
-                          child: Text(value.toString()),
+                          child: Text(
+                            value.toString(),
+                            style: Theme.of(context).textTheme.labelSmall,
+                          ),
                         );
                       }).toList(),
                 ),
               ),
 
               DTextFormField(
-                hintText: "$_selectedRepeat  ",
+                hintText: _selectedRepeat,
                 prefixIcon: Icons.closed_caption,
                 title: "Repeat",
                 suffixWidget: DropdownButton(
@@ -186,14 +189,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                           value: value,
                           child: Text(
                             value!,
-                            style: TextStyle(color: Colors.grey),
+                            style: Theme.of(context).textTheme.labelSmall,
                           ),
                         );
                       }).toList(),
                 ),
               ),
 
-              SizedBox(height: 18),
+              SizedBox(height: DSizes.spaceBtwItems),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -206,7 +209,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         'Color',
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
-                      SizedBox(height: 8),
+
+                      SizedBox(height: DSizes.sm),
+
                       Wrap(
                         children: List<Widget>.generate(3, (int index) {
                           return GestureDetector(
@@ -216,21 +221,21 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               });
                             },
                             child: Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
+                              padding: const EdgeInsets.only(right: DSizes.sm),
                               child: CircleAvatar(
                                 radius: 14,
                                 backgroundColor:
                                     index == 0
-                                        ? DColors.primary
+                                        ? Colors.red
                                         : index == 1
-                                        ? DColors.secondary
-                                        : Colors.red,
+                                        ? Colors.yellow
+                                        : Colors.blue,
                                 child:
                                     _selectedColor == index
                                         ? Icon(
                                           Icons.done,
                                           color: Colors.white,
-                                          size: 16,
+                                          size: DSizes.iconSm,
                                         )
                                         : Container(),
                               ),
@@ -245,7 +250,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     btnTitle: 'Create Task',
                     width: 140,
                     height: 50,
-                    onTap: () => _validateDate(),
+                    onTap: () => _validateData(),
                   ),
                 ],
               ),
@@ -256,34 +261,31 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     );
   }
 
-  _validateDate() {
+  _validateData() {
     if (_titleController.text.isNotEmpty && _noteController.text.isNotEmpty) {
       _addTaskToDb();
       Navigator.pop(context);
     } else if (_titleController.text.isEmpty || _noteController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('All fields are required!'),
-          backgroundColor: Colors.red,
-        ),
+      DHelperFunctions.showSnackBar(
+        message: 'All fields are required!',
+        context: context,
       );
     }
   }
 
-  _addTaskToDb() async {
-    int value = await _taskController.addTask(
-      task: Task(
-        note: _noteController.text,
-        title: _titleController.text,
-        date: DateFormat.yMd().format(_selectedDate),
-        startTime: _startTime,
-        endTime: _endTime,
-        remind: _selectedRemind,
-        repeat: _selectedRepeat,
-        color: _selectedColor,
-        isCompleted: 0,
-      ),
+  _addTaskToDb() {
+    final task = TaskModel(
+      note: _noteController.text,
+      title: _titleController.text,
+      date: _selectedDate,
+      startTime: _startTime,
+      endTime: _endTime,
+      remind: _selectedRemind,
+      repeat: _selectedRepeat,
+      color: _selectedColor,
+      isCompleted: 0,
     );
-    print('my id is $value');
+
+    context.read<TaskBloc>().add(AddTask(task));
   }
 }

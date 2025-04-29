@@ -62,6 +62,11 @@ class DTextTheme {
       fontWeight: FontWeight.normal,
       color: DColors.dark.withValues(alpha: 0.5),
     ),
+    labelSmall: GoogleFonts.lato(
+      fontSize: 10.0,
+      fontWeight: FontWeight.normal,
+      color: DColors.dark.withValues(alpha: 0.5),
+    ),
   );
 
   // Dark Theme For Text
@@ -118,6 +123,11 @@ class DTextTheme {
     ),
     labelMedium: GoogleFonts.lato(
       fontSize: 12.0,
+      fontWeight: FontWeight.normal,
+      color: DColors.light.withValues(alpha: 0.5),
+    ),
+    labelSmall: GoogleFonts.lato(
+      fontSize: 10.0,
       fontWeight: FontWeight.normal,
       color: DColors.light.withValues(alpha: 0.5),
     ),
