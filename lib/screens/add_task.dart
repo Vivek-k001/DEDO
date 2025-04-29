@@ -30,11 +30,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   ).format(DateTime.now().add(Duration(hours: 3)));
 
   int _selectedRemind = 5;
-  List<int> remindList = [0, 5, 10, 15, 20];
+  List<int> remindList = [5, 10, 15, 20];
 
   String _selectedRepeat = 'None';
+
   List<String> repeatList = ["None", "Daily", "Weakly", "Monthly"];
+
   int _selectedColor = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,9 +48,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Add Task",
-                style: Theme.of(context).textTheme.headlineSmall,
+              Center(
+                child: Text(
+                  "Add Task",
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
               ),
               const SizedBox(height: DSizes.spaceBtwItems),
 
@@ -159,6 +164,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       }).toList(),
                 ),
               ),
+
               DTextFormField(
                 hintText: "$_selectedRepeat  ",
                 prefixIcon: Icons.closed_caption,
@@ -186,7 +192,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       }).toList(),
                 ),
               ),
+
               SizedBox(height: 18),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -232,6 +240,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       ),
                     ],
                   ),
+
                   DButton(
                     btnTitle: 'Create Task',
                     width: 140,

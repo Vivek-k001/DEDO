@@ -19,7 +19,7 @@ class DTextFormField extends StatelessWidget {
     this.isDense = false,
     this.suffixWidget,
     this.onChanged,
-    this.height = 50,
+    this.height = 52,
   });
 
   final TextEditingController? controller;
@@ -38,12 +38,14 @@ class DTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = DHelperFunctions.isDarkMode(context);
+    final cursorColor = isDark ? DColors.light : DColors.dark;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: DSizes.sm + 2),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: Theme.of(context).textTheme.labelMedium),
+          Text(title, style: Theme.of(context).textTheme.bodyMedium),
           const SizedBox(height: DSizes.sm),
           SizedBox(
             height: height,
@@ -53,13 +55,18 @@ class DTextFormField extends StatelessWidget {
               autofocus: false,
               controller: controller,
               keyboardType: keyboardType,
-              cursorColor: isDark ? Colors.grey[100] : Colors.grey[800],
+              cursorColor: cursorColor,
               textAlignVertical: TextAlignVertical.center,
               onChanged: onChanged,
               style: Theme.of(context).textTheme.bodySmall,
               decoration: InputDecoration(
                 hintText: hintText,
-                hintStyle: Theme.of(context).textTheme.bodySmall,
+                hintStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color:
+                      isDark
+                          ? DColors.light.withValues(alpha: 0.7)
+                          : DColors.dark.withValues(alpha: 0.7),
+                ),
                 isDense: isDense,
                 prefixIcon: Icon(prefixIcon, size: 16, color: Colors.grey),
                 suffixIcon:
@@ -71,7 +78,16 @@ class DTextFormField extends StatelessWidget {
                         )
                         : null),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(DSizes.borderRadiusLg),
+                  borderSide: const BorderSide(color: DColors.borderPrimary),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(DSizes.inputFieldRadius),
+                  borderSide: const BorderSide(color: DColors.primary),
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: DSizes.md,
+                  vertical: DSizes.sm,
                 ),
                 filled: true,
                 fillColor: fillColor ?? (isDark ? DColors.dark : DColors.light),

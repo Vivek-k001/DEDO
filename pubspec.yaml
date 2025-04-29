@@ -25,6 +25,7 @@ dependencies:
   google_fonts: ^6.2.1
   date_picker_timeline: ^1.2.6
   font_awesome_flutter: ^10.8.0
+  flutter_local_notifications: ^19.1.0
   sqflite: ^2.4.2
 
 dev_dependencies:

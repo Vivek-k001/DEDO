@@ -7,59 +7,57 @@ class DTextTheme {
 
   // Light Theme For Text
   static TextTheme lightTextTheme = TextTheme(
-    headlineLarge: const TextStyle().copyWith(
+    headlineLarge: GoogleFonts.poppins(
       fontSize: 32.0,
       fontWeight: FontWeight.bold,
       color: DColors.dark,
     ),
-    headlineMedium: const TextStyle().copyWith(
+    headlineMedium: GoogleFonts.poppins(
       fontSize: 24.0,
       fontWeight: FontWeight.w600,
       color: DColors.dark,
-      fontFamily: GoogleFonts.lato().fontFamily,
     ),
-    headlineSmall: const TextStyle().copyWith(
+    headlineSmall: GoogleFonts.poppins(
       fontSize: 20.0,
       fontWeight: FontWeight.w600,
       color: DColors.dark,
-      fontFamily: GoogleFonts.lato().fontFamily,
     ),
-    titleLarge: const TextStyle().copyWith(
+    titleLarge: GoogleFonts.poppins(
       fontSize: 18.0,
       fontWeight: FontWeight.w600,
       color: DColors.dark,
     ),
-    titleMedium: const TextStyle().copyWith(
+    titleMedium: GoogleFonts.poppins(
       fontSize: 16.0,
       fontWeight: FontWeight.w500,
       color: DColors.dark,
     ),
-    titleSmall: const TextStyle().copyWith(
+    titleSmall: GoogleFonts.lato(
       fontSize: 16.0,
       fontWeight: FontWeight.w400,
       color: DColors.dark,
     ),
-    bodyLarge: const TextStyle().copyWith(
+    bodyLarge: GoogleFonts.lato(
       fontSize: 14.0,
       fontWeight: FontWeight.w500,
       color: DColors.dark,
     ),
-    bodyMedium: const TextStyle().copyWith(
+    bodyMedium: GoogleFonts.lato(
       fontSize: 16.0,
       fontWeight: FontWeight.normal,
       color: DColors.dark,
     ),
-    bodySmall: const TextStyle().copyWith(
+    bodySmall: GoogleFonts.lato(
       fontSize: 14.0,
       fontWeight: FontWeight.w500,
       color: DColors.dark.withValues(alpha: 0.5),
     ),
-    labelLarge: const TextStyle().copyWith(
+    labelLarge: GoogleFonts.lato(
       fontSize: 12.0,
       fontWeight: FontWeight.normal,
       color: DColors.dark,
     ),
-    labelMedium: const TextStyle().copyWith(
+    labelMedium: GoogleFonts.lato(
       fontSize: 12.0,
       fontWeight: FontWeight.normal,
       color: DColors.dark.withValues(alpha: 0.5),
@@ -68,57 +66,57 @@ class DTextTheme {
 
   // Dark Theme For Text
   static TextTheme darkTextTheme = TextTheme(
-    headlineLarge: const TextStyle().copyWith(
+    headlineLarge: GoogleFonts.poppins(
       fontSize: 32.0,
       fontWeight: FontWeight.bold,
       color: DColors.light,
     ),
-    headlineMedium: const TextStyle().copyWith(
+    headlineMedium: GoogleFonts.poppins(
       fontSize: 24.0,
       fontWeight: FontWeight.w600,
       color: DColors.light,
     ),
-    headlineSmall: const TextStyle().copyWith(
+    headlineSmall: GoogleFonts.poppins(
       fontSize: 18.0,
       fontWeight: FontWeight.w600,
       color: DColors.light,
     ),
-    titleLarge: const TextStyle().copyWith(
+    titleLarge: GoogleFonts.poppins(
       fontSize: 16.0,
       fontWeight: FontWeight.w600,
       color: DColors.light,
     ),
-    titleMedium: const TextStyle().copyWith(
+    titleMedium: GoogleFonts.poppins(
       fontSize: 16.0,
       fontWeight: FontWeight.w500,
       color: DColors.light,
     ),
-    titleSmall: const TextStyle().copyWith(
+    titleSmall: GoogleFonts.lato(
       fontSize: 16.0,
       fontWeight: FontWeight.w400,
       color: DColors.light,
     ),
-    bodyLarge: const TextStyle().copyWith(
+    bodyLarge: GoogleFonts.lato(
       fontSize: 14.0,
       fontWeight: FontWeight.w500,
       color: DColors.light,
     ),
-    bodyMedium: const TextStyle().copyWith(
+    bodyMedium: GoogleFonts.lato(
       fontSize: 14.0,
       fontWeight: FontWeight.normal,
       color: DColors.light,
     ),
-    bodySmall: const TextStyle().copyWith(
+    bodySmall: GoogleFonts.lato(
       fontSize: 14.0,
       fontWeight: FontWeight.w500,
       color: DColors.light.withValues(alpha: 0.5),
     ),
-    labelLarge: const TextStyle().copyWith(
+    labelLarge: GoogleFonts.lato(
       fontSize: 12.0,
       fontWeight: FontWeight.normal,
       color: DColors.light,
     ),
-    labelMedium: const TextStyle().copyWith(
+    labelMedium: GoogleFonts.lato(
       fontSize: 12.0,
       fontWeight: FontWeight.normal,
       color: DColors.light.withValues(alpha: 0.5),

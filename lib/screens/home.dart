@@ -1,6 +1,7 @@
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:dedo/bloc/theme/theme_bloc.dart';
 import 'package:dedo/screens/add_task.dart';
+import 'package:dedo/services/notification_service.dart';
 import 'package:dedo/utils/constants/colors.dart';
 import 'package:dedo/utils/constants/sizes.dart';
 import 'package:dedo/utils/constants/text.dart';
@@ -14,7 +15,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime _selectedDate = DateTime.now();
+    DateTime selectedDate = DateTime.now();
 
     return Scaffold(
       appBar: DAppBar(
@@ -36,6 +37,14 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   context.read<ThemeBloc>().add(
                     ThemeChangedEvent(state == ThemeMode.dark ? false : true),
+                  );
+                  NotificationService().showNotification(
+                    id: 0,
+                    title: "Theme Changed",
+                    body:
+                        state == ThemeMode.dark
+                            ? "Switched to light mode"
+                            : "Switched to dark mode",
                   );
                 },
               );
@@ -60,29 +69,30 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: [
-                    Text(
-                      DHelperFunctions.formatDate(DateTime.now()),
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    // Text(
-                    //   "Today",
-                    //   style: Theme.of(context).textTheme.headlineSmall,
-                    // ),
-                  ],
-                ),
-                // DButton(
-                //   btnTitle: "Add Task",
-                //   width: 100,
-                //   height: 60,
-                //   onTap: () {},
-                // ),
-              ],
+            // Row(
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // children: [
+            // Column(
+            // crossAxisAlignment: CrossAxisAlignment.start,
+            // children: [
+            Text(
+              DHelperFunctions.formatDate(DateTime.now()),
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
+            // Text(
+            //   "Today",
+            //   style: Theme.of(context).textTheme.headlineSmall,
+            // ),
+            // ],
+            // ),
+            // DButton(
+            //   btnTitle: "Add Task",
+            //   width: 100,
+            //   height: 60,
+            //   onTap: () {},
+            // ),
+            // ],
+            // ),
             const SizedBox(height: DSizes.spaceBtwItems),
             Container(
               margin: const EdgeInsets.only(top: DSizes.sm, left: DSizes.sm),
@@ -97,8 +107,9 @@ class HomePage extends StatelessWidget {
                 dayTextStyle: Theme.of(context).textTheme.bodyMedium!,
                 monthTextStyle: Theme.of(context).textTheme.bodySmall!,
                 onDateChange: (date) {
-                  _selectedDate = date;
-                  print(_selectedDate);
+                  selectedDate = date;
+                  // ignore: avoid_print
+                  print(selectedDate);
                 },
               ),
             ),
