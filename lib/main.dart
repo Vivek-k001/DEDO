@@ -1,6 +1,8 @@
+import 'package:dedo/bloc/task/task_bloc.dart';
 import 'package:dedo/bloc/theme/theme_bloc.dart';
 import 'package:dedo/controllers/task_controller.dart';
 import 'package:dedo/db/db_helper.dart';
+import 'package:dedo/services/notification_service.dart';
 import 'package:dedo/utils/constants/text.dart';
 import 'package:dedo/screens/home.dart';
 import 'package:dedo/utils/theme/theme.dart';
@@ -13,6 +15,7 @@ void main() async {
 
   await DBHelper.initDb();
   await GetStorage.init();
+  await NotificationService().initNotification();
 
   runApp(
     MultiBlocProvider(

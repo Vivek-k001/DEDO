@@ -1,4 +1,4 @@
-class Task {
+class TaskModel {
   int? id;
   String? title;
   String? note;
@@ -10,7 +10,7 @@ class Task {
   int? remind;
   String? repeat;
 
-  Task({
+  TaskModel({
     this.id,
     this.title,
     this.note,
@@ -22,7 +22,8 @@ class Task {
     this.remind,
     this.repeat,
   });
-  Task.fromJson(Map<String, dynamic> json) {
+
+  TaskModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     note = json['note'];
@@ -34,18 +35,19 @@ class Task {
     remind = json['remind'];
     repeat = json['repeat'];
   }
+
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['date'] = this.date;
-    data['note'] = this.note;
-    data['isCompleted'] = this.isCompleted;
-    data['startTime'] = this.startTime;
-    data['endTime'] = this.endTime;
-    data['color'] = this.color;
-    data['reminder'] = this.remind;
-    data['repeat'] = this.repeat;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['title'] = title;
+    data['date'] = date;
+    data['note'] = note;
+    data['isCompleted'] = isCompleted;
+    data['startTime'] = startTime;
+    data['endTime'] = endTime;
+    data['color'] = color;
+    data['reminder'] = remind;
+    data['repeat'] = repeat;
     return data;
   }
 }

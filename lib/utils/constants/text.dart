@@ -1,5 +1,5 @@
 class DTexts {
   DTexts._();
 
-  static const String appName = "Dedo Todo App";
+  static const String appName = "Dedo";
 }

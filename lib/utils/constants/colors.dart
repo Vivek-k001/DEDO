@@ -6,13 +6,13 @@ class DColors {
   // App Theme Colors
   static const Color primary = Color(0xFFD0BBA8);
   static const Color secondary = Color(0xFFFFE24B);
-  static const Color accent = Color(0xFFb0c7ff);
+  static const Color accent = Color(0xFFB0C7FF);
 
   // Gradient Colors
-  static const Gradient linerGradient = LinearGradient(
+  static const Gradient linearGradient = LinearGradient(
     begin: Alignment(0.0, 0.0),
     end: Alignment(0.707, -0.707),
-    colors: [Color(0xffff9a9e), Color(0xfffad0c4), Color(0xfffad0c4)],
+    colors: [Color(0xFFFF9A9E), Color(0xFFFAD0C4), Color(0xFFFAD0C4)],
   );
 
   // Text Colors
@@ -27,10 +27,10 @@ class DColors {
 
   // Background Container Colors
   static const Color lightContainer = Color(0xFFF6F6F6);
-  static Color darkContainer = Colors.white.withValues(alpha: 0.1);
+  static const Color darkContainer = Color.fromRGBO(255, 255, 255, 0.1);
 
   // Button Colors
-  static const Color buttonPrimary = Color(0xFF4b68ff);
+  static const Color buttonPrimary = Color(0xFF4B68FF);
   static const Color buttonSecondary = Color(0xFF6C757D);
   static const Color buttonDisabled = Color(0xFFC4C4C4);
 

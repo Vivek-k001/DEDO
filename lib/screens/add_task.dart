@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:dedo/models/taskmodel.dart';
 
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({super.key});
@@ -28,13 +27,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   ).format(DateTime.now().add(Duration(hours: 3)));
 
   int _selectedRemind = 5;
-  List<int> remindList = [0, 5, 10, 15, 20];
+  List<int> remindList = [5, 10, 15, 20];
 
   String _selectedRepeat = 'None';
   List<String> repeatList = ["None", "Daily", "Weakly", "Monthly"];
-
   int _selectedColor = 0;
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<TaskBloc, TaskState>(
