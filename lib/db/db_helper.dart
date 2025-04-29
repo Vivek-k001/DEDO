@@ -5,35 +5,41 @@ class DBHelper {
   static Database? _db;
   static final int _version = 1;
   static final String _tableName = 'tasks';
+
   static Future<void> initDb() async {
-    if (_db != null) {
-      return;
-    }
+    if (_db != null) return;
     try {
-      String _path = await getDatabasesPath() + 'tasks.db';
+      String _path = '${await getDatabasesPath()}/tasks.db'; // Fixed path
       _db = await openDatabase(
         _path,
         version: _version,
-        onCreate: (db, version) {
-          print('creating a new one');
-          return db.execute(
+        onCreate: (db, version) async {
+          print('Creating new DB');
+          await db.execute(
             "CREATE TABLE $_tableName("
             "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-            "title STRING,note TEXT,date STRING,"
-            "startTime STRING,endTime STIRNG,"
-            "remind INTEGER,repeat STIRNG,"
+            "title TEXT,"
+            "note TEXT,"
+            "date TEXT,"
+            "startTime TEXT,"
+            "endTime TEXT,"
+            "remind INTEGER,"
+            "repeat TEXT,"
             "color INTEGER,"
             "isCompleted INTEGER)",
           );
         },
       );
     } catch (e) {
-      print(e);
+      print("DB Init Error: $e");
     }
   }
 
   static Future<int> insert(Task? task) async {
-    print("insert function called");
-    return await _db?.insert(_tableName, task!.toJson()) ?? 1;
+    print("Insert function called");
+    if (_db == null) {
+      throw Exception("Database is not initialized");
+    }
+    return await _db!.insert(_tableName, task!.toJson());
   }
 }

@@ -16,10 +16,6 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   }
 }
 
-Future<int> addTask({Task? task}) async {
-  return await DBHelper.insert(task);
-}
-
 abstract class TaskEvent {}
 
 class AddTaskEvent extends TaskEvent {
