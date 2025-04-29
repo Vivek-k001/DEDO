@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class DButton extends StatelessWidget {
   const DButton({
     super.key,
-    this.onTap,
+    required this.onTap,
     required this.btnTitle,
     required this.width,
     required this.height,
@@ -29,7 +29,9 @@ class DButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(DSizes.buttonRadius),
           color: btnColor ?? DColors.primary,
         ),
-        child: Text(btnTitle, style: Theme.of(context).textTheme.bodyMedium),
+        child: Center(
+          child: Text(btnTitle, style: Theme.of(context).textTheme.bodyMedium),
+        ),
       ),
     );
   }

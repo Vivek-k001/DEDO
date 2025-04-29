@@ -1,8 +1,11 @@
+import 'package:dedo/utils/constants/colors.dart';
 import 'package:dedo/utils/constants/sizes.dart';
 import 'package:dedo/widgets/appbar.dart';
+import 'package:dedo/widgets/button.dart';
 import 'package:dedo/widgets/text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 
 class AddTaskScreen extends StatefulWidget {
@@ -13,6 +16,9 @@ class AddTaskScreen extends StatefulWidget {
 }
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
+  final _titleController = TextEditingController();
+  final _noteController = TextEditingController();
+
   String _selectedDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
 
   String _startTime = DateFormat('hh:mm a').format(DateTime.now());
@@ -22,9 +28,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   ).format(DateTime.now().add(Duration(hours: 3)));
 
   int _selectedRemind = 5;
-
   List<int> remindList = [0, 5, 10, 15, 20];
 
+  String _selectedRepeat = 'None';
+  List<String> repeatList = ["None", "Daily", "Weakly", "Monthly"];
+  int _selectedColor = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,10 +156,97 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       }).toList(),
                 ),
               ),
+              DTextFormField(
+                hintText: "$_selectedRepeat  ",
+                prefixIcon: Icons.closed_caption,
+                title: "Repeat",
+                suffixWidget: DropdownButton(
+                  icon: Icon(Icons.keyboard_arrow_down, color: Colors.grey),
+                  iconSize: 32,
+                  elevation: 4,
+                  style: Theme.of(context).textTheme.titleSmall,
+                  underline: Container(height: 0),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedRepeat = newValue!;
+                    });
+                  },
+                  items:
+                      repeatList.map<DropdownMenuItem<String>>((String? value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value!,
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        );
+                      }).toList(),
+                ),
+              ),
+              SizedBox(height: 18),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Color',
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      SizedBox(height: 8),
+                      Wrap(
+                        children: List<Widget>.generate(3, (int index) {
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedColor = index;
+                              });
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: CircleAvatar(
+                                radius: 14,
+                                backgroundColor:
+                                    index == 0
+                                        ? DColors.primary
+                                        : index == 1
+                                        ? DColors.secondary
+                                        : Colors.red,
+                                child:
+                                    _selectedColor == index
+                                        ? Icon(
+                                          Icons.done,
+                                          color: Colors.white,
+                                          size: 16,
+                                        )
+                                        : Container(),
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    ],
+                  ),
+                  DButton(
+                    btnTitle: 'Create Task',
+                    width: 140,
+                    height: 50,
+                    onTap: () {},
+                  ),
+                ],
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  _validateDate() {
+    if (_titleController.text.isNotEmpty && _noteController.text.isNotEmpty) {
+      Navigator.pop(context);
+    } else if (_titleController.text.isEmpty || _noteController.text.isEmpty) {Get.snackbar}
   }
 }
