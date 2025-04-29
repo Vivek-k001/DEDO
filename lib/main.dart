@@ -1,4 +1,5 @@
 import 'package:dedo/bloc/theme/theme_bloc.dart';
+import 'package:dedo/db/db_helper.dart';
 import 'package:dedo/utils/constants/text.dart';
 import 'package:dedo/screens/home.dart';
 import 'package:dedo/utils/theme/theme.dart';
@@ -8,7 +9,7 @@ import 'package:get_storage/get_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await DBHelper.initDb();
   await GetStorage.init();
 
   runApp(BlocProvider(create: (context) => ThemeBloc(), child: const MyApp()));

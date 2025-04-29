@@ -1,3 +1,5 @@
+import 'package:dedo/controllers/task_controller.dart';
+import 'package:dedo/models/taskmodel.dart';
 import 'package:dedo/utils/constants/colors.dart';
 import 'package:dedo/utils/constants/sizes.dart';
 import 'package:dedo/widgets/appbar.dart';
@@ -5,7 +7,6 @@ import 'package:dedo/widgets/button.dart';
 import 'package:dedo/widgets/text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 
 class AddTaskScreen extends StatefulWidget {
@@ -16,10 +17,11 @@ class AddTaskScreen extends StatefulWidget {
 }
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
+  final TaskController _taskController = Get.put();
   final _titleController = TextEditingController();
   final _noteController = TextEditingController();
 
-  String _selectedDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
+  DateTime _selectedDate = DateTime.now();
 
   String _startTime = DateFormat('hh:mm a').format(DateTime.now());
 
@@ -53,17 +55,19 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 title: "Title",
                 hintText: "Enter your title",
                 prefixIcon: Icons.title,
+                controller: _titleController,
               ),
 
               DTextFormField(
                 title: "Note",
                 hintText: "Enter your note",
                 prefixIcon: Icons.note,
+                controller: _noteController,
               ),
 
               DTextFormField(
                 title: "Date",
-                hintText: _selectedDate,
+                hintText: _selectedDate.toString(),
                 prefixIcon: FontAwesomeIcons.calendar,
                 readOnly: true,
                 onTap: () async {
@@ -75,9 +79,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   );
 
                   setState(() {
-                    _selectedDate = DateFormat(
-                      'dd/MM/yyyy',
-                    ).format(pickerDate ?? DateTime.now());
+                    _selectedDate = pickerDate ?? DateTime.now();
+                    Text(DateFormat('dd/MM/yyyy').format(_selectedDate));
                   });
                 },
               ),
@@ -233,7 +236,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     btnTitle: 'Create Task',
                     width: 140,
                     height: 50,
-                    onTap: () {},
+                    onTap: () => _validateDate(),
                   ),
                 ],
               ),
@@ -246,7 +249,32 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   _validateDate() {
     if (_titleController.text.isNotEmpty && _noteController.text.isNotEmpty) {
+      _addTaskToDb();
       Navigator.pop(context);
-    } else if (_titleController.text.isEmpty || _noteController.text.isEmpty) {Get.snackbar}
+    } else if (_titleController.text.isEmpty || _noteController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('All fields are required!'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  _addTaskToDb() async {
+    int value = await _taskController.addTask(
+      task: Task(
+        note: _noteController.text,
+        title: _titleController.text,
+        date: DateFormat.yMd().format(_selectedDate),
+        startTime: _startTime,
+        endTime: _endTime,
+        remind: _selectedRemind,
+        repeat: _selectedRepeat,
+        color: _selectedColor,
+        isCompleted: 0,
+      ),
+    );
+    print('my id is $value');
   }
 }
