@@ -22,6 +22,6 @@ class DAppbarTheme {
     scrolledUnderElevation: 0,
     backgroundColor: Colors.transparent,
     surfaceTintColor: Colors.transparent,
-    iconTheme: IconThemeData(color: Colors.black, size: DSizes.iconMd),
+    iconTheme: IconThemeData(color: Colors.white, size: DSizes.iconMd),
   );
 }

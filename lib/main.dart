@@ -14,6 +14,8 @@ void main() async {
 
   await DBHelper.initDb();
   await GetStorage.init();
+
+  await NotificationService().requestNotificationPermission();
   await NotificationService().initNotification();
 
   runApp(

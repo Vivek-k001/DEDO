@@ -23,6 +23,7 @@ class HomePage extends StatelessWidget {
           DTexts.appName,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
+
         actions: [
           /// Theme Switcher
           BlocBuilder<ThemeBloc, ThemeMode>(
@@ -32,14 +33,14 @@ class HomePage extends StatelessWidget {
                   state == ThemeMode.dark
                       ? Icons.nightlight_round
                       : Icons.wb_sunny,
-                  color: state == ThemeMode.dark ? Colors.white : Colors.black,
+                  color: state == ThemeMode.dark ? DColors.light : DColors.dark,
                 ),
                 onPressed: () {
                   context.read<ThemeBloc>().add(
                     ThemeChangedEvent(state == ThemeMode.dark ? false : true),
                   );
                   NotificationService().showNotification(
-                    id: 0,
+                    id: 1,
                     title: "Theme Changed",
                     body:
                         state == ThemeMode.dark
@@ -52,9 +53,19 @@ class HomePage extends StatelessWidget {
           ),
 
           /// Profile Icon
-          IconButton(icon: Icon(Icons.person), onPressed: () {}),
+          IconButton(
+            icon: Icon(
+              Icons.person,
+              color:
+                  DHelperFunctions.isDarkMode(context)
+                      ? DColors.light
+                      : DColors.dark,
+            ),
+            onPressed: () {},
+          ),
         ],
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed:
             () => DHelperFunctions.navigateToScreen(
@@ -64,38 +75,34 @@ class HomePage extends StatelessWidget {
         tooltip: "Add Task",
         child: const Icon(Icons.add),
       ),
+
       body: Padding(
-        padding: const EdgeInsets.all(DSizes.sm + 2),
+        padding: const EdgeInsets.symmetric(
+          horizontal: DSizes.md,
+          vertical: DSizes.sm,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Row(
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            // children: [
-            // Column(
-            // crossAxisAlignment: CrossAxisAlignment.start,
-            // children: [
-            Text(
-              DHelperFunctions.formatDate(DateTime.now()),
-              style: Theme.of(context).textTheme.bodyLarge,
+            Padding(
+              padding: const EdgeInsets.only(left: DSizes.sm),
+              child: Text(
+                DHelperFunctions.formatDate(DateTime.now()),
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
             ),
-            // Text(
-            //   "Today",
-            //   style: Theme.of(context).textTheme.headlineSmall,
-            // ),
-            // ],
-            // ),
-            // DButton(
-            //   btnTitle: "Add Task",
-            //   width: 100,
-            //   height: 60,
-            //   onTap: () {},
-            // ),
-            // ],
-            // ),
+
             const SizedBox(height: DSizes.spaceBtwItems),
+
             Container(
-              margin: const EdgeInsets.only(top: DSizes.sm, left: DSizes.sm),
+              padding: const EdgeInsets.all(DSizes.sm),
+              decoration: BoxDecoration(
+                color:
+                    DHelperFunctions.isDarkMode(context)
+                        ? DColors.darkerGrey
+                        : DColors.lightGrey,
+                borderRadius: BorderRadius.circular(DSizes.sm),
+              ),
               child: DatePicker(
                 DateTime.now(),
                 height: 100,
@@ -104,14 +111,13 @@ class HomePage extends StatelessWidget {
                 selectionColor: DColors.primary,
                 selectedTextColor:
                     DHelperFunctions.isDarkMode(context)
-                        ? DColors.lightGrey
-                        : DColors.darkGrey,
+                        ? DColors.light
+                        : DColors.dark,
                 dateTextStyle: Theme.of(context).textTheme.headlineSmall!,
                 dayTextStyle: Theme.of(context).textTheme.bodyMedium!,
                 monthTextStyle: Theme.of(context).textTheme.bodySmall!,
                 onDateChange: (date) {
                   selectedDate = date;
-                  // ignore: avoid_print
                   print(selectedDate);
                 },
               ),

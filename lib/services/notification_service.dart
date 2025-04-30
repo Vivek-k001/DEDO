@@ -1,15 +1,17 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class NotificationService {
   final notificationPlugin = FlutterLocalNotificationsPlugin();
 
-  final bool _isInitialized = false;
+  bool _isInitialized = false;
 
   bool get isInitialized => _isInitialized;
 
   Future<void> initNotification() async {
     // Prevent re-initialization
     if (_isInitialized) return;
+    _isInitialized = true;
 
     const initAndroidSettings = AndroidInitializationSettings(
       '@mipmap/ic_launcher',
@@ -26,7 +28,15 @@ class NotificationService {
       iOS: initIOSSettings,
     );
 
-    await notificationPlugin.initialize(initSettings);
+    await notificationPlugin.initialize(
+      initSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) {
+        // Handle notification tap
+        if (response.payload != null) {
+          print('Notification payload: ${response.payload}');
+        }
+      },
+    );
   }
 
   // Notification Details Setup
@@ -49,11 +59,13 @@ class NotificationService {
     String? title,
     String? body,
   }) async {
-    return notificationPlugin.show(
-      id,
-      title,
-      body,
-      const NotificationDetails(),
-    );
+    return notificationPlugin.show(id, title, body, notificationDetails());
+  }
+
+  Future<void> requestNotificationPermission() async {
+    final status = await Permission.notification.status;
+    if (!status.isGranted) {
+      await Permission.notification.request();
+    }
   }
 }

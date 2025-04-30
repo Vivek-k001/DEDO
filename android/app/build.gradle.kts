@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.dedo"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 35
     ndkVersion = "27.0.12077973"
 
     compileOptions {
@@ -25,10 +25,10 @@ android {
         applicationId = "com.example.dedo"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = 21 // Replace with the actual minSdk version you want to use
-        targetSdk = 33 // Replace with the actual targetSdk version you want to use
-        versionCode = 1 // Replace with your app's version code
-        versionName = "1.0" // Replace with your app's version name
+        minSdk = 21 
+        targetSdk = 33 
+        versionCode = 1 
+        versionName = "1.0"
     }
 
     buildTypes {

@@ -32,7 +32,7 @@ class DAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ? IconButton(
                   onPressed: () => Navigator.pop(context),
                   icon: Icon(
-                    Icons.arrow_left,
+                    Icons.arrow_back_ios_new,
                     color: darkMode ? Colors.white : DColors.dark,
                   ),
                 )

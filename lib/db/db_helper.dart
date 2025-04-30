@@ -9,39 +9,37 @@ class DBHelper {
   static final String _tableName = 'tasks';
 
   static Future<void> initDb() async {
-    if (_db != null) return;
+    if (_db != null) {
+      return;
+    }
+
     try {
-      String _path = '${await getDatabasesPath()}/tasks.db';
+      String path = '${await getDatabasesPath()}/tasks.db';
       _db = await openDatabase(
-        _path,
+        path,
         version: _version,
-        onCreate: (db, version) async {
-          print('Creating new DB');
-          await db.execute(
+        onCreate: (db, version) {
+          print("Creating a new one");
+          return db.execute(
             "CREATE TABLE $_tableName("
-            "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-            "title TEXT,"
-            "note TEXT,"
-            "date TEXT,"
-            "startTime TEXT,"
-            "endTime TEXT,"
-            "remind INTEGER,"
-            "repeat TEXT,"
-            "color INTEGER,"
-            "isCompleted INTEGER)",
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+            "title STRING, note TEXT, date STRING, "
+            "startTime STRING, endTime STRING, "
+            "remind INTEGER, repeat STRING, "
+            "color INTEGER, isCompleted INTEGER)",
           );
         },
       );
     } catch (e) {
-      print("DB Init Error: $e");
+      print(e.toString());
     }
   }
 
-  static Future<int> insert(TaskModel? task) async {
-    print("Insert function called");
-    if (_db == null) {
-      throw Exception("Database is not initialized");
-    }
-    return await _db!.insert(_tableName, task!.toJson());
+  static Future<List<Map<String, dynamic>>> query() async {
+    return await _db!.query(_tableName);
+  }
+
+  static Future<int> insert(TaskModel task) async {
+    return await _db!.insert(_tableName, task.toJson());
   }
 }
