@@ -31,7 +31,7 @@ class TaskModel {
     date = json['date'];
     startTime = json['startTime'];
     endTime = json['endTime'];
-    color == json['color'];
+    color = json['color'];
     remind = json['remind'];
     repeat = json['repeat'];
   }

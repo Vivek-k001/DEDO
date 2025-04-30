@@ -7,6 +7,7 @@ import 'package:dedo/utils/constants/sizes.dart';
 import 'package:dedo/utils/constants/text.dart';
 import 'package:dedo/utils/helper_functions.dart';
 import 'package:dedo/widgets/appbar.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -35,18 +36,28 @@ class HomePage extends StatelessWidget {
                       : Icons.wb_sunny,
                   color: state == ThemeMode.dark ? DColors.light : DColors.dark,
                 ),
-                onPressed: () {
+                onPressed: () async {
                   context.read<ThemeBloc>().add(
                     ThemeChangedEvent(state == ThemeMode.dark ? false : true),
                   );
-                  NotificationService().showNotification(
-                    id: 1,
-                    title: "Theme Changed",
-                    body:
-                        state == ThemeMode.dark
-                            ? "Switched to light mode"
-                            : "Switched to dark mode",
-                  );
+                  final allowed =
+                      await NotificationService()
+                          .requestNotificationPermission();
+                  if (allowed) {
+                    NotificationService().showNotification(
+                      id: 1,
+                      title: "Theme Changed",
+                      body:
+                          state == ThemeMode.dark
+                              ? "Switched to light mode"
+                              : "Switched to dark mode",
+                    );
+                  } else {
+                    if (kDebugMode) {
+                      print("Notification permission denied");
+                    }
+                    await NotificationService().requestNotificationPermission();
+                  }
                 },
               );
             },
@@ -118,7 +129,9 @@ class HomePage extends StatelessWidget {
                 monthTextStyle: Theme.of(context).textTheme.bodySmall!,
                 onDateChange: (date) {
                   selectedDate = date;
-                  print(selectedDate);
+                  if (kDebugMode) {
+                    print(selectedDate);
+                  }
                 },
               ),
             ),

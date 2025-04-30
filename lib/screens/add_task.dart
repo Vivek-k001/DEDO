@@ -266,7 +266,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       btnTitle: 'Create Task',
                       width: 140,
                       height: 50,
-                      onTap: () => _validateData(),
+                      onTap: () => _validateAndSubmitTask(),
                     ),
                   ],
                 ),
@@ -278,22 +278,21 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     );
   }
 
-  _validateData() {
-    if (_titleController.text.isEmpty || _noteController.text.isEmpty) {
+  void _validateAndSubmitTask() {
+    final title = _titleController.text.trim();
+    final note = _noteController.text.trim();
+
+    if (title.isEmpty || note.isEmpty) {
       DHelperFunctions.showSnackBar(
-        message: 'All fields are required!',
+        message: 'Please fill out all fields.',
         context: context,
       );
-    } else {
-      _addTaskToDb();
-      Navigator.pop(context);
+      return;
     }
-  }
 
-  _addTaskToDb() {
     final task = TaskModel(
-      note: _noteController.text,
-      title: _titleController.text,
+      note: note,
+      title: title,
       date: _selectedDate,
       startTime: _startTime,
       endTime: _endTime,

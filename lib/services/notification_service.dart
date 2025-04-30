@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -62,10 +63,27 @@ class NotificationService {
     return notificationPlugin.show(id, title, body, notificationDetails());
   }
 
-  Future<void> requestNotificationPermission() async {
+  Future<bool> requestNotificationPermission() async {
     final status = await Permission.notification.status;
-    if (!status.isGranted) {
-      await Permission.notification.request();
+
+    if (status.isGranted) {
+      debugPrint('Notification permission already granted');
+      return true;
     }
+
+    final result = await Permission.notification.request();
+
+    if (result.isGranted) {
+      debugPrint('Notification permission granted');
+      return true;
+    } else if (result.isDenied) {
+      debugPrint('Notification permission denied');
+      return false;
+    } else if (result.isPermanentlyDenied) {
+      debugPrint('Notification permission permanently denied');
+      return false;
+    }
+
+    return false;
   }
 }

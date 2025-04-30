@@ -1,4 +1,5 @@
 import 'package:dedo/models/task_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DBHelper {
@@ -19,7 +20,9 @@ class DBHelper {
         path,
         version: _version,
         onCreate: (db, version) {
-          print("Creating a new one");
+          if (kDebugMode) {
+            print("Creating a new one");
+          }
           return db.execute(
             "CREATE TABLE $_tableName("
             "id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -31,7 +34,9 @@ class DBHelper {
         },
       );
     } catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
     }
   }
 
