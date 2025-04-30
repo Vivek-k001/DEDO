@@ -35,7 +35,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   String _selectedRepeat = 'None';
   List<String> repeatList = ["None", "Daily", "Weakly", "Monthly"];
 
-  int _selectedColor = 0;
+  int _selectedColorIndex = 0;
+
+  final List<Color> _colorOptions = [
+    Colors.red,
+    Colors.yellow,
+    Colors.blue,
+    Colors.green,
+    Colors.purple,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +69,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         }
       },
       child: Scaffold(
-        appBar: DAppBar(showBackArrow: true),
+        appBar: DAppBar(
+          showBackArrow: true,
+          title: Center(
+            child: Text(
+              'Add Task',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ),
+        ),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(DSizes.md),
@@ -88,6 +104,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   hintText: "Enter your note",
                   prefixIcon: Icons.note,
                   controller: _noteController,
+                  maxlines: 3,
                 ),
 
                 DTextFormField(
@@ -161,6 +178,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   hintText: "$_selectedRemind minutes early",
                   prefixIcon: Icons.closed_caption,
                   title: "Remind",
+                  readOnly: true,
                   suffixWidget: DropdownButton(
                     icon: Icon(Icons.keyboard_arrow_down, color: Colors.grey),
                     iconSize: 32,
@@ -178,7 +196,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                             value: value.toString(),
                             child: Text(
                               '$value minutes early',
-                              style: Theme.of(context).textTheme.labelSmall,
+                              style: Theme.of(context).textTheme.bodySmall,
                             ),
                           );
                         }).toList(),
@@ -189,6 +207,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   hintText: _selectedRepeat,
                   prefixIcon: Icons.repeat,
                   title: "Repeat",
+                  readOnly: true,
                   suffixWidget: DropdownButton(
                     icon: Icon(Icons.keyboard_arrow_down, color: Colors.grey),
                     iconSize: 32,
@@ -206,7 +225,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                             value: value,
                             child: Text(
                               value,
-                              style: Theme.of(context).textTheme.labelSmall,
+                              style: Theme.of(context).textTheme.bodySmall,
                             ),
                           );
                         }).toList(),
@@ -215,65 +234,47 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
                 const SizedBox(height: DSizes.spaceBtwItems),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Color',
-                          style: Theme.of(context).textTheme.titleSmall,
+                Text('Color', style: Theme.of(context).textTheme.titleSmall),
+
+                const SizedBox(height: DSizes.sm),
+
+                Wrap(
+                  children: List<Widget>.generate(_colorOptions.length, (
+                    index,
+                  ) {
+                    final color = _colorOptions[index];
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedColorIndex = index;
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: DSizes.sm),
+                        child: CircleAvatar(
+                          radius: 14,
+                          backgroundColor: color,
+                          child:
+                              _selectedColorIndex == index
+                                  ? Icon(
+                                    Icons.done,
+                                    color: Colors.white,
+                                    size: DSizes.iconSm,
+                                  )
+                                  : null,
                         ),
+                      ),
+                    );
+                  }),
+                ),
 
-                        const SizedBox(height: DSizes.sm),
+                const SizedBox(height: DSizes.spaceBtwItems),
 
-                        Wrap(
-                          children: List<Widget>.generate(3, (index) {
-                            final color =
-                                index == 0
-                                    ? Colors.red
-                                    : index == 1
-                                    ? Colors.yellow
-                                    : Colors.blue;
-
-                            return GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _selectedColor = index;
-                                });
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                  right: DSizes.sm,
-                                ),
-                                child: CircleAvatar(
-                                  radius: 14,
-                                  backgroundColor: color,
-                                  child:
-                                      _selectedColor == index
-                                          ? Icon(
-                                            Icons.done,
-                                            color: Colors.white,
-                                            size: DSizes.iconSm,
-                                          )
-                                          : Container(),
-                                ),
-                              ),
-                            );
-                          }),
-                        ),
-                      ],
-                    ),
-
-                    DButton(
-                      btnTitle: 'Create Task',
-                      width: 140,
-                      height: 50,
-                      onTap: () => _validateAndSubmitTask(),
-                    ),
-                  ],
+                DButton(
+                  btnTitle: 'Create Task',
+                  width: 140,
+                  height: 50,
+                  onTap: () => _validateAndSubmitTask(),
                 ),
               ],
             ),
@@ -306,7 +307,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       endTime: _endTime,
       remind: _selectedRemind,
       repeat: _selectedRepeat,
-      color: _selectedColor,
+      colorIndex: _selectedColorIndex,
       isCompleted: 0,
     );
 

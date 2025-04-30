@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 class DTaskTile extends StatelessWidget {
   const DTaskTile({
     super.key,
-    this.bgColor,
     required this.title,
     required this.note,
     required this.startTime,
@@ -17,7 +16,6 @@ class DTaskTile extends StatelessWidget {
     required this.isCompleted,
   });
 
-  final Color? bgColor;
   final String title, note;
   final String startTime, endTime, date, repeat;
   final int remind;
@@ -32,16 +30,10 @@ class DTaskTile extends StatelessWidget {
       margin: EdgeInsets.only(bottom: DSizes.sm + DSizes.xs),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(DSizes.md),
-        color: bgColor ?? _getColor(colorIndex),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade300,
-            blurRadius: 6,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        color: _getColor(colorIndex),
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,36 +79,38 @@ class DTaskTile extends StatelessWidget {
             ],
           ),
 
-          const Spacer(),
+          Row(
+            children: [
+              Container(height: 60, width: 1, color: DColors.darkGrey),
 
-          Container(height: 60, width: 1, color: DColors.darkGrey),
+              const SizedBox(width: DSizes.md),
 
-          const SizedBox(width: DSizes.sm),
-
-          RotatedBox(
-            quarterTurns: 3,
-            child: Text(
-              isCompleted ? "Completed" : "Pending",
-              style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                color: isCompleted ? Colors.greenAccent : Colors.deepOrange,
+              RotatedBox(
+                quarterTurns: 3,
+                child: Text(
+                  isCompleted ? "Completed" : "Pending",
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                    color: isCompleted ? Colors.greenAccent : Colors.deepOrange,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  _getColor(int colorIndex) {
-    switch (colorIndex) {
-      case 0:
-        return Colors.red;
-      case 1:
-        return Colors.yellow;
-      case 2:
-        return Colors.blue;
-      default:
-        return Colors.red;
-    }
+  Color _getColor(int index) {
+    final List<Color> colors = [
+      Colors.red,
+      Colors.yellow,
+      Colors.blue,
+      Colors.green,
+      Colors.purple,
+    ];
+
+    return colors[index];
   }
 }

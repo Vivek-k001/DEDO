@@ -20,6 +20,7 @@ class DTextFormField extends StatelessWidget {
     this.suffixWidget,
     this.onChanged,
     this.height = 52,
+    this.maxlines = 1,
   });
 
   final TextEditingController? controller;
@@ -34,6 +35,7 @@ class DTextFormField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final Widget? suffixWidget;
   final double height;
+  final int maxlines;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,7 @@ class DTextFormField extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: Theme.of(context).textTheme.bodyMedium),
+          Text(title, style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: DSizes.sm),
           SizedBox(
             height: height,
@@ -54,6 +56,7 @@ class DTextFormField extends StatelessWidget {
               readOnly: readOnly,
               autofocus: false,
               controller: controller,
+              maxLines: maxlines,
               keyboardType: keyboardType,
               cursorColor: cursorColor,
               textAlignVertical: TextAlignVertical.center,
@@ -61,29 +64,25 @@ class DTextFormField extends StatelessWidget {
               style: Theme.of(context).textTheme.bodySmall,
               decoration: InputDecoration(
                 hintText: hintText,
-                hintStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
+                hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color:
                       isDark
                           ? DColors.light.withValues(alpha: 0.7)
                           : DColors.dark.withValues(alpha: 0.7),
                 ),
                 isDense: isDense,
-                prefixIcon: Icon(prefixIcon, size: 16, color: Colors.grey),
+                prefixIcon: Icon(prefixIcon, size: 18, color: Colors.grey),
                 suffixIcon:
                     suffixWidget ??
                     (suffixIcon != null
                         ? IconButton(
                           onPressed: onIconPressed,
-                          icon: Icon(suffixIcon, size: 16, color: Colors.grey),
+                          icon: Icon(suffixIcon, size: 18, color: Colors.grey),
                         )
                         : null),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(DSizes.borderRadiusLg),
                   borderSide: const BorderSide(color: DColors.borderPrimary),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(DSizes.inputFieldRadius),
-                  borderSide: const BorderSide(color: DColors.primary),
                 ),
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: DSizes.md,

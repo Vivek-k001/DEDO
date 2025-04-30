@@ -29,7 +29,7 @@ class DBHelper {
             "title STRING, note TEXT, date STRING, "
             "startTime STRING, endTime STRING, "
             "remind INTEGER, repeat STRING, "
-            "color INTEGER, isCompleted BOOLEAN)",
+            "colorIndex INTEGER, isCompleted INTEGER)",
           );
         },
       );

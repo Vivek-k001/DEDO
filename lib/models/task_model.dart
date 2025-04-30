@@ -6,7 +6,7 @@ class TaskModel {
   String date;
   String startTime;
   String endTime;
-  int color;
+  int colorIndex;
   int remind;
   String repeat;
 
@@ -18,7 +18,7 @@ class TaskModel {
     this.date = '',
     this.startTime = '',
     this.endTime = '',
-    this.color = 0,
+    this.colorIndex = 0,
     this.remind = 0,
     this.repeat = '',
   });
@@ -31,7 +31,7 @@ class TaskModel {
       date = json['date'] ?? '',
       startTime = json['startTime'] ?? '',
       endTime = json['endTime'] ?? '',
-      color = json['color'] ?? 0,
+      colorIndex = json['colorIndex'] ?? 0,
       remind = json['remind'] ?? 0,
       repeat = json['repeat'] ?? '';
 
@@ -44,7 +44,7 @@ class TaskModel {
       'date': date,
       'startTime': startTime,
       'endTime': endTime,
-      'color': color,
+      'colorIndex': colorIndex,
       'remind': remind,
       'repeat': repeat,
     };

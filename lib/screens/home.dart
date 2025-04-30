@@ -2,7 +2,6 @@ import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:dedo/bloc/task/task_bloc.dart';
 import 'package:dedo/bloc/theme/theme_bloc.dart';
 import 'package:dedo/models/task_model.dart';
-import 'package:dedo/screens/add_task.dart';
 import 'package:dedo/services/notification_service.dart';
 import 'package:dedo/utils/constants/colors.dart';
 import 'package:dedo/utils/constants/sizes.dart';
@@ -82,17 +81,6 @@ class HomePage extends StatelessWidget {
         ],
       ),
 
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: DColors.primary,
-        onPressed:
-            () => DHelperFunctions.navigateToScreen(
-              context,
-              const AddTaskScreen(),
-            ),
-        tooltip: "Add Task",
-        child: const Icon(Icons.add),
-      ),
-
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: DSizes.md,
@@ -101,23 +89,13 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(left: DSizes.sm),
-              child: Text(
-                DHelperFunctions.formatDate(DateTime.now()),
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-            ),
-
-            const SizedBox(height: DSizes.spaceBtwItems),
-
             Container(
               padding: const EdgeInsets.all(DSizes.sm),
               decoration: BoxDecoration(
                 color:
                     DHelperFunctions.isDarkMode(context)
                         ? DColors.darkerGrey
-                        : DColors.darkGrey,
+                        : const Color(0xFFCCC0C0),
                 borderRadius: BorderRadius.circular(DSizes.sm),
               ),
               child: DatePicker(
@@ -166,6 +144,7 @@ class HomePage extends StatelessWidget {
                       message: "Error ${state.message}",
                       icon: Icons.error,
                       context: context,
+                      bgColor: Colors.red,
                     );
                   }
                 },
@@ -201,7 +180,7 @@ class HomePage extends StatelessWidget {
                                     date: task.date,
                                     repeat: task.repeat,
                                     remind: task.remind,
-                                    colorIndex: task.color,
+                                    colorIndex: task.colorIndex,
                                     isCompleted:
                                         task.isCompleted == 1 ? true : false,
                                   ),
@@ -245,69 +224,72 @@ class HomePage extends StatelessWidget {
               topRight: Radius.circular(DSizes.sm),
             ),
           ),
-          child: Column(
-            children: [
-              SizedBox(height: DSizes.spaceBtwSections),
+          child: Center(
+            child: Column(
+              children: [
+                SizedBox(height: DSizes.spaceBtwSections),
 
-              DButton(
-                onTap: () {
-                  context.read<TaskBloc>().add(
-                    UpdateSingleField(
-                      task.id!,
-                      "isCompleted",
-                      task.isCompleted == 0 ? 1 : 0,
-                    ),
-                  );
-                  DHelperFunctions.showSnackBar(
-                    title: "Success",
-                    message: "Task updated successfully!",
-                    icon: Icons.check_circle,
-                    bgColor: Colors.green,
-                    context: context,
-                  );
-                  Navigator.pop(context);
-                },
-                btnTitle: isCompleted ? "Mark as Pending" : "Mark as Completed",
-                width: double.infinity,
-                height: 55,
-                btnColor: Colors.blue,
-                showBorder: true,
-              ),
+                DButton(
+                  onTap: () {
+                    context.read<TaskBloc>().add(
+                      UpdateSingleField(
+                        task.id!,
+                        "isCompleted",
+                        task.isCompleted == 0 ? 1 : 0,
+                      ),
+                    );
+                    DHelperFunctions.showSnackBar(
+                      title: "Success",
+                      message: "Task updated successfully!",
+                      icon: Icons.check_circle,
+                      bgColor: Colors.green,
+                      context: context,
+                    );
+                    Navigator.pop(context);
+                  },
+                  btnTitle:
+                      isCompleted ? "Mark as Pending" : "Mark as Completed",
+                  width: double.infinity,
+                  height: 55,
+                  btnColor: Colors.blue,
+                  showBorder: true,
+                ),
 
-              SizedBox(height: DSizes.spaceBtwItems),
+                SizedBox(height: DSizes.spaceBtwItems),
 
-              DButton(
-                onTap: () {
-                  context.read<TaskBloc>().add(DeleteTask(task.id!));
-                  DHelperFunctions.showSnackBar(
-                    title: "Success",
-                    message: "Task deleted successfully!",
-                    icon: Icons.check_circle,
-                    context: context,
-                    bgColor: Colors.green,
-                  );
-                  Navigator.pop(context);
-                },
-                btnTitle: "Delete Task",
-                width: double.infinity,
-                height: 55,
-                btnColor: Colors.red,
-                showBorder: true,
-              ),
+                DButton(
+                  onTap: () {
+                    context.read<TaskBloc>().add(DeleteTask(task.id!));
+                    DHelperFunctions.showSnackBar(
+                      title: "Success",
+                      message: "Task deleted successfully!",
+                      icon: Icons.check_circle,
+                      context: context,
+                      bgColor: Colors.green,
+                    );
+                    Navigator.pop(context);
+                  },
+                  btnTitle: "Delete Task",
+                  width: double.infinity,
+                  height: 55,
+                  btnColor: Colors.red,
+                  showBorder: true,
+                ),
 
-              SizedBox(height: DSizes.spaceBtwItems),
+                SizedBox(height: DSizes.spaceBtwItems),
 
-              DButton(
-                onTap: () => Navigator.pop(context),
-                btnTitle: "Close",
-                width: double.infinity,
-                height: 55,
-                btnColor: Colors.white70,
-                showBorder: true,
-              ),
+                DButton(
+                  onTap: () => Navigator.pop(context),
+                  btnTitle: "Close",
+                  width: double.infinity,
+                  height: 55,
+                  btnColor: Colors.white70,
+                  showBorder: true,
+                ),
 
-              SizedBox(height: DSizes.spaceBtwSections),
-            ],
+                SizedBox(height: DSizes.spaceBtwSections),
+              ],
+            ),
           ),
         );
       },

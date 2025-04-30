@@ -53,7 +53,7 @@ class DHelperFunctions {
     required String message,
     required IconData icon,
     required BuildContext context,
-    Color bgColor = Colors.red,
+    required Color bgColor,
     Duration duration = const Duration(seconds: 3),
     SnackBarAction? action,
   }) {
@@ -61,6 +61,7 @@ class DHelperFunctions {
       SnackBar(
         content: Container(
           padding: const EdgeInsets.all(DSizes.sm),
+          width: double.infinity,
           height: 80,
           decoration: BoxDecoration(
             color: bgColor,
@@ -83,11 +84,11 @@ class DHelperFunctions {
                     const SizedBox(height: DSizes.xs),
                     Text(
                       message,
-                      maxLines: 2,
+                      maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(
                         context,
-                      ).textTheme.labelSmall!.copyWith(color: Colors.white70),
+                      ).textTheme.bodyMedium!.copyWith(color: Colors.white70),
                     ),
                   ],
                 ),
@@ -95,7 +96,7 @@ class DHelperFunctions {
             ],
           ),
         ),
-        backgroundColor: Colors.transparent,
+        // backgroundColor: Colors.transparent,
         duration: duration,
         action: action,
         behavior: SnackBarBehavior.floating,

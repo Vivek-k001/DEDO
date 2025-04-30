@@ -1,9 +1,9 @@
 import 'package:dedo/bloc/task/task_bloc.dart';
 import 'package:dedo/bloc/theme/theme_bloc.dart';
 import 'package:dedo/db/db_helper.dart';
+import 'package:dedo/screens/main.dart';
 import 'package:dedo/services/notification_service.dart';
 import 'package:dedo/utils/constants/text.dart';
-import 'package:dedo/screens/home.dart';
 import 'package:dedo/utils/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
           theme: DAppTheme.lightTheme,
           darkTheme: DAppTheme.darkTheme,
           title: DTexts.appName,
-          home: const HomePage(),
+          home: const MainPage(),
         );
       },
     );

@@ -10,7 +10,7 @@ class DAppbarTheme {
     elevation: 2,
     centerTitle: false,
     scrolledUnderElevation: 0,
-    backgroundColor: DColors.light,
+    backgroundColor: DColors.primary,
     surfaceTintColor: Colors.transparent,
     iconTheme: IconThemeData(color: DColors.textPrimary, size: DSizes.iconMd),
   );
@@ -20,7 +20,7 @@ class DAppbarTheme {
     elevation: 2,
     centerTitle: false,
     scrolledUnderElevation: 0,
-    backgroundColor: Colors.transparent,
+    backgroundColor: DColors.primary,
     surfaceTintColor: Colors.transparent,
     iconTheme: IconThemeData(color: Colors.white, size: DSizes.iconMd),
   );
