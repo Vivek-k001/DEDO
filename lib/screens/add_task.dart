@@ -44,14 +44,19 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         if (state is TaskSuccess) {
           Navigator.pop(context);
           DHelperFunctions.showSnackBar(
+            title: "Success",
             message: "Task added successfully! ID: ${state.taskId}",
+            icon: Icons.check_circle,
             context: context,
             bgColor: Colors.green,
           );
         } else if (state is TaskError) {
           DHelperFunctions.showSnackBar(
+            title: "Error",
             message: "Error: ${state.message}",
+            icon: Icons.error,
             context: context,
+            bgColor: Colors.red,
           );
         }
       },
@@ -284,7 +289,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
     if (title.isEmpty || note.isEmpty) {
       DHelperFunctions.showSnackBar(
+        title: "Error",
         message: 'Please fill out all fields.',
+        icon: Icons.error,
+        bgColor: Colors.red,
         context: context,
       );
       return;

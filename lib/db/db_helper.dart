@@ -51,4 +51,26 @@ class DBHelper {
   static Future<int> delete(int taskId) async {
     return await _db!.delete(_tableName, where: 'id = ?', whereArgs: [taskId]);
   }
+
+  static Future<int> update(TaskModel task) async {
+    return await _db!.update(
+      _tableName,
+      task.toJson(),
+      where: 'id = ?',
+      whereArgs: [task.id],
+    );
+  }
+
+  static Future<int> updateSingleField(
+    int taskId,
+    String field,
+    dynamic value,
+  ) async {
+    return await _db!.update(
+      _tableName,
+      {field: value},
+      where: 'id = ?',
+      whereArgs: [taskId],
+    );
+  }
 }

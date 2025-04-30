@@ -25,6 +25,17 @@ class UpdateTask extends TaskEvent {
   List<Object?> get props => [task];
 }
 
+class UpdateSingleField extends TaskEvent {
+  final int taskId;
+  final String field;
+  final dynamic value;
+
+  UpdateSingleField(this.taskId, this.field, this.value);
+
+  @override
+  List<Object?> get props => [taskId, field, value];
+}
+
 class DeleteTask extends TaskEvent {
   final int taskId;
 

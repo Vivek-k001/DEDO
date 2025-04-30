@@ -11,12 +11,14 @@ class DButton extends StatelessWidget {
     required this.height,
     this.btnColor,
     this.textColor,
+    this.showBorder = false,
   });
 
   final Function()? onTap;
   final String btnTitle;
   final double width, height;
   final Color? btnColor, textColor;
+  final bool showBorder;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +30,8 @@ class DButton extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(DSizes.buttonRadius),
           color: btnColor ?? DColors.primary,
+          border:
+              showBorder ? Border.all(color: DColors.primary, width: 2) : null,
         ),
         child: Center(
           child: Text(btnTitle, style: Theme.of(context).textTheme.bodyMedium),

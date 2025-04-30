@@ -1,6 +1,5 @@
 import 'package:dedo/utils/constants/colors.dart';
 import 'package:dedo/utils/constants/sizes.dart';
-import 'package:dedo/utils/helper_functions.dart';
 import 'package:flutter/material.dart';
 
 class DTaskTile extends StatelessWidget {
@@ -14,7 +13,7 @@ class DTaskTile extends StatelessWidget {
     required this.date,
     required this.repeat,
     required this.remind,
-    required this.color,
+    required this.colorIndex,
     required this.isCompleted,
   });
 
@@ -22,23 +21,21 @@ class DTaskTile extends StatelessWidget {
   final String title, note;
   final String startTime, endTime, date, repeat;
   final int remind;
-  final int color;
+  final int colorIndex;
   final bool isCompleted;
 
   @override
   Widget build(BuildContext context) {
-    final isDark = DHelperFunctions.isDarkMode(context);
-
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(DSizes.md),
       margin: EdgeInsets.only(bottom: DSizes.sm + DSizes.xs),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(DSizes.md),
-        color: bgColor ?? (isDark ? DColors.darkerGrey : DColors.lightGrey),
+        color: bgColor ?? _getColor(colorIndex),
         boxShadow: [
           BoxShadow(
-            color: isDark ? Colors.black12 : Colors.grey.shade300,
+            color: Colors.grey.shade300,
             blurRadius: 6,
             offset: const Offset(0, 3),
           ),
@@ -49,8 +46,15 @@ class DTaskTile extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: Theme.of(context).textTheme.titleLarge),
+              Text(
+                title,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge!.copyWith(color: DColors.darkGrey),
+              ),
+
               SizedBox(height: DSizes.spaceBtwItems),
+
               Row(
                 children: [
                   Icon(
@@ -58,10 +62,14 @@ class DTaskTile extends StatelessWidget {
                     size: 18,
                     color: DColors.primary,
                   ),
+
                   SizedBox(width: DSizes.sm),
+
                   Text(
                     "$startTime - $endTime",
-                    style: Theme.of(context).textTheme.bodySmall,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall!.copyWith(color: DColors.darkGrey),
                   ),
                 ],
               ),
@@ -72,28 +80,43 @@ class DTaskTile extends StatelessWidget {
                 note,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodyLarge,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge!.copyWith(color: DColors.darkGrey),
               ),
             ],
           ),
+
+          const Spacer(),
+
+          Container(height: 60, width: 1, color: DColors.darkGrey),
+
           const SizedBox(width: DSizes.sm),
-          Container(
-            height: 60,
-            width: 1,
-            color: isDark ? DColors.light : DColors.dark,
-          ),
-          const SizedBox(width: DSizes.sm),
+
           RotatedBox(
             quarterTurns: 3,
             child: Text(
               isCompleted ? "Completed" : "Pending",
               style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                color: isCompleted ? Colors.green : Colors.orange,
+                color: isCompleted ? Colors.greenAccent : Colors.deepOrange,
               ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  _getColor(int colorIndex) {
+    switch (colorIndex) {
+      case 0:
+        return Colors.red;
+      case 1:
+        return Colors.yellow;
+      case 2:
+        return Colors.blue;
+      default:
+        return Colors.red;
+    }
   }
 }

@@ -41,6 +41,21 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       }
     });
 
+    on<UpdateSingleField>((event, emit) async {
+      emit(TaskLoading());
+      try {
+        await DBHelper.updateSingleField(
+          event.taskId,
+          event.field,
+          event.value,
+        );
+        emit(TaskSuccess(event.taskId));
+        add(LoadTasks());
+      } catch (e) {
+        emit(TaskError(e.toString()));
+      }
+    });
+
     add(LoadTasks());
   }
 }

@@ -29,43 +29,43 @@ class DTextTheme {
     ),
     titleMedium: GoogleFonts.poppins(
       fontSize: 16.0,
-      fontWeight: FontWeight.w500,
+      fontWeight: FontWeight.w600,
       color: DColors.dark,
     ),
     titleSmall: GoogleFonts.lato(
       fontSize: 16.0,
-      fontWeight: FontWeight.w400,
+      fontWeight: FontWeight.w500,
       color: DColors.dark,
     ),
     bodyLarge: GoogleFonts.lato(
       fontSize: 14.0,
-      fontWeight: FontWeight.w500,
+      fontWeight: FontWeight.w600,
       color: DColors.dark,
     ),
     bodyMedium: GoogleFonts.lato(
-      fontSize: 16.0,
-      fontWeight: FontWeight.normal,
+      fontSize: 14.0,
+      fontWeight: FontWeight.w500,
       color: DColors.dark,
     ),
     bodySmall: GoogleFonts.lato(
       fontSize: 14.0,
-      fontWeight: FontWeight.w500,
-      color: DColors.dark.withValues(alpha: 0.5),
+      fontWeight: FontWeight.normal,
+      color: DColors.dark,
     ),
     labelLarge: GoogleFonts.lato(
       fontSize: 12.0,
-      fontWeight: FontWeight.normal,
+      fontWeight: FontWeight.w600,
       color: DColors.dark,
     ),
     labelMedium: GoogleFonts.lato(
       fontSize: 12.0,
       fontWeight: FontWeight.normal,
-      color: DColors.dark.withValues(alpha: 0.5),
+      color: DColors.dark,
     ),
     labelSmall: GoogleFonts.lato(
       fontSize: 10.0,
       fontWeight: FontWeight.normal,
-      color: DColors.dark.withValues(alpha: 0.5),
+      color: DColors.dark,
     ),
   );
 
@@ -82,54 +82,54 @@ class DTextTheme {
       color: DColors.light,
     ),
     headlineSmall: GoogleFonts.poppins(
-      fontSize: 18.0,
+      fontSize: 20.0,
       fontWeight: FontWeight.w600,
       color: DColors.light,
     ),
     titleLarge: GoogleFonts.poppins(
-      fontSize: 16.0,
+      fontSize: 18.0,
       fontWeight: FontWeight.w600,
       color: DColors.light,
     ),
     titleMedium: GoogleFonts.poppins(
       fontSize: 16.0,
-      fontWeight: FontWeight.w500,
+      fontWeight: FontWeight.w600,
       color: DColors.light,
     ),
     titleSmall: GoogleFonts.lato(
       fontSize: 16.0,
-      fontWeight: FontWeight.w400,
+      fontWeight: FontWeight.w500,
       color: DColors.light,
     ),
     bodyLarge: GoogleFonts.lato(
       fontSize: 14.0,
-      fontWeight: FontWeight.w500,
+      fontWeight: FontWeight.w600,
       color: DColors.light,
     ),
     bodyMedium: GoogleFonts.lato(
       fontSize: 14.0,
-      fontWeight: FontWeight.normal,
+      fontWeight: FontWeight.w500,
       color: DColors.light,
     ),
     bodySmall: GoogleFonts.lato(
       fontSize: 14.0,
-      fontWeight: FontWeight.w500,
-      color: DColors.light.withValues(alpha: 0.5),
+      fontWeight: FontWeight.normal,
+      color: DColors.light,
     ),
     labelLarge: GoogleFonts.lato(
       fontSize: 12.0,
-      fontWeight: FontWeight.normal,
+      fontWeight: FontWeight.w600,
       color: DColors.light,
     ),
     labelMedium: GoogleFonts.lato(
       fontSize: 12.0,
       fontWeight: FontWeight.normal,
-      color: DColors.light.withValues(alpha: 0.5),
+      color: DColors.light,
     ),
     labelSmall: GoogleFonts.lato(
       fontSize: 10.0,
       fontWeight: FontWeight.normal,
-      color: DColors.light.withValues(alpha: 0.5),
+      color: DColors.light,
     ),
   );
 }
