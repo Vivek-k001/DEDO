@@ -15,3 +15,21 @@ class AddTask extends TaskEvent {
   @override
   List<Object?> get props => [task];
 }
+
+class UpdateTask extends TaskEvent {
+  final TaskModel task;
+
+  UpdateTask(this.task);
+
+  @override
+  List<Object?> get props => [task];
+}
+
+class DeleteTask extends TaskEvent {
+  final int taskId;
+
+  DeleteTask(this.taskId);
+
+  @override
+  List<Object?> get props => [taskId];
+}

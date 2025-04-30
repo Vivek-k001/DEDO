@@ -172,7 +172,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                           return DropdownMenuItem<String>(
                             value: value.toString(),
                             child: Text(
-                              value.toString(),
+                              '$value minutes early',
                               style: Theme.of(context).textTheme.labelSmall,
                             ),
                           );

@@ -29,7 +29,7 @@ class DBHelper {
             "title STRING, note TEXT, date STRING, "
             "startTime STRING, endTime STRING, "
             "remind INTEGER, repeat STRING, "
-            "color INTEGER, isCompleted INTEGER)",
+            "color INTEGER, isCompleted BOOLEAN)",
           );
         },
       );
@@ -46,5 +46,9 @@ class DBHelper {
 
   static Future<int> insert(TaskModel task) async {
     return await _db!.insert(_tableName, task.toJson());
+  }
+
+  static Future<int> delete(int taskId) async {
+    return await _db!.delete(_tableName, where: 'id = ?', whereArgs: [taskId]);
   }
 }

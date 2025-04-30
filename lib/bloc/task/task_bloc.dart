@@ -29,5 +29,18 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         emit(TaskError(e.toString()));
       }
     });
+
+    on<DeleteTask>((event, emit) async {
+      emit(TaskLoading());
+      try {
+        await DBHelper.delete(event.taskId);
+        emit(TaskSuccess(event.taskId));
+        add(LoadTasks());
+      } catch (e) {
+        emit(TaskError(e.toString()));
+      }
+    });
+
+    add(LoadTasks());
   }
 }

@@ -1,4 +1,5 @@
 import 'package:date_picker_timeline/date_picker_widget.dart';
+import 'package:dedo/bloc/task/task_bloc.dart';
 import 'package:dedo/bloc/theme/theme_bloc.dart';
 import 'package:dedo/screens/add_task.dart';
 import 'package:dedo/services/notification_service.dart';
@@ -7,9 +8,11 @@ import 'package:dedo/utils/constants/sizes.dart';
 import 'package:dedo/utils/constants/text.dart';
 import 'package:dedo/utils/helper_functions.dart';
 import 'package:dedo/widgets/appbar.dart';
+import 'package:dedo/widgets/task_tile.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -99,7 +102,7 @@ class HomePage extends StatelessWidget {
               padding: const EdgeInsets.only(left: DSizes.sm),
               child: Text(
                 DHelperFunctions.formatDate(DateTime.now()),
-                style: Theme.of(context).textTheme.titleSmall,
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
             ),
 
@@ -111,7 +114,7 @@ class HomePage extends StatelessWidget {
                 color:
                     DHelperFunctions.isDarkMode(context)
                         ? DColors.darkerGrey
-                        : DColors.lightGrey,
+                        : DColors.darkGrey,
                 borderRadius: BorderRadius.circular(DSizes.sm),
               ),
               child: DatePicker(
@@ -131,6 +134,67 @@ class HomePage extends StatelessWidget {
                   selectedDate = date;
                   if (kDebugMode) {
                     print(selectedDate);
+                  }
+                },
+              ),
+            ),
+
+            const SizedBox(height: DSizes.spaceBtwItems),
+
+            Text("Tasks", style: Theme.of(context).textTheme.titleLarge),
+
+            const SizedBox(height: DSizes.spaceBtwItems),
+
+            /// Task List
+            Expanded(
+              child: BlocConsumer<TaskBloc, TaskState>(
+                listener: (context, state) {
+                  if (state is TaskError) {
+                    DHelperFunctions.showSnackBar(
+                      message: "Error ${state.message}",
+                      context: context,
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  if (state is TaskLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is TaskLoaded) {
+                    if (state.tasks.isEmpty) {
+                      return const Center(child: Text("No tasks available"));
+                    }
+                    return ListView.builder(
+                      itemCount: state.tasks.length,
+                      itemBuilder: (context, index) {
+                        final task = state.tasks[index];
+                        return AnimationConfiguration.staggeredList(
+                          position: index,
+                          child: SlideAnimation(
+                            child: Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {},
+                                  child: DTaskTile(
+                                    title: task.title,
+                                    note: task.note,
+                                    startTime: task.startTime,
+                                    endTime: task.endTime,
+                                    date: task.date,
+                                    repeat: task.repeat,
+                                    remind: task.remind,
+                                    color: task.color,
+                                    isCompleted:
+                                        task.isCompleted == 1 ? true : false,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    return const Center(child: Text("Tasks not found"));
                   }
                 },
               ),
