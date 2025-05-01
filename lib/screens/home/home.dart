@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                 width: 60,
                 initialSelectedDate: _selectedDate,
                 selectionColor: DColors.primary,
-                selectedTextColor: isDark ? DColors.light : DColors.dark,
+                selectedTextColor: DColors.dark,
                 dateTextStyle: Theme.of(context).textTheme.titleMedium!,
                 dayTextStyle: Theme.of(context).textTheme.bodyMedium!,
                 monthTextStyle: Theme.of(context).textTheme.bodySmall!,
@@ -263,8 +263,8 @@ class _HomePageState extends State<HomePage> {
         });
       },
       backgroundColor: isDark ? DColors.darkerGrey : DColors.lightContainer,
-      selectedColor: DColors.primary.withValues(alpha: 0.2),
-      checkmarkColor: isDark ? DColors.primary : DColors.darkerGrey,
+      selectedColor: DColors.primary,
+      checkmarkColor: DColors.darkerGrey,
     );
   }
 }

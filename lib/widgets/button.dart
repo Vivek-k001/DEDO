@@ -55,10 +55,10 @@ class DButton extends StatelessWidget {
                   color:
                       iconColor ??
                       (isDark ? DColors.darkerGrey : DColors.lightGrey),
-                  size: 16,
+                  size: 30,
                 ),
 
-              if (icon != null) const SizedBox(width: DSizes.sm),
+              if (icon != null) const SizedBox(width: DSizes.md),
 
               Text(
                 btnTitle,

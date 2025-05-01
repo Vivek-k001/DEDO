@@ -29,7 +29,7 @@ class _MainPageState extends State<MainPage> {
               const AddTaskScreen(),
             ),
         tooltip: "Add Task",
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: DColors.dark),
       ),
 
       bottomNavigationBar: DBottomNavbar(
