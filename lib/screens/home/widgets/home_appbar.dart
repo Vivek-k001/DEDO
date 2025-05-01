@@ -1,4 +1,5 @@
 import 'package:dedo/bloc/theme/theme_bloc.dart';
+import 'package:dedo/screens/category/category_screen.dart';
 import 'package:dedo/services/notification_service.dart';
 import 'package:dedo/utils/constants/colors.dart';
 import 'package:dedo/utils/constants/text.dart';
@@ -60,13 +61,18 @@ class DHomeAppbar extends StatelessWidget implements PreferredSizeWidget {
         /// Profile Icon
         IconButton(
           icon: Icon(
-            Icons.person,
+            Icons.category_sharp,
             color:
                 DHelperFunctions.isDarkMode(context)
                     ? DColors.light
                     : DColors.dark,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CategoryScreen()),
+            );
+          },
         ),
       ],
     );

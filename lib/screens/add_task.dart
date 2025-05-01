@@ -103,6 +103,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   hintText: "Enter your note",
                   prefixIcon: Icons.description,
                   controller: _noteController,
+                  maxlines: 2,
                 ),
 
                 DTextFormField(

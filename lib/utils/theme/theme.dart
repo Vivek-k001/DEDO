@@ -25,7 +25,7 @@ class DAppTheme {
     fontFamily: 'Poppins',
     brightness: Brightness.dark,
     primaryColor: DColors.primary,
-    scaffoldBackgroundColor: DColors.dark,
+    scaffoldBackgroundColor: DColors.black,
     disabledColor: DColors.darkGrey,
     appBarTheme: DAppbarTheme.darkAppbarTheme,
     textTheme: DTextTheme.darkTextTheme,

@@ -52,12 +52,12 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: DSizes.sm),
+              padding: const EdgeInsets.symmetric(vertical: DSizes.xs),
               decoration: BoxDecoration(
-                color: isDark ? DColors.darkerGrey : DColors.lightContainer,
+                color: isDark ? DColors.black : DColors.lightContainer,
                 borderRadius: BorderRadius.circular(DSizes.md),
                 border: Border.all(
-                  color: isDark ? DColors.darkGrey : DColors.lightGrey,
+                  color: isDark ? DColors.black : DColors.lightGrey,
                 ),
               ),
               child: DTextFormField(
@@ -87,9 +87,9 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: DSizes.spaceBtwItems),
 
             Container(
-              padding: const EdgeInsets.all(DSizes.sm),
+              padding: const EdgeInsets.symmetric(vertical: DSizes.xs),
               decoration: BoxDecoration(
-                color: isDark ? DColors.darkerGrey : DColors.lightContainer,
+                color: isDark ? DColors.black : DColors.lightContainer,
                 borderRadius: BorderRadius.circular(DSizes.sm),
               ),
               child: DatePicker(
@@ -115,7 +115,7 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: DSizes.spaceBtwItems),
 
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: DSizes.md),
+              padding: const EdgeInsets.symmetric(vertical: DSizes.xs),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
