@@ -4,6 +4,7 @@ import 'package:dedo/bloc/categories/categories_state.dart';
 import 'package:dedo/models/category_model.dart';
 import 'package:dedo/screens/category/widgets/category_item.dart';
 import 'package:dedo/utils/constants/colors.dart';
+import 'package:dedo/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -86,9 +87,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   }).toList(),
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _addCategory,
-              child: const Text('Add Category'),
+            Center(
+              child: DButton(
+                btnTitle: 'Add Category',
+                width: 140,
+                height: 50,
+                onTap: () => _addCategory(),
+              ),
             ),
             const SizedBox(height: 24),
             const Text('Your Categories:'),

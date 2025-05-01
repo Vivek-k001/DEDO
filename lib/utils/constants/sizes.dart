@@ -30,7 +30,7 @@ class DSizes {
 
   // Spacing
   static const double defaultSpace = 16.0;
-  static const double spaceBtwItems = 8.0;
+  static const double spaceBtwItems = 2.0;
   static const double spaceBtwSections = 32.0;
   static const double spaceBtwInputFields = 16.0;
 

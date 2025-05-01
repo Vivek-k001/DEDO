@@ -1,6 +1,9 @@
+import 'package:dedo/bloc/categories/categories_bloc.dart';
 import 'package:dedo/bloc/task/task_bloc.dart';
 import 'package:dedo/bloc/theme/theme_bloc.dart';
+import 'package:dedo/db/database_provider.dart';
 import 'package:dedo/db/db_helper.dart';
+import 'package:dedo/repositories/category_repository.dart';
 import 'package:dedo/screens/main.dart';
 import 'package:dedo/services/notification_service.dart';
 import 'package:dedo/utils/constants/text.dart';
@@ -17,12 +20,19 @@ void main() async {
 
   await NotificationService().requestNotificationPermission();
   await NotificationService().initNotification();
-
+  final dbHelper = DBHelper(); // Create DBHelper instance
+  final databaseProvider = DatabaseProvider(
+    dbHelper,
+  ); // Pass it to DatabaseProvider
+  final categoryRepository = CategoryRepository(
+    databaseProvider,
+  ); // Create CategoryRepository
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => ThemeBloc()),
         BlocProvider(create: (context) => TaskBloc()),
+        BlocProvider(create: (context) => CategoryBloc(categoryRepository)),
       ],
       child: const MyApp(),
     ),

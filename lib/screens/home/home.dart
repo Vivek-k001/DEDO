@@ -30,6 +30,15 @@ class _HomePageState extends State<HomePage> {
   String searchQuery = '';
   final _searchController = TextEditingController();
 
+  final List<String> categories = [
+    "Health",
+    "Payments",
+    "Work",
+    "Study",
+    "Studyf",
+    "Studys",
+    "Studyr",
+  ];
   @override
   void dispose() {
     _searchController.dispose();
@@ -44,15 +53,12 @@ class _HomePageState extends State<HomePage> {
       appBar: DHomeAppbar(),
 
       body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: DSizes.md,
-          vertical: DSizes.sm,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: DSizes.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(vertical: DSizes.xs),
+              padding: const EdgeInsets.all(0),
               decoration: BoxDecoration(
                 color: isDark ? DColors.black : DColors.lightContainer,
                 borderRadius: BorderRadius.circular(DSizes.md),
@@ -94,8 +100,8 @@ class _HomePageState extends State<HomePage> {
               ),
               child: DatePicker(
                 DateTime.now(),
-                height: 100,
-                width: 80,
+                height: 90,
+                width: 60,
                 initialSelectedDate: _selectedDate,
                 selectionColor: DColors.primary,
                 selectedTextColor: isDark ? DColors.light : DColors.dark,
@@ -113,7 +119,58 @@ class _HomePageState extends State<HomePage> {
             ),
 
             const SizedBox(height: DSizes.spaceBtwItems),
-
+            Container(
+              height: 90,
+              padding: const EdgeInsets.symmetric(vertical: DSizes.xs),
+              decoration: BoxDecoration(
+                color: isDark ? DColors.black : DColors.lightContainer,
+                borderRadius: BorderRadius.circular(DSizes.sm),
+              ),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children:
+                      categories.map((category) {
+                        return Container(
+                          margin: EdgeInsets.only(right: 12),
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 1,
+                                blurRadius: 5,
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "2 todos",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: const Color.fromARGB(255, 0, 0, 0),
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                category,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                ),
+              ),
+            ),
+            const SizedBox(height: DSizes.spaceBtwItems),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: DSizes.xs),
               child: Row(
