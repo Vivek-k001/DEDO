@@ -1,4 +1,7 @@
+import 'package:dedo/bloc/categories/categories_bloc.dart';
+import 'package:dedo/bloc/categories/categories_state.dart';
 import 'package:dedo/bloc/task/task_bloc.dart';
+import 'package:dedo/models/category_model.dart';
 import 'package:dedo/models/task_model.dart';
 import 'package:dedo/screens/add_task/widgets/add_task_header.dart';
 import 'package:dedo/utils/constants/sizes.dart';
@@ -22,7 +25,7 @@ class AddTaskScreen extends StatefulWidget {
 class _AddTaskScreenState extends State<AddTaskScreen> {
   final _titleController = TextEditingController();
   final _noteController = TextEditingController();
-
+  Category? selectedCategory;
   String _selectedDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
 
   String startTime = DateFormat('hh:mm a').format(DateTime.now());
@@ -202,49 +205,111 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   ),
                 ),
 
-                Padding(
-                  padding: const EdgeInsets.only(top: DSizes.sm),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Color',
-                        style: Theme.of(context).textTheme.titleSmall,
+                Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: DSizes.sm),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Color',
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+
+                            const SizedBox(height: DSizes.sm),
+
+                            Wrap(
+                              children: List<Widget>.generate(
+                                _colorOptions.length,
+                                (index) {
+                                  final color = _colorOptions[index];
+                                  return GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedColorIndex = index;
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                        right: DSizes.sm,
+                                      ),
+                                      child: CircleAvatar(
+                                        radius: 14,
+                                        backgroundColor: color,
+                                        child:
+                                            _selectedColorIndex == index
+                                                ? Icon(
+                                                  Icons.done,
+                                                  color: Colors.white,
+                                                  size: DSizes.iconSm,
+                                                )
+                                                : null,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-
-                      const SizedBox(height: DSizes.sm),
-
-                      Wrap(
-                        children: List<Widget>.generate(_colorOptions.length, (
-                          index,
-                        ) {
-                          final color = _colorOptions[index];
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _selectedColorIndex = index;
-                              });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: DSizes.sm),
-                              child: CircleAvatar(
-                                radius: 14,
-                                backgroundColor: color,
-                                child:
-                                    _selectedColorIndex == index
-                                        ? Icon(
-                                          Icons.done,
-                                          color: Colors.white,
-                                          size: DSizes.iconSm,
-                                        )
-                                        : null,
+                    ),
+                    BlocBuilder<CategoryBloc, CategoryState>(
+                      builder: (context, state) {
+                        if (state is CategoryLoading) {
+                          return CircularProgressIndicator();
+                        } else if (state is CategoryLoaded) {
+                          return Expanded(
+                            child: DTextFormField(
+                              hintText:
+                                  selectedCategory?.name ?? "Select Category",
+                              prefixIcon: Icons.category,
+                              title: "Category",
+                              readOnly: true,
+                              suffixWidget: DDropdown<Category>(
+                                value: selectedCategory,
+                                onChanged: (Category? newValue) {
+                                  setState(() {
+                                    selectedCategory = newValue;
+                                  });
+                                },
+                                items:
+                                    state.categories.map((Category category) {
+                                      return DropdownMenuItem<Category>(
+                                        value: category,
+                                        child: Row(
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 6,
+                                              backgroundColor: Color(
+                                                category.color,
+                                              ),
+                                            ),
+                                            SizedBox(width: 8),
+                                            Text(
+                                              category.name,
+                                              style:
+                                                  Theme.of(
+                                                    context,
+                                                  ).textTheme.bodySmall,
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }).toList(),
                               ),
                             ),
                           );
-                        }),
-                      ),
-                    ],
-                  ),
+                        } else if (state is CategoryError) {
+                          return Text('Error: ${state.message}');
+                        } else {
+                          return const Text('No categories found.');
+                        }
+                      },
+                    ),
+                  ],
                 ),
 
                 const SizedBox(height: DSizes.spaceBtwSections),
@@ -331,4 +396,21 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
     context.read<TaskBloc>().add(AddTask(task));
   }
+}
+
+List<DropdownMenuItem<Category>> buildCategoryDropdownItems(
+  List<Category> categories,
+) {
+  return categories.map((category) {
+    return DropdownMenuItem<Category>(
+      value: category,
+      child: Row(
+        children: [
+          CircleAvatar(radius: 6, backgroundColor: Color(category.color)),
+          SizedBox(width: 8),
+          Text(category.name),
+        ],
+      ),
+    );
+  }).toList();
 }

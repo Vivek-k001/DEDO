@@ -5,6 +5,7 @@ import 'package:dedo/models/category_model.dart';
 import 'package:dedo/screens/category/widgets/category_item.dart';
 import 'package:dedo/utils/constants/colors.dart';
 import 'package:dedo/widgets/button.dart';
+import 'package:dedo/widgets/text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -51,13 +52,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(
+            DTextFormField(
+              title: "Title",
+              hintText: "Enter your title",
+              prefixIcon: Icons.title,
               controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: 'Category Name',
-                border: OutlineInputBorder(),
-              ),
             ),
+
             const SizedBox(height: 16),
             const Text('Select Color:'),
             const SizedBox(height: 8),
