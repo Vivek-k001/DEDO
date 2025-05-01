@@ -8,6 +8,7 @@ class DBHelper {
   static final int _version = 1;
 
   static final String _tableName = 'tasks';
+
   Future<Database> get database async {
     if (_database != null) return _database!;
     return _database!;

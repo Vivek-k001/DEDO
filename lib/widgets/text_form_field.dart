@@ -21,6 +21,7 @@ class DTextFormField extends StatelessWidget {
     this.onChanged,
     this.height = 52,
     this.maxlines = 1,
+    this.validator,
   });
 
   final TextEditingController? controller;
@@ -36,6 +37,7 @@ class DTextFormField extends StatelessWidget {
   final Widget? suffixWidget;
   final double height;
   final int maxlines;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -48,10 +50,33 @@ class DTextFormField extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (title.isNotEmpty)
-            Text(title, style: Theme.of(context).textTheme.titleMedium),
-          if (title.isNotEmpty) const SizedBox(height: DSizes.sm),
-          SizedBox(
-            height: height,
+            Padding(
+              padding: const EdgeInsets.only(bottom: DSizes.xs),
+              child: Text(
+                title,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            height: maxlines > 1 ? height * maxlines * 0.7 : height,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(DSizes.borderRadiusLg),
+              boxShadow: [
+                BoxShadow(
+                  color:
+                      isDark
+                          ? Colors.black12
+                          : Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 5,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
             child: TextFormField(
               onTap: onTap,
               readOnly: readOnly,
@@ -62,35 +87,69 @@ class DTextFormField extends StatelessWidget {
               cursorColor: cursorColor,
               textAlignVertical: TextAlignVertical.center,
               onChanged: onChanged,
-              style: Theme.of(context).textTheme.bodySmall,
+              validator: validator,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: isDark ? DColors.light : DColors.dark,
+              ),
               decoration: InputDecoration(
                 hintText: hintText,
                 hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color:
                       isDark
-                          ? DColors.light.withValues(alpha: 0.7)
-                          : DColors.dark.withValues(alpha: 0.7),
+                          ? DColors.light.withValues(alpha: 0.5)
+                          : DColors.dark.withValues(alpha: 0.5),
                 ),
                 isDense: isDense,
-                prefixIcon: Icon(prefixIcon, size: 18, color: Colors.grey),
+                prefixIcon: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: DSizes.sm),
+                  child: Icon(
+                    prefixIcon,
+                    size: 20,
+                    color: isDark ? DColors.grey : DColors.grey,
+                  ),
+                ),
                 suffixIcon:
                     suffixWidget ??
                     (suffixIcon != null
                         ? IconButton(
                           onPressed: onIconPressed,
-                          icon: Icon(suffixIcon, size: 18, color: Colors.grey),
+                          icon: Icon(
+                            suffixIcon,
+                            size: 20,
+                            color: isDark ? DColors.grey : DColors.grey,
+                          ),
                         )
                         : null),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(DSizes.borderRadiusLg),
-                  borderSide: const BorderSide(color: DColors.borderPrimary),
+                  borderSide: BorderSide(
+                    color: isDark ? DColors.darkGrey : DColors.lightGrey,
+                    width: 1.0,
+                  ),
                 ),
-                contentPadding: const EdgeInsets.symmetric(
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(DSizes.borderRadiusLg),
+                  borderSide: BorderSide(
+                    color: isDark ? DColors.darkGrey : DColors.lightGrey,
+                    width: 1.0,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(DSizes.borderRadiusLg),
+                  borderSide: BorderSide(color: DColors.primary, width: 1.5),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(DSizes.borderRadiusLg),
+                  borderSide: BorderSide(color: Colors.red, width: 1.0),
+                ),
+                contentPadding: EdgeInsets.symmetric(
                   horizontal: DSizes.md,
-                  vertical: DSizes.sm,
+                  vertical: maxlines > 1 ? DSizes.md : DSizes.sm,
                 ),
                 filled: true,
-                fillColor: fillColor ?? (isDark ? DColors.dark : DColors.light),
+                fillColor:
+                    fillColor ??
+                    (isDark ? DColors.darkerGrey : DColors.lightGrey),
               ),
             ),
           ),

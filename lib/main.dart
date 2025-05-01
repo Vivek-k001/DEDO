@@ -20,13 +20,13 @@ void main() async {
 
   await NotificationService().requestNotificationPermission();
   await NotificationService().initNotification();
-  final dbHelper = DBHelper(); // Create DBHelper instance
-  final databaseProvider = DatabaseProvider(
-    dbHelper,
-  ); // Pass it to DatabaseProvider
-  final categoryRepository = CategoryRepository(
-    databaseProvider,
-  ); // Create CategoryRepository
+
+  final dbHelper = DBHelper();
+
+  final databaseProvider = DatabaseProvider(dbHelper);
+
+  final categoryRepository = CategoryRepository(databaseProvider);
+
   runApp(
     MultiBlocProvider(
       providers: [

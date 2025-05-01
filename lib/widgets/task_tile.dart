@@ -30,7 +30,7 @@ class DTaskTile extends StatelessWidget {
       margin: EdgeInsets.only(bottom: DSizes.sm + DSizes.xs),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(DSizes.md),
-        color: _getColor(colorIndex).withOpacity(0.3),
+        color: _getColor(colorIndex),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -1,8 +1,10 @@
 import 'package:dedo/bloc/task/task_bloc.dart';
 import 'package:dedo/models/task_model.dart';
+import 'package:dedo/screens/add_task/widgets/add_task_header.dart';
 import 'package:dedo/utils/constants/sizes.dart';
 import 'package:dedo/widgets/appbar.dart';
 import 'package:dedo/widgets/button.dart';
+import 'package:dedo/widgets/dropdown.dart';
 import 'package:dedo/widgets/text_form_field.dart';
 import 'package:dedo/utils/helper_functions.dart';
 import 'package:flutter/material.dart';
@@ -23,14 +25,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   String _selectedDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
 
-  String _startTime = DateFormat('hh:mm a').format(DateTime.now());
+  final String _startTime = DateFormat('hh:mm a').format(DateTime.now());
 
-  String _endTime = DateFormat(
+  final String _endTime = DateFormat(
     'hh:mm a',
   ).format(DateTime.now().add(Duration(hours: 3)));
 
   int _selectedRemind = 5;
-  List<int> remindList = [5, 10, 15, 20];
+  List<int> remindList = [5, 10, 15, 20, 30, 60];
 
   String _selectedRepeat = 'None';
   List<String> repeatList = ["None", "Daily", "Weakly", "Monthly"];
@@ -76,20 +78,20 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         }
       },
       child: Scaffold(
-        appBar: DAppBar(showBackArrow: true),
+        appBar: DAppBar(
+          showBackArrow: true,
+          title: Text(
+            "Add Task",
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+        ),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(DSizes.md),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(
-                  child: Text(
-                    "Add Task",
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                ),
-                const SizedBox(height: DSizes.spaceBtwItems),
+                AddTaskHeader(),
 
                 DTextFormField(
                   title: "Title",
@@ -111,18 +113,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   hintText: _selectedDate,
                   prefixIcon: FontAwesomeIcons.calendar,
                   readOnly: true,
+                  suffixIcon: Icons.calendar_today,
+                  onIconPressed: () async {
+                    await _selectDateFromPicker(context);
+                  },
                   onTap: () async {
-                    DateTime? pickerDate = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime.now().add(Duration(days: 365)),
-                    );
-                    setState(() {
-                      _selectedDate = DateFormat(
-                        'dd/MM/yyyy',
-                      ).format(pickerDate ?? DateTime.now());
-                    });
+                    await _selectDateFromPicker(context);
                   },
                 ),
 
@@ -135,16 +131,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         title: "Start Time",
                         readOnly: true,
                         onTap: () async {
-                          TimeOfDay? pickerStartTime = await showTimePicker(
-                            context: context,
-                            initialTime: TimeOfDay.now(),
-                          );
-                          setState(() {
-                            _startTime =
-                                pickerStartTime != null
-                                    ? pickerStartTime.format(context)
-                                    : _startTime;
-                          });
+                          await _selectTimeFromPicker(context, _startTime);
                         },
                       ),
                     ),
@@ -158,17 +145,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         title: "End Time",
                         readOnly: true,
                         onTap: () async {
-                          TimeOfDay? pickerEndTime = await showTimePicker(
-                            context: context,
-                            initialTime: TimeOfDay.now(),
-                          );
-
-                          setState(() {
-                            _endTime =
-                                pickerEndTime != null
-                                    ? pickerEndTime.format(context)
-                                    : _endTime;
-                          });
+                          await _selectTimeFromPicker(context, _endTime);
                         },
                       ),
                     ),
@@ -176,16 +153,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 ),
 
                 DTextFormField(
-                  hintText: "$_selectedRemind minutes",
-                  prefixIcon: Icons.closed_caption,
-                  title: "Remind",
+                  hintText: "$_selectedRemind minutes before",
+                  prefixIcon: Icons.notifications_active,
+                  title: "Reminder",
                   readOnly: true,
-                  suffixWidget: DropdownButton(
-                    icon: Icon(Icons.keyboard_arrow_down, color: Colors.grey),
-                    iconSize: 32,
-                    elevation: 4,
-                    style: Theme.of(context).textTheme.titleSmall,
-                    underline: Container(height: 0),
+                  suffixWidget: DDropdown(
+                    value: _selectedRemind.toString(),
                     onChanged: (String? newValue) {
                       setState(() {
                         _selectedRemind = int.parse(newValue!);
@@ -209,12 +182,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   prefixIcon: Icons.repeat,
                   title: "Repeat",
                   readOnly: true,
-                  suffixWidget: DropdownButton(
-                    icon: Icon(Icons.keyboard_arrow_down, color: Colors.grey),
-                    iconSize: 32,
-                    elevation: 4,
-                    style: Theme.of(context).textTheme.titleSmall,
-                    underline: Container(height: 0),
+                  suffixWidget: DDropdown(
+                    value: _selectedRepeat.toString(),
                     onChanged: (String? newValue) {
                       setState(() {
                         _selectedRepeat = newValue!;
@@ -233,38 +202,49 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   ),
                 ),
 
-                Text('Color', style: Theme.of(context).textTheme.titleSmall),
-
-                const SizedBox(height: DSizes.sm),
-
-                Wrap(
-                  children: List<Widget>.generate(_colorOptions.length, (
-                    index,
-                  ) {
-                    final color = _colorOptions[index];
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedColorIndex = index;
-                        });
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: DSizes.sm),
-                        child: CircleAvatar(
-                          radius: 14,
-                          backgroundColor: color,
-                          child:
-                              _selectedColorIndex == index
-                                  ? Icon(
-                                    Icons.done,
-                                    color: Colors.white,
-                                    size: DSizes.iconSm,
-                                  )
-                                  : null,
-                        ),
+                Padding(
+                  padding: const EdgeInsets.only(top: DSizes.sm),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Color',
+                        style: Theme.of(context).textTheme.titleSmall,
                       ),
-                    );
-                  }),
+
+                      const SizedBox(height: DSizes.sm),
+
+                      Wrap(
+                        children: List<Widget>.generate(_colorOptions.length, (
+                          index,
+                        ) {
+                          final color = _colorOptions[index];
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedColorIndex = index;
+                              });
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: DSizes.sm),
+                              child: CircleAvatar(
+                                radius: 14,
+                                backgroundColor: color,
+                                child:
+                                    _selectedColorIndex == index
+                                        ? Icon(
+                                          Icons.done,
+                                          color: Colors.white,
+                                          size: DSizes.iconSm,
+                                        )
+                                        : null,
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    ],
+                  ),
                 ),
 
                 const SizedBox(height: DSizes.spaceBtwSections),
@@ -272,7 +252,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 Center(
                   child: DButton(
                     btnTitle: 'Create Task',
-                    width: 140,
+                    width: 180,
                     height: 50,
                     onTap: () => _validateAndSubmitTask(),
                   ),
@@ -285,6 +265,30 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _selectTimeFromPicker(BuildContext context, String time) async {
+    TimeOfDay? pickerStartTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    setState(() {
+      time = pickerStartTime != null ? pickerStartTime.format(context) : time;
+    });
+  }
+
+  Future<void> _selectDateFromPicker(BuildContext context) async {
+    DateTime? pickerDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+    );
+    setState(() {
+      _selectedDate = DateFormat(
+        'dd/MM/yyyy',
+      ).format(pickerDate ?? DateTime.now());
+    });
   }
 
   void _validateAndSubmitTask() {

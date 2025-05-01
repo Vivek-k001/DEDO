@@ -17,7 +17,7 @@ Future<dynamic> taskOptionsBottomSheet(
     builder: (BuildContext context) {
       return Container(
         padding: const EdgeInsets.all(DSizes.md),
-        height: DHelperFunctions.screenHeight(context) * 0.32,
+        height: DHelperFunctions.screenHeight(context) * 0.50,
         decoration: BoxDecoration(
           color:
               DHelperFunctions.isDarkMode(context)
@@ -31,8 +31,6 @@ Future<dynamic> taskOptionsBottomSheet(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            SizedBox(height: DSizes.spaceBtwSections),
-
             DButton(
               onTap: () {
                 context.read<TaskBloc>().add(
@@ -51,6 +49,7 @@ Future<dynamic> taskOptionsBottomSheet(
                 );
                 Navigator.pop(context);
               },
+              icon: Icons.pending,
               btnTitle: isCompleted ? "Mark as Pending" : "Mark as Completed",
               width: double.infinity,
               height: 55,
@@ -61,9 +60,8 @@ Future<dynamic> taskOptionsBottomSheet(
             SizedBox(height: DSizes.spaceBtwItems),
 
             DButton(
-              onTap: () {
-                Navigator.pop(context);
-              },
+              onTap: () {},
+              icon: Icons.edit,
               btnTitle: "Edit Task",
               width: double.infinity,
               height: 55,
@@ -85,6 +83,7 @@ Future<dynamic> taskOptionsBottomSheet(
                 );
                 Navigator.pop(context);
               },
+              icon: Icons.delete,
               btnTitle: "Delete Task",
               width: double.infinity,
               height: 55,
@@ -95,6 +94,7 @@ Future<dynamic> taskOptionsBottomSheet(
             SizedBox(height: DSizes.spaceBtwItems),
 
             DButton(
+              icon: Icons.close,
               onTap: () => Navigator.pop(context),
               btnTitle: "Close",
               width: double.infinity,
