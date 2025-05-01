@@ -1,5 +1,4 @@
 import 'package:dedo/utils/constants/colors.dart';
-import 'package:dedo/utils/constants/sizes.dart';
 import 'package:dedo/utils/helper_functions.dart';
 import 'package:flutter/material.dart';
 
@@ -23,28 +22,24 @@ class DAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final darkMode = DHelperFunctions.isDarkMode(context);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: DSizes.md),
-      child: AppBar(
-        automaticallyImplyLeading: false,
-        leading:
-            showBackArrow
-                ? IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: Icon(
-                    Icons.arrow_back_ios_new,
-                    color: darkMode ? Colors.white : DColors.dark,
-                  ),
-                )
-                : leadingIcon != null
-                ? IconButton(
-                  onPressed: leadingOnPressed,
-                  icon: Icon(leadingIcon),
-                )
-                : null,
-        title: title,
-        actions: actions,
-      ),
+    return AppBar(
+      automaticallyImplyLeading: false,
+      titleSpacing: 0,
+      leadingWidth: 48,
+      leading:
+          showBackArrow
+              ? IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: Icon(
+                  Icons.arrow_back_ios_new,
+                  color: darkMode ? Colors.white : DColors.dark,
+                ),
+              )
+              : leadingIcon != null
+              ? IconButton(onPressed: leadingOnPressed, icon: Icon(leadingIcon))
+              : null,
+      title: title,
+      actions: actions,
     );
   }
 

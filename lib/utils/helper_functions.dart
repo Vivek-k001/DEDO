@@ -61,7 +61,7 @@ class DHelperFunctions {
       SnackBar(
         content: Container(
           padding: const EdgeInsets.all(DSizes.sm),
-          width: double.infinity,
+          width: MediaQuery.of(context).size.width,
           height: 80,
           decoration: BoxDecoration(
             color: bgColor,
@@ -84,7 +84,7 @@ class DHelperFunctions {
                     const SizedBox(height: DSizes.xs),
                     Text(
                       message,
-                      maxLines: 3,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(
                         context,
@@ -96,7 +96,7 @@ class DHelperFunctions {
             ],
           ),
         ),
-        // backgroundColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
         duration: duration,
         action: action,
         behavior: SnackBarBehavior.floating,

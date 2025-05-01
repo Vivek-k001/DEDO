@@ -1,5 +1,5 @@
 import 'package:dedo/screens/add_task.dart';
-import 'package:dedo/screens/home.dart';
+import 'package:dedo/screens/home/home.dart';
 import 'package:dedo/screens/profile.dart';
 import 'package:dedo/utils/constants/colors.dart';
 import 'package:dedo/utils/helper_functions.dart';
@@ -37,7 +37,7 @@ class _MainPageState extends State<MainPage> {
         onIndexChange: (index) => setState(() => currentIndex = index),
       ),
 
-      body: SafeArea(child: _screens[currentIndex]),
+      body: _screens[currentIndex],
     );
   }
 }

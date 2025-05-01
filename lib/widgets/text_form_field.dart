@@ -47,8 +47,9 @@ class DTextFormField extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: DSizes.sm),
+          if (title.isNotEmpty)
+            Text(title, style: Theme.of(context).textTheme.titleMedium),
+          if (title.isNotEmpty) const SizedBox(height: DSizes.sm),
           SizedBox(
             height: height,
             child: TextFormField(

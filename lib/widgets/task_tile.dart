@@ -30,87 +30,102 @@ class DTaskTile extends StatelessWidget {
       margin: EdgeInsets.only(bottom: DSizes.sm + DSizes.xs),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(DSizes.md),
-        color: _getColor(colorIndex),
+        color: _getColor(colorIndex).withOpacity(0.3),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge!.copyWith(color: DColors.darkGrey),
-              ),
+          Expanded(
+            flex: 5,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge!.copyWith(color: DColors.darkGrey),
+                ),
 
-              SizedBox(height: DSizes.spaceBtwItems),
+                SizedBox(height: DSizes.spaceBtwItems),
 
-              Row(
-                children: [
-                  Icon(
-                    Icons.access_time_rounded,
-                    size: 18,
-                    color: DColors.primary,
-                  ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.access_time_rounded,
+                      size: 18,
+                      color: DColors.primary,
+                    ),
 
-                  SizedBox(width: DSizes.sm),
+                    SizedBox(width: DSizes.sm),
 
-                  Text(
-                    "$startTime - $endTime",
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodySmall!.copyWith(color: DColors.darkGrey),
-                  ),
-                ],
-              ),
+                    Text(
+                      "$startTime - $endTime",
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall!.copyWith(color: DColors.darkGrey),
+                    ),
+                  ],
+                ),
 
-              SizedBox(height: DSizes.sm + DSizes.xs),
+                SizedBox(height: DSizes.sm + DSizes.xs),
 
-              Text(
-                note,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyLarge!.copyWith(color: DColors.darkGrey),
-              ),
-            ],
+                Text(
+                  note,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyLarge!.copyWith(color: DColors.darkGrey),
+                ),
+              ],
+            ),
           ),
 
-          Row(
-            children: [
-              Container(height: 60, width: 1, color: DColors.darkGrey),
+          Expanded(
+            flex: 1,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(height: 60, width: 2, color: Colors.grey.shade600),
 
-              const SizedBox(width: DSizes.md),
+                const SizedBox(width: DSizes.md),
 
-              RotatedBox(
-                quarterTurns: 3,
-                child: Text(
-                  isCompleted ? "Completed" : "Pending",
-                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                    color: isCompleted ? Colors.greenAccent : Colors.deepOrange,
-                    fontWeight: FontWeight.bold,
+                RotatedBox(
+                  quarterTurns: 3,
+                  child: Text(
+                    isCompleted ? "Completed" : "Pending",
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      color:
+                          isCompleted
+                              ? Colors.green.shade700
+                              : Colors.deepOrange,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
     );
   }
 
-  Color _getColor(int index) {
-    final List<Color> colors = [
-      Colors.red,
-      Colors.yellow,
-      Colors.blue,
-      Colors.green,
-      Colors.purple,
-    ];
-
-    return colors[index];
+  _getColor(int colorIndex) {
+    switch (colorIndex) {
+      case 0:
+        return Colors.red;
+      case 1:
+        return Colors.yellow;
+      case 2:
+        return Colors.blue;
+      case 3:
+        return Colors.green;
+      case 4:
+        return Colors.purple;
+      default:
+        return Colors.red;
+    }
   }
 }

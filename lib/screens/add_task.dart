@@ -46,6 +46,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   ];
 
   @override
+  void dispose() {
+    _titleController.dispose();
+    _noteController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocListener<TaskBloc, TaskState>(
       listener: (context, state) {
@@ -69,15 +76,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         }
       },
       child: Scaffold(
-        appBar: DAppBar(
-          showBackArrow: true,
-          title: Center(
-            child: Text(
-              'Add Task',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          ),
-        ),
+        appBar: DAppBar(showBackArrow: true),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(DSizes.md),
@@ -102,9 +101,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 DTextFormField(
                   title: "Note",
                   hintText: "Enter your note",
-                  prefixIcon: Icons.note,
+                  prefixIcon: Icons.description,
                   controller: _noteController,
-                  maxlines: 3,
                 ),
 
                 DTextFormField(
@@ -149,7 +147,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         },
                       ),
                     ),
+
                     const SizedBox(width: DSizes.sm),
+
                     Expanded(
                       child: DTextFormField(
                         hintText: _endTime,
@@ -175,7 +175,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 ),
 
                 DTextFormField(
-                  hintText: "$_selectedRemind minutes early",
+                  hintText: "$_selectedRemind minutes",
                   prefixIcon: Icons.closed_caption,
                   title: "Remind",
                   readOnly: true,
@@ -195,7 +195,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                           return DropdownMenuItem<String>(
                             value: value.toString(),
                             child: Text(
-                              '$value minutes early',
+                              '$value minutes',
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                           );
@@ -232,8 +232,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   ),
                 ),
 
-                const SizedBox(height: DSizes.spaceBtwItems),
-
                 Text('Color', style: Theme.of(context).textTheme.titleSmall),
 
                 const SizedBox(height: DSizes.sm),
@@ -268,14 +266,18 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   }),
                 ),
 
-                const SizedBox(height: DSizes.spaceBtwItems),
+                const SizedBox(height: DSizes.spaceBtwSections),
 
-                DButton(
-                  btnTitle: 'Create Task',
-                  width: 140,
-                  height: 50,
-                  onTap: () => _validateAndSubmitTask(),
+                Center(
+                  child: DButton(
+                    btnTitle: 'Create Task',
+                    width: 140,
+                    height: 50,
+                    onTap: () => _validateAndSubmitTask(),
+                  ),
                 ),
+
+                const SizedBox(height: DSizes.spaceBtwSections),
               ],
             ),
           ),

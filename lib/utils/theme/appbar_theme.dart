@@ -8,9 +8,9 @@ class DAppbarTheme {
   // Light Theme for Appbar
   static const lightAppbarTheme = AppBarTheme(
     elevation: 2,
-    centerTitle: false,
+    centerTitle: true,
     scrolledUnderElevation: 0,
-    backgroundColor: DColors.primary,
+    backgroundColor: Colors.transparent,
     surfaceTintColor: Colors.transparent,
     iconTheme: IconThemeData(color: DColors.textPrimary, size: DSizes.iconMd),
   );
@@ -18,9 +18,9 @@ class DAppbarTheme {
   // Dark Theme For Appbar
   static const darkAppbarTheme = AppBarTheme(
     elevation: 2,
-    centerTitle: false,
+    centerTitle: true,
     scrolledUnderElevation: 0,
-    backgroundColor: DColors.primary,
+    backgroundColor: Colors.transparent,
     surfaceTintColor: Colors.transparent,
     iconTheme: IconThemeData(color: Colors.white, size: DSizes.iconMd),
   );
