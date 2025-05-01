@@ -120,101 +120,105 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: DSizes.sm),
 
             /// Category Row
-            Container(
-              height: 90,
-              padding: const EdgeInsets.symmetric(vertical: DSizes.xs),
-              decoration: BoxDecoration(
-                color: isDark ? DColors.black : DColors.lightContainer,
-                borderRadius: BorderRadius.circular(DSizes.sm),
-              ),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children:
-                      categories.map((category) {
-                        return Container(
-                          margin: EdgeInsets.only(right: 12),
-                          padding: EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withValues(alpha: 0.2),
-                                spreadRadius: 1,
-                                blurRadius: 5,
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                "2 todos",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: const Color.fromARGB(255, 0, 0, 0),
+            GestureDetector(
+              onTap: () {},
+              child: Container(
+                height: 90,
+                padding: const EdgeInsets.symmetric(vertical: DSizes.xs),
+                decoration: BoxDecoration(
+                  color: isDark ? DColors.black : DColors.lightContainer,
+                  borderRadius: BorderRadius.circular(DSizes.sm),
+                ),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children:
+                        categories.map((category) {
+                          return Container(
+                            margin: EdgeInsets.only(right: 12),
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withValues(alpha: 0.2),
+                                  spreadRadius: 1,
+                                  blurRadius: 5,
                                 ),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                category,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                              ],
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  "2 todos",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: const Color.fromARGB(255, 0, 0, 0),
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }).toList(),
+                                SizedBox(height: 4),
+                                Text(
+                                  category,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                  ),
                 ),
               ),
             ),
+            const SizedBox(height: DSizes.spaceBtwItems),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: DSizes.xs),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Tasks",
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
 
-            const SizedBox(height: DSizes.sm),
-
-            /// Task Header
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Task text
-                Text("Tasks", style: Theme.of(context).textTheme.headlineSmall),
-
-                // Sort Menu
-                Row(
-                  children: [
-                    PopupMenuButton<SortOption>(
-                      tooltip: "Sort Tasks",
-                      icon: const Icon(Icons.sort),
-                      onSelected: (SortOption sort) {
-                        setState(() {
-                          currentSort = sort;
-                        });
-                      },
-                      itemBuilder:
-                          (context) => [
-                            const PopupMenuItem(
-                              value: SortOption.newest,
-                              child: Text("Newest"),
-                            ),
-                            const PopupMenuItem(
-                              value: SortOption.oldest,
-                              child: Text("Oldest"),
-                            ),
-                            const PopupMenuItem(
-                              value: SortOption.titleAsc,
-                              child: Text("Title (A-Z)"),
-                            ),
-                            const PopupMenuItem(
-                              value: SortOption.titleDesc,
-                              child: Text("Title (Z-A)"),
-                            ),
-                          ],
-                    ),
-                  ],
-                ),
-              ],
+                  Row(
+                    children: [
+                      PopupMenuButton<SortOption>(
+                        tooltip: "Sort Tasks",
+                        icon: const Icon(Icons.sort),
+                        onSelected: (SortOption sort) {
+                          setState(() {
+                            currentSort = sort;
+                          });
+                        },
+                        itemBuilder:
+                            (context) => [
+                              const PopupMenuItem(
+                                value: SortOption.newest,
+                                child: Text("Newest First"),
+                              ),
+                              const PopupMenuItem(
+                                value: SortOption.oldest,
+                                child: Text("Oldest First"),
+                              ),
+                              const PopupMenuItem(
+                                value: SortOption.titleAsc,
+                                child: Text("Title (A-Z)"),
+                              ),
+                              const PopupMenuItem(
+                                value: SortOption.titleDesc,
+                                child: Text("Title (Z-A)"),
+                              ),
+                            ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
 
             const SizedBox(height: DSizes.sm),

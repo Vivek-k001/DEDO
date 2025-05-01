@@ -15,13 +15,12 @@ import 'package:get_storage/get_storage.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await DBHelper.initDb();
   await GetStorage.init();
 
   await NotificationService().requestNotificationPermission();
   await NotificationService().initNotification();
 
-  final dbHelper = DBHelper();
+  final dbHelper = DBHelper.instance;
 
   final databaseProvider = DatabaseProvider(dbHelper);
 

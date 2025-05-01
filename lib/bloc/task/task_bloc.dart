@@ -16,7 +16,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<LoadTasks>((event, emit) async {
       emit(TaskLoading());
       try {
-        final rawTasks = await DBHelper.query();
+        final rawTasks = await DBHelper.instance.query();
         final tasks = rawTasks.map((task) => TaskModel.fromJson(task)).toList();
         emit(TaskLoaded(tasks));
       } catch (e) {
@@ -27,7 +27,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<AddTask>((event, emit) async {
       emit(TaskLoading());
       try {
-        final taskId = await DBHelper.insert(event.task);
+        final taskId = await DBHelper.instance.insert(event.task);
         await _notificationHelper.scheduleTaskNotifications(event.task);
         emit(TaskSuccess(taskId));
         add(LoadTasks());
@@ -39,10 +39,10 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<DeleteTask>((event, emit) async {
       emit(TaskLoading());
       try {
-        final taskJson = await DBHelper.queryById(event.taskId);
+        final taskJson = await DBHelper.instance.queryById(event.taskId);
         final task = TaskModel.fromJson(taskJson!);
 
-        await DBHelper.delete(event.taskId);
+        await DBHelper.instance.delete(event.taskId);
 
         await _notificationHelper.handleTaskDeletion(task);
 
@@ -57,13 +57,13 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<UpdateSingleField>((event, emit) async {
       emit(TaskLoading());
       try {
-        await DBHelper.updateSingleField(
+        await DBHelper.instance.updateSingleField(
           event.taskId,
           event.field,
           event.value,
         );
 
-        final taskJson = await DBHelper.queryById(event.taskId);
+        final taskJson = await DBHelper.instance.queryById(event.taskId);
         final task = TaskModel.fromJson(taskJson!);
 
         if (event.field == "isCompleted") {
