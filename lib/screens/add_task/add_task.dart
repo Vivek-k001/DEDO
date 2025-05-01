@@ -25,9 +25,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   String _selectedDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
 
-  final String _startTime = DateFormat('hh:mm a').format(DateTime.now());
+  String startTime = DateFormat('hh:mm a').format(DateTime.now());
 
-  final String _endTime = DateFormat(
+  String endTime = DateFormat(
     'hh:mm a',
   ).format(DateTime.now().add(Duration(hours: 3)));
 
@@ -126,12 +126,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   children: [
                     Expanded(
                       child: DTextFormField(
-                        hintText: _startTime,
+                        hintText: startTime,
                         prefixIcon: FontAwesomeIcons.clock,
                         title: "Start Time",
                         readOnly: true,
                         onTap: () async {
-                          await _selectTimeFromPicker(context, _startTime);
+                          await _selectTimeFromPicker(context, true);
                         },
                       ),
                     ),
@@ -140,12 +140,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
                     Expanded(
                       child: DTextFormField(
-                        hintText: _endTime,
+                        hintText: endTime,
                         prefixIcon: FontAwesomeIcons.clock,
                         title: "End Time",
                         readOnly: true,
                         onTap: () async {
-                          await _selectTimeFromPicker(context, _endTime);
+                          await _selectTimeFromPicker(context, false);
                         },
                       ),
                     ),
@@ -267,14 +267,25 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     );
   }
 
-  Future<void> _selectTimeFromPicker(BuildContext context, String time) async {
-    TimeOfDay? pickerStartTime = await showTimePicker(
+  Future<void> _selectTimeFromPicker(
+    BuildContext context,
+    bool isStartTime,
+  ) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
     );
-    setState(() {
-      time = pickerStartTime != null ? pickerStartTime.format(context) : time;
-    });
+
+    if (pickedTime != null) {
+      final formattedTime = pickedTime.format(context);
+      setState(() {
+        if (isStartTime) {
+          startTime = formattedTime;
+        } else {
+          endTime = formattedTime;
+        }
+      });
+    }
   }
 
   Future<void> _selectDateFromPicker(BuildContext context) async {
@@ -310,8 +321,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       note: note,
       title: title,
       date: _selectedDate,
-      startTime: _startTime,
-      endTime: _endTime,
+      startTime: startTime,
+      endTime: endTime,
       remind: _selectedRemind,
       repeat: _selectedRepeat,
       colorIndex: _selectedColorIndex,

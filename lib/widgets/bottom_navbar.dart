@@ -22,14 +22,17 @@ class DBottomNavbar extends StatelessWidget {
       child: NavigationBar(
         height: 80,
         indicatorColor: DColors.primary,
-        backgroundColor: isDark ? DColors.dark : DColors.light,
+        backgroundColor: isDark ? DColors.darkerGrey : DColors.lightGrey,
         elevation: 3,
         selectedIndex: currentIndex,
         onDestinationSelected: onIndexChange,
         destinations: const [
-          NavigationDestination(icon: Icon(CupertinoIcons.home), label: 'Home'),
           NavigationDestination(
-            icon: Icon(CupertinoIcons.person_2_fill),
+            icon: Icon(CupertinoIcons.home, color: DColors.black),
+            label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Icon(CupertinoIcons.person_2_fill, color: DColors.dark),
             label: 'Profile',
           ),
         ],

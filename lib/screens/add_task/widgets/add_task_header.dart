@@ -12,6 +12,7 @@ class AddTaskHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.task_alt, size: 50, color: DColors.darkerGrey),
             const SizedBox(height: DSizes.sm),

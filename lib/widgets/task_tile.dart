@@ -44,7 +44,7 @@ class DTaskTile extends StatelessWidget {
                   title,
                   style: Theme.of(
                     context,
-                  ).textTheme.titleLarge!.copyWith(color: DColors.darkGrey),
+                  ).textTheme.titleLarge!.copyWith(color: DColors.light),
                 ),
 
                 SizedBox(height: DSizes.spaceBtwItems),
@@ -54,7 +54,7 @@ class DTaskTile extends StatelessWidget {
                     Icon(
                       Icons.access_time_rounded,
                       size: 18,
-                      color: DColors.primary,
+                      color: DColors.lightContainer,
                     ),
 
                     SizedBox(width: DSizes.sm),
@@ -63,7 +63,7 @@ class DTaskTile extends StatelessWidget {
                       "$startTime - $endTime",
                       style: Theme.of(
                         context,
-                      ).textTheme.bodySmall!.copyWith(color: DColors.darkGrey),
+                      ).textTheme.bodySmall!.copyWith(color: DColors.light),
                     ),
                   ],
                 ),
@@ -76,7 +76,7 @@ class DTaskTile extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(
                     context,
-                  ).textTheme.bodyLarge!.copyWith(color: DColors.darkGrey),
+                  ).textTheme.bodyLarge!.copyWith(color: DColors.light),
                 ),
               ],
             ),
@@ -87,7 +87,7 @@ class DTaskTile extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Container(height: 60, width: 2, color: Colors.grey.shade600),
+                Container(height: 60, width: 2, color: Colors.grey.shade200),
 
                 const SizedBox(width: DSizes.md),
 
@@ -96,10 +96,7 @@ class DTaskTile extends StatelessWidget {
                   child: Text(
                     isCompleted ? "Completed" : "Pending",
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                      color:
-                          isCompleted
-                              ? Colors.green.shade700
-                              : Colors.deepOrange,
+                      color: isCompleted ? Colors.white : Colors.white70,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

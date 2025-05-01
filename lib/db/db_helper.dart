@@ -49,6 +49,15 @@ class DBHelper {
     return await _db!.query(_tableName);
   }
 
+  static Future<Map<String, dynamic>?> queryById(int taskId) async {
+    final List<Map<String, dynamic>> result = await _db!.query(
+      _tableName,
+      where: 'id = ?',
+      whereArgs: [taskId],
+    );
+    return result.first;
+  }
+
   static Future<int> insert(TaskModel task) async {
     return await _db!.insert(_tableName, task.toJson());
   }
