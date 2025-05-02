@@ -1,3 +1,4 @@
+import 'package:dedo/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class DFilterChip extends StatelessWidget {
@@ -21,7 +22,7 @@ class DFilterChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FilterChip(
-      label: Text(label),
+      label: Text(label, style: TextStyle(color: DColors.black)),
       selected: isSelected,
       onSelected: onSelected,
       backgroundColor: backgroundColor,

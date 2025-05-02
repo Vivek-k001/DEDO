@@ -1,11 +1,11 @@
-import 'package:dedo/bloc/categories/categories_bloc.dart';
+import 'package:dedo/bloc/category/category_bloc.dart';
 import 'package:dedo/bloc/task/task_bloc.dart';
 import 'package:dedo/bloc/theme/theme_bloc.dart';
-import 'package:dedo/db/database_provider.dart';
 import 'package:dedo/db/db_helper.dart';
 import 'package:dedo/repositories/category_repository.dart';
+import 'package:dedo/repositories/task_repository.dart';
 import 'package:dedo/screens/main.dart';
-import 'package:dedo/services/notification_service.dart';
+import 'package:dedo/services/notification_helper.dart';
 import 'package:dedo/utils/constants/text.dart';
 import 'package:dedo/utils/theme/theme.dart';
 import 'package:flutter/material.dart';
@@ -17,21 +17,22 @@ void main() async {
 
   await GetStorage.init();
 
-  await NotificationService().requestNotificationPermission();
-  await NotificationService().initNotification();
-
   final dbHelper = DBHelper.instance;
 
-  final databaseProvider = DatabaseProvider(dbHelper);
+  final categoryRepo = CategoryRepository(dbHelper);
 
-  final categoryRepository = CategoryRepository(databaseProvider);
+  final taskRepo = TaskRepository(dbHelper);
+
+  final notificationHelper = NotificationHelper();
 
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => ThemeBloc()),
-        BlocProvider(create: (context) => TaskBloc()),
-        BlocProvider(create: (context) => CategoryBloc(categoryRepository)),
+        BlocProvider(
+          create: (context) => TaskBloc(taskRepo, notificationHelper),
+        ),
+        BlocProvider(create: (context) => CategoryBloc(categoryRepo)),
       ],
       child: const MyApp(),
     ),

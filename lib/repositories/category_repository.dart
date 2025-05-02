@@ -1,42 +1,46 @@
-import 'package:dedo/db/database_provider.dart';
-import 'package:sqflite/sqflite.dart';
-
-import '../models/category_model.dart';
+import 'package:dedo/db/db_helper.dart';
+import 'package:dedo/models/category_model.dart';
 
 class CategoryRepository {
-  final DatabaseProvider databaseProvider;
+  final DBHelper dbHelper;
 
-  CategoryRepository(this.databaseProvider);
+  CategoryRepository(this.dbHelper);
 
-  Future<List<Category>> getAllCategories() async {
-    final db = await databaseProvider.database;
-    final List<Map<String, dynamic>> maps = await db.query('categories');
-    return List.generate(maps.length, (i) {
-      return Category(
-        id: maps[i]['id'],
-        name: maps[i]['name'],
-        color: maps[i]['color'],
-      );
-    });
+  Future<int> insertCategory(CategoryModel category) async {
+    final db = await dbHelper.database;
+    return await db.insert('categories', category.toMap());
   }
 
-  Future<void> addCategory(Category category) async {
-    final db = await databaseProvider.database;
-    await db.insert(
+  Future<List<CategoryModel>> getAllCategories() async {
+    final db = await dbHelper.database;
+    final results = await db.query('categories');
+    return results.map((result) => CategoryModel.fromMap(result)).toList();
+  }
+
+  Future<int> updateCategory(CategoryModel category) async {
+    final db = await dbHelper.database;
+    return await db.update(
       'categories',
       category.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
+      where: 'id = ?',
+      whereArgs: [category.id],
     );
   }
 
-  Future<void> deleteCategory(String id) async {
-    final db = await databaseProvider.database;
-    await db.delete('categories', where: 'id = ?', whereArgs: [id]);
+  Future<int> deleteCategory(String id) async {
+    final db = await dbHelper.database;
+    return await db.delete('categories', where: 'id = ?', whereArgs: [id]);
   }
-}
 
-extension CategoryExtensions on Category {
-  Map<String, dynamic> toMap() {
-    return {'id': id, 'name': name, 'color': color};
+  Future<CategoryModel?> getCategoryById(String id) async {
+    final db = await dbHelper.database;
+    final results = await db.query(
+      'categories',
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
+    if (results.isNotEmpty) return CategoryModel.fromMap(results.first);
+    return null;
   }
 }

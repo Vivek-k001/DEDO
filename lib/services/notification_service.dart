@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
@@ -19,8 +20,7 @@ class NotificationService {
     if (_isInitialized) return;
 
     // Initialize timezone
-    tz_data.initializeTimeZones();
-    tz.setLocalLocation(tz.getLocation(await _getLocalTimeZone()));
+    await _initializeTimeZone();
 
     // Android initialization settings
     const AndroidInitializationSettings initAndroidSettings =
@@ -55,15 +55,10 @@ class NotificationService {
     debugPrint('Notification service initialized');
   }
 
-  // Get local timezone (default to UTC if not available)
-  Future<String> _getLocalTimeZone() async {
-    try {
-      // Use device timezone
-      return tz.local.name;
-    } catch (e) {
-      debugPrint('Failed to get timezone: $e');
-      return 'UTC';
-    }
+  Future<void> _initializeTimeZone() async {
+    tz_data.initializeTimeZones();
+    final timeZoneName = await FlutterTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(timeZoneName));
   }
 
   // Notification Details Setup
@@ -75,8 +70,8 @@ class NotificationService {
         channelDescription: 'Notifications for task reminders',
         importance: Importance.max,
         priority: Priority.high,
-        sound: RawResourceAndroidNotificationSound('notification_sound'),
         enableVibration: true,
+        playSound: true,
       ),
       iOS: DarwinNotificationDetails(
         presentAlert: true,
@@ -110,14 +105,22 @@ class NotificationService {
     required DateTime scheduledTime,
     String? payload,
   }) async {
+    final tzDateTime = tz.TZDateTime.from(scheduledTime, tz.local);
+
+    if (tzDateTime.isBefore(tz.TZDateTime.now(tz.local))) {
+      debugPrint('Scheduled time is in the past, not scheduling');
+      return;
+    }
+
     await notificationPlugin.zonedSchedule(
       id,
       title,
       body,
-      tz.TZDateTime.from(scheduledTime, tz.local),
+      tzDateTime,
       _notificationDetails(),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      // matchDateTimeComponents: DateTimeComponents.time,
+      // uiLocalNotificationDateInterpretation:
+      //     UILocalNotificationDateInterpretation.absoluteTime,
       payload: payload,
     );
     debugPrint('Notification scheduled for: $scheduledTime');

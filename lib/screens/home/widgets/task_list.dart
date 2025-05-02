@@ -29,102 +29,43 @@ class DTaskList extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = DHelperFunctions.isDarkMode(context);
 
-    return BlocConsumer<TaskBloc, TaskState>(
-      listener: (context, state) {
-        if (state is TaskError) {
-          DHelperFunctions.showSnackBar(
-            title: "Error",
-            message: "Error ${state.message}",
-            icon: Icons.error,
-            context: context,
-            bgColor: Colors.red,
-          );
-        }
-      },
+    return BlocBuilder<TaskBloc, TaskState>(
       builder: (context, state) {
         if (state is TaskLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is TaskLoaded) {
-          // Filter by date
-          final dateString = DateFormat('dd/MM/yyyy').format(selectedDate);
-          List<TaskModel> dateFilteredTasks =
-              state.tasks.where((task) {
-                return task.date == dateString;
-              }).toList();
+          final tasks = state.tasks;
 
-          // Assign dateFilteredTasks to filteredTasks
-          List<TaskModel> filteredTasks = dateFilteredTasks;
-
-          // Filter by task status
-          if (currentFilter == TaskFilter.pending) {
-            filteredTasks =
-                dateFilteredTasks
-                    .where((task) => task.isCompleted == 0)
-                    .toList();
-          } else if (currentFilter == TaskFilter.completed) {
-            filteredTasks =
-                dateFilteredTasks
-                    .where((task) => task.isCompleted == 1)
-                    .toList();
-          }
-
-          // Filter by search query (title & note)
-          if (searchQuery.isNotEmpty) {
-            filteredTasks =
-                filteredTasks
-                    .where(
-                      (task) =>
-                          task.title.toLowerCase().contains(
-                            searchQuery.toLowerCase(),
-                          ) ||
-                          task.note.toLowerCase().contains(
-                            searchQuery.toLowerCase(),
-                          ),
-                    )
-                    .toList();
-          }
-
-          // Filter by sort option
-          switch (currentSort) {
-            case SortOption.newest:
-              filteredTasks.sort((a, b) => a.startTime.compareTo(b.startTime));
-              break;
-            case SortOption.oldest:
-              filteredTasks.sort((a, b) => b.startTime.compareTo(a.startTime));
-              break;
-            case SortOption.titleAsc:
-              filteredTasks.sort((a, b) => a.title.compareTo(b.title));
-              break;
-            case SortOption.titleDesc:
-              filteredTasks.sort((a, b) => b.title.compareTo(a.title));
-              break;
-          }
+          final filteredTasks = _filterAndSortTasks(tasks);
 
           // Empty Task view
           if (filteredTasks.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.task_alt,
-                    size: 60,
-                    color:
-                        isDark
-                            ? DColors.grey
-                            : DColors.darkGrey.withValues(alpha: 0.5),
-                  ),
-                  const SizedBox(height: DSizes.spaceBtwItems),
-                  Text(
-                    "No tasks available",
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+            return Padding(
+              padding: const EdgeInsets.all(DSizes.sm),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.task_alt,
+                      size: 60,
                       color:
                           isDark
                               ? DColors.grey
                               : DColors.darkGrey.withValues(alpha: 0.5),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: DSizes.spaceBtwItems),
+                    Text(
+                      "No tasks found",
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                        color:
+                            isDark
+                                ? DColors.grey
+                                : DColors.darkGrey.withValues(alpha: 0.5),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           }
@@ -141,11 +82,7 @@ class DTaskList extends StatelessWidget {
                   child: FadeInAnimation(
                     child: GestureDetector(
                       onTap: () {
-                        taskOptionsBottomSheet(
-                          context,
-                          task,
-                          task.isCompleted == 1 ? true : false,
-                        );
+                        taskOptionsBottomSheet(context, task);
                       },
                       child: DTaskTile(
                         title: task.title,
@@ -156,7 +93,7 @@ class DTaskList extends StatelessWidget {
                         repeat: task.repeat,
                         remind: task.remind,
                         colorIndex: task.colorIndex,
-                        isCompleted: task.isCompleted == 1 ? true : false,
+                        isCompleted: task.isCompleted,
                       ),
                     ),
                   ),
@@ -165,9 +102,55 @@ class DTaskList extends StatelessWidget {
             },
           );
         } else {
-          return const SizedBox();
+          return const Center(child: Text('No Tasks found'));
         }
       },
     );
+  }
+
+  List<TaskModel> _filterAndSortTasks(List<TaskModel> tasks) {
+    // Date filtering
+    final dateString = DateFormat('dd/MM/yyyy').format(selectedDate);
+
+    var filteredTasks = tasks.where((task) => task.date == dateString).toList();
+
+    // Status filtering
+    if (currentFilter == TaskFilter.pending) {
+      filteredTasks = filteredTasks.where((task) => !task.isCompleted).toList();
+    } else if (currentFilter == TaskFilter.completed) {
+      filteredTasks = filteredTasks.where((task) => task.isCompleted).toList();
+    }
+
+    // Search filtering
+    if (searchQuery.isNotEmpty) {
+      filteredTasks =
+          filteredTasks
+              .where(
+                (task) =>
+                    task.title.toLowerCase().contains(
+                      searchQuery.toLowerCase(),
+                    ) ||
+                    task.note.toLowerCase().contains(searchQuery.toLowerCase()),
+              )
+              .toList();
+    }
+
+    // Sorting
+    switch (currentSort) {
+      case SortOption.newest:
+        filteredTasks.sort((a, b) => b.startTime.compareTo(a.startTime));
+        break;
+      case SortOption.oldest:
+        filteredTasks.sort((a, b) => a.startTime.compareTo(b.startTime));
+        break;
+      case SortOption.titleAsc:
+        filteredTasks.sort((a, b) => a.title.compareTo(b.title));
+        break;
+      case SortOption.titleDesc:
+        filteredTasks.sort((a, b) => b.title.compareTo(a.title));
+        break;
+    }
+
+    return filteredTasks;
   }
 }

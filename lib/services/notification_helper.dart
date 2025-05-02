@@ -20,7 +20,6 @@ class NotificationHelper {
   // Schedule notifications for a task
   Future<void> scheduleTaskNotifications(TaskModel task) async {
     try {
-      // Only schedule if the task has a valid date and time
       await _notificationService.scheduleTaskReminder(task);
       debugPrint('Scheduled notifications for task: ${task.title}');
     } catch (e) {

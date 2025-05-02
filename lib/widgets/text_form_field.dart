@@ -42,7 +42,7 @@ class DTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = DHelperFunctions.isDarkMode(context);
-    final cursorColor = isDark ? DColors.light : DColors.dark;
+    final cursorColor = isDark ? DColors.white : DColors.black;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: DSizes.sm + 2),
@@ -88,9 +88,11 @@ class DTextFormField extends StatelessWidget {
               textAlignVertical: TextAlignVertical.center,
               onChanged: onChanged,
               validator: validator,
+
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: isDark ? DColors.light : DColors.dark,
               ),
+
               decoration: InputDecoration(
                 hintText: hintText,
                 hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -99,27 +101,35 @@ class DTextFormField extends StatelessWidget {
                           ? DColors.light.withValues(alpha: 0.5)
                           : DColors.dark.withValues(alpha: 0.5),
                 ),
+
                 isDense: isDense,
+
                 prefixIcon: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: DSizes.sm),
                   child: Icon(
                     prefixIcon,
-                    size: 20,
-                    color: isDark ? DColors.grey : DColors.grey,
+                    size: 18,
+                    color: isDark ? DColors.grey : DColors.darkerGrey,
                   ),
                 ),
                 suffixIcon:
                     suffixWidget ??
                     (suffixIcon != null
-                        ? IconButton(
-                          onPressed: onIconPressed,
-                          icon: Icon(
-                            suffixIcon,
-                            size: 20,
-                            color: isDark ? DColors.grey : DColors.grey,
+                        ? Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: DSizes.sm,
+                          ),
+                          child: IconButton(
+                            onPressed: onIconPressed,
+                            icon: Icon(
+                              suffixIcon,
+                              size: 18,
+                              color: isDark ? DColors.grey : DColors.darkerGrey,
+                            ),
                           ),
                         )
                         : null),
+
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(DSizes.borderRadiusLg),
                   borderSide: BorderSide(
@@ -127,6 +137,7 @@ class DTextFormField extends StatelessWidget {
                     width: 1.0,
                   ),
                 ),
+
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(DSizes.borderRadiusLg),
                   borderSide: BorderSide(
@@ -134,18 +145,22 @@ class DTextFormField extends StatelessWidget {
                     width: 1.0,
                   ),
                 ),
+
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(DSizes.borderRadiusLg),
                   borderSide: BorderSide(color: DColors.primary, width: 1.5),
                 ),
+
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(DSizes.borderRadiusLg),
-                  borderSide: BorderSide(color: Colors.red, width: 1.0),
+                  borderSide: BorderSide(color: Colors.red, width: 1.5),
                 ),
+
                 contentPadding: EdgeInsets.symmetric(
                   horizontal: DSizes.md,
                   vertical: maxlines > 1 ? DSizes.md : DSizes.sm,
                 ),
+
                 filled: true,
                 fillColor:
                     fillColor ??

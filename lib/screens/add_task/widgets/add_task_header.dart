@@ -15,7 +15,7 @@ class AddTaskHeader extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.task_alt, size: 50, color: DColors.darkerGrey),
-            const SizedBox(height: DSizes.sm),
+            const SizedBox(height: DSizes.spaceBtwItems),
             Text(
               "Create New Task",
               style: Theme.of(

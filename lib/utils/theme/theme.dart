@@ -1,3 +1,4 @@
+import 'package:dedo/utils/constants/sizes.dart';
 import 'package:dedo/utils/theme/text_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:dedo/utils/constants/colors.dart';
@@ -12,11 +13,11 @@ class DAppTheme {
     fontFamily: 'Poppins',
     brightness: Brightness.light,
     primaryColor: DColors.primary,
-    scaffoldBackgroundColor: DColors.light,
-    disabledColor: DColors.grey,
+    scaffoldBackgroundColor: DColors.white,
+    disabledColor: DColors.lightGrey,
     appBarTheme: DAppbarTheme.lightAppbarTheme,
     textTheme: DTextTheme.lightTextTheme,
-    iconTheme: const IconThemeData(color: DColors.textPrimary),
+    iconTheme: IconThemeData(color: DColors.textPrimary, size: DSizes.iconMd),
   );
 
   // Dark Theme
@@ -29,6 +30,6 @@ class DAppTheme {
     disabledColor: DColors.darkGrey,
     appBarTheme: DAppbarTheme.darkAppbarTheme,
     textTheme: DTextTheme.darkTextTheme,
-    iconTheme: const IconThemeData(color: DColors.textWhite),
+    iconTheme: IconThemeData(color: DColors.textWhite, size: DSizes.iconMd),
   );
 }

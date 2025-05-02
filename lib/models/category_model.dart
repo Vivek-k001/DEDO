@@ -1,16 +1,19 @@
-import 'package:equatable/equatable.dart';
-
-class Category extends Equatable {
+class CategoryModel {
   final String id;
   final String name;
   final int color;
 
-  const Category({
+  const CategoryModel({
     required this.id,
     required this.name,
     required this.color,
   });
 
-  @override
-  List<Object?> get props => [id, name, color];
+  Map<String, dynamic> toMap() {
+    return {'id': id, 'name': name, 'color': color};
+  }
+
+  factory CategoryModel.fromMap(Map<String, dynamic> map) {
+    return CategoryModel(id: map['id'], name: map['name'], color: map['color']);
+  }
 }

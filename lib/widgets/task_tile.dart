@@ -1,5 +1,6 @@
 import 'package:dedo/utils/constants/colors.dart';
 import 'package:dedo/utils/constants/sizes.dart';
+import 'package:dedo/widgets/container.dart';
 import 'package:flutter/material.dart';
 
 class DTaskTile extends StatelessWidget {
@@ -24,14 +25,12 @@ class DTaskTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return DContainer(
       width: double.infinity,
       padding: EdgeInsets.all(DSizes.md),
       margin: EdgeInsets.only(bottom: DSizes.sm + DSizes.xs),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(DSizes.md),
-        color: _getColor(colorIndex),
-      ),
+      borderRadius: BorderRadius.circular(DSizes.md),
+      backgroundColor: _getColor(colorIndex),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -47,7 +46,7 @@ class DTaskTile extends StatelessWidget {
                   ).textTheme.titleLarge!.copyWith(color: DColors.light),
                 ),
 
-                SizedBox(height: DSizes.spaceBtwItems),
+                SizedBox(height: DSizes.sm),
 
                 Row(
                   children: [
@@ -76,7 +75,7 @@ class DTaskTile extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(
                     context,
-                  ).textTheme.bodyLarge!.copyWith(color: DColors.light),
+                  ).textTheme.bodyLarge!.copyWith(color: DColors.lightGrey),
                 ),
               ],
             ),

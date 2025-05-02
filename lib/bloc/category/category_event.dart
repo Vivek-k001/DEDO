@@ -1,5 +1,4 @@
-import 'package:dedo/models/category_model.dart';
-import 'package:equatable/equatable.dart';
+part of 'category_bloc.dart';
 
 abstract class CategoryEvent extends Equatable {
   const CategoryEvent();
@@ -11,7 +10,7 @@ abstract class CategoryEvent extends Equatable {
 class LoadCategories extends CategoryEvent {}
 
 class AddCategory extends CategoryEvent {
-  final Category category;
+  final CategoryModel category;
 
   const AddCategory(this.category);
 
@@ -19,11 +18,20 @@ class AddCategory extends CategoryEvent {
   List<Object> get props => [category];
 }
 
-class DeleteCategory extends CategoryEvent {
-  final String id;
+class UpdateCategory extends CategoryEvent {
+  final CategoryModel category;
 
-  const DeleteCategory(this.id);
+  const UpdateCategory(this.category);
 
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [category];
+}
+
+class DeleteCategory extends CategoryEvent {
+  final String categoryId;
+
+  const DeleteCategory(this.categoryId);
+
+  @override
+  List<Object> get props => [categoryId];
 }

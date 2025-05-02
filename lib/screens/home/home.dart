@@ -1,11 +1,14 @@
 import 'package:date_picker_timeline/date_picker_widget.dart';
+import 'package:dedo/bloc/category/category_bloc.dart';
 import 'package:dedo/bloc/task/task_bloc.dart';
+import 'package:dedo/screens/home/widgets/categoy_chip.dart';
 import 'package:dedo/screens/home/widgets/home_appbar.dart';
 import 'package:dedo/screens/home/widgets/task_list.dart';
 import 'package:dedo/utils/constants/colors.dart';
 import 'package:dedo/utils/constants/enum.dart';
 import 'package:dedo/utils/constants/sizes.dart';
 import 'package:dedo/utils/helper_functions.dart';
+import 'package:dedo/widgets/container.dart';
 import 'package:dedo/widgets/filter_chip.dart';
 import 'package:dedo/widgets/text_form_field.dart';
 import 'package:flutter/material.dart';
@@ -27,15 +30,12 @@ class _HomePageState extends State<HomePage> {
   String searchQuery = '';
   final _searchController = TextEditingController();
 
-  final List<String> categories = [
-    "Health",
-    "Payments",
-    "Work",
-    "Study",
-    "Studyf",
-    "Studys",
-    "Studyr",
-  ];
+  @override
+  void initState() {
+    context.read<TaskBloc>().add(LoadTasks());
+    super.initState();
+  }
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -44,211 +44,196 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = DHelperFunctions.isDarkMode(context);
-
     return Scaffold(
       appBar: DHomeAppbar(),
 
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: DSizes.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /// Search bar
-            Container(
-              padding: const EdgeInsets.all(0),
-              decoration: BoxDecoration(
-                color: isDark ? DColors.black : DColors.lightContainer,
-                borderRadius: BorderRadius.circular(DSizes.md),
-                border: Border.all(
-                  color: isDark ? DColors.black : DColors.lightGrey,
+      body: BlocListener<TaskBloc, TaskState>(
+        listener: (context, state) {
+          if (state is TaskSuccess) {
+            DHelperFunctions.showSnackBar(
+              title: "Success",
+              message: state.message,
+              icon: Icons.check_circle,
+              context: context,
+              bgColor: Colors.green,
+            );
+          } else if (state is TaskError) {
+            DHelperFunctions.showSnackBar(
+              title: "Error",
+              message: state.message,
+              icon: Icons.error,
+              context: context,
+              bgColor: Colors.red,
+            );
+          }
+        },
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: DSizes.md),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /// Search bar
+                DContainer(
+                  padding: EdgeInsets.zero,
+                  backgroundColor:
+                      DHelperFunctions.isDarkMode(context)
+                          ? DColors.black
+                          : DColors.white,
+                  child: DTextFormField(
+                    hintText: "Search tasks...",
+                    prefixIcon: Icons.search,
+                    title: "",
+                    suffixIcon: Icons.clear,
+                    onIconPressed: () {
+                      _searchController.clear();
+                      setState(() => setState(() => searchQuery = ''));
+                    },
+                    onChanged: (value) => setState(() => searchQuery = value),
+                  ),
                 ),
-              ),
-              child: DTextFormField(
-                hintText: "Search tasks...",
-                prefixIcon: Icons.search,
-                title: "",
-                suffixWidget:
-                    _searchController.text.isNotEmpty
-                        ? IconButton(
-                          icon: const Icon(Icons.clear),
-                          onPressed: () {
-                            _searchController.clear();
+
+                /// Date Timeline
+                DContainer(
+                  child: DatePicker(
+                    DateTime.now(),
+                    height: 90,
+                    width: 60,
+                    initialSelectedDate: _selectedDate,
+                    selectionColor: DColors.primary,
+                    selectedTextColor: DColors.dark,
+                    dateTextStyle: Theme.of(context).textTheme.titleMedium!
+                        .copyWith(fontWeight: FontWeight.bold),
+                    dayTextStyle: Theme.of(context).textTheme.bodySmall!,
+                    monthTextStyle: Theme.of(context).textTheme.bodyMedium!,
+                    onDateChange: (date) {
+                      setState(() => _selectedDate = date);
+                      context.read<TaskBloc>().add(LoadTasks());
+                    },
+                  ),
+                ),
+
+                const SizedBox(height: DSizes.sm + DSizes.xs),
+
+                /// Category Row
+                BlocBuilder<CategoryBloc, CategoryState>(
+                  builder: (context, state) {
+                    if (state is CategoryLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is CategoryLoaded ||
+                        state is CategorySuccess) {
+                      final categories =
+                          (state is CategoryLoaded)
+                              ? state.categories
+                              : (state as CategorySuccess).categories;
+
+                      if (categories.isEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.all(DSizes.sm),
+                          child: const Center(
+                            child: Text('No categories Found'),
+                          ),
+                        );
+                      }
+
+                      return DContainer(
+                        height: 90,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: categories.length,
+                          itemBuilder: (context, index) {
+                            final category = categories[index];
+
+                            return DCategoryChip(
+                              category: category,
+                              taskCount: 2,
+                            );
+                          },
+                        ),
+                      );
+                    } else if (state is CategoryError) {
+                      return Center(child: Text(state.message));
+                    } else {
+                      return const Center(child: Text('No categories found'));
+                    }
+                  },
+                ),
+
+                const SizedBox(height: DSizes.sm + DSizes.xs),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Tasks",
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+
+                    Row(
+                      children: [
+                        PopupMenuButton<SortOption>(
+                          tooltip: "Sort Tasks",
+                          icon: const Icon(Icons.sort),
+                          onSelected: (SortOption sort) {
                             setState(() {
-                              searchQuery = '';
+                              currentSort = sort;
                             });
                           },
-                        )
-                        : null,
-                onChanged: (value) {
-                  setState(() {
-                    searchQuery = value;
-                  });
-                },
-              ),
-            ),
-
-            const SizedBox(height: DSizes.sm),
-
-            /// Date Timeline
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: DSizes.xs),
-              decoration: BoxDecoration(
-                color: isDark ? DColors.black : DColors.lightContainer,
-                borderRadius: BorderRadius.circular(DSizes.sm),
-              ),
-              child: DatePicker(
-                DateTime.now(),
-                height: 90,
-                width: 60,
-                initialSelectedDate: _selectedDate,
-                selectionColor: DColors.primary,
-                selectedTextColor: DColors.dark,
-                dateTextStyle: Theme.of(context).textTheme.titleMedium!,
-                dayTextStyle: Theme.of(context).textTheme.bodyMedium!,
-                monthTextStyle: Theme.of(context).textTheme.bodySmall!,
-                onDateChange: (date) {
-                  setState(() {
-                    _selectedDate = date;
-                  });
-
-                  context.read<TaskBloc>().add(LoadTasks());
-                },
-              ),
-            ),
-
-            const SizedBox(height: DSizes.sm),
-
-            /// Category Row
-            GestureDetector(
-              onTap: () {},
-              child: Container(
-                height: 90,
-                padding: const EdgeInsets.symmetric(vertical: DSizes.xs),
-                decoration: BoxDecoration(
-                  color: isDark ? DColors.black : DColors.lightContainer,
-                  borderRadius: BorderRadius.circular(DSizes.sm),
+                          itemBuilder:
+                              (context) => [
+                                const PopupMenuItem(
+                                  value: SortOption.newest,
+                                  child: Text("Newest First"),
+                                ),
+                                const PopupMenuItem(
+                                  value: SortOption.oldest,
+                                  child: Text("Oldest First"),
+                                ),
+                                const PopupMenuItem(
+                                  value: SortOption.titleAsc,
+                                  child: Text("Title (A-Z)"),
+                                ),
+                                const PopupMenuItem(
+                                  value: SortOption.titleDesc,
+                                  child: Text("Title (Z-A)"),
+                                ),
+                              ],
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                child: SingleChildScrollView(
+
+                const SizedBox(height: DSizes.sm),
+
+                /// Task status chip
+                SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                    children:
-                        categories.map((category) {
-                          return Container(
-                            margin: EdgeInsets.only(right: 12),
-                            padding: EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withValues(alpha: 0.2),
-                                  spreadRadius: 1,
-                                  blurRadius: 5,
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  "2 todos",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: const Color.fromARGB(255, 0, 0, 0),
-                                  ),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  category,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: DSizes.spaceBtwItems),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: DSizes.xs),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Tasks",
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-
-                  Row(
                     children: [
-                      PopupMenuButton<SortOption>(
-                        tooltip: "Sort Tasks",
-                        icon: const Icon(Icons.sort),
-                        onSelected: (SortOption sort) {
-                          setState(() {
-                            currentSort = sort;
-                          });
-                        },
-                        itemBuilder:
-                            (context) => [
-                              const PopupMenuItem(
-                                value: SortOption.newest,
-                                child: Text("Newest First"),
-                              ),
-                              const PopupMenuItem(
-                                value: SortOption.oldest,
-                                child: Text("Oldest First"),
-                              ),
-                              const PopupMenuItem(
-                                value: SortOption.titleAsc,
-                                child: Text("Title (A-Z)"),
-                              ),
-                              const PopupMenuItem(
-                                value: SortOption.titleDesc,
-                                child: Text("Title (Z-A)"),
-                              ),
-                            ],
-                      ),
+                      _buildFilterChip("All", TaskFilter.all),
+                      const SizedBox(width: DSizes.xs),
+                      _buildFilterChip("Pending", TaskFilter.pending),
+                      const SizedBox(width: DSizes.xs),
+                      _buildFilterChip("Completed", TaskFilter.completed),
                     ],
                   ),
-                ],
-              ),
+                ),
+
+                const SizedBox(height: DSizes.sm),
+
+                /// Task List
+                Expanded(
+                  child: DTaskList(
+                    selectedDate: _selectedDate,
+                    currentFilter: currentFilter,
+                    searchQuery: searchQuery,
+                    currentSort: currentSort,
+                  ),
+                ),
+              ],
             ),
-
-            const SizedBox(height: DSizes.sm),
-
-            /// Task status chip
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  _buildFilterChip("All", TaskFilter.all),
-                  const SizedBox(width: DSizes.xs),
-                  _buildFilterChip("Pending", TaskFilter.pending),
-                  const SizedBox(width: DSizes.xs),
-                  _buildFilterChip("Completed", TaskFilter.completed),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: DSizes.sm),
-
-            /// Task List
-            Expanded(
-              child: DTaskList(
-                selectedDate: _selectedDate,
-                currentFilter: currentFilter,
-                searchQuery: searchQuery,
-                currentSort: currentSort,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -262,13 +247,11 @@ class _HomePageState extends State<HomePage> {
       label: label,
       isSelected: currentFilter == filter,
       onSelected: (selected) {
-        setState(() {
-          currentFilter = filter;
-        });
+        setState(() => currentFilter = filter);
       },
-      backgroundColor: isDark ? DColors.darkerGrey : DColors.lightContainer,
+      backgroundColor: isDark ? DColors.dark : DColors.light,
       selectedColor: DColors.primary,
-      checkmarkColor: DColors.darkerGrey,
+      checkmarkColor: DColors.black,
     );
   }
 }

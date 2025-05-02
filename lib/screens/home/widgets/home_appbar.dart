@@ -1,5 +1,5 @@
 import 'package:dedo/bloc/theme/theme_bloc.dart';
-import 'package:dedo/screens/category/category_screen.dart';
+import 'package:dedo/screens/category/category.dart';
 import 'package:dedo/services/notification_service.dart';
 import 'package:dedo/utils/constants/colors.dart';
 import 'package:dedo/utils/constants/text.dart';
@@ -15,6 +15,8 @@ class DHomeAppbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = DHelperFunctions.isDarkMode(context);
+
     return DAppBar(
       title: Text(
         DTexts.appName,
@@ -62,16 +64,10 @@ class DHomeAppbar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           icon: Icon(
             Icons.category_sharp,
-            color:
-                DHelperFunctions.isDarkMode(context)
-                    ? DColors.light
-                    : DColors.dark,
+            color: isDark ? DColors.light : DColors.dark,
           ),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const CategoryScreen()),
-            );
+            DHelperFunctions.navigateToScreen(context, CategoryScreen());
           },
         ),
       ],

@@ -61,7 +61,7 @@ class DHelperFunctions {
       SnackBar(
         content: Container(
           padding: const EdgeInsets.all(DSizes.sm),
-          width: MediaQuery.of(context).size.width,
+          width: double.infinity,
           height: 80,
           decoration: BoxDecoration(
             color: bgColor,
@@ -100,7 +100,7 @@ class DHelperFunctions {
         duration: duration,
         action: action,
         behavior: SnackBarBehavior.floating,
-        elevation: 3,
+        elevation: 0,
       ),
     );
   }

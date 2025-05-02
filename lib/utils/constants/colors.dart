@@ -4,7 +4,7 @@ class DColors {
   DColors._();
 
   // App Theme Colors
-  static const Color primary = Color.fromARGB(255, 0, 255, 255);
+  static const Color primary = Color(0xFF00FFFF);
   static const Color secondary = Color(0xFFFFE24B);
   static const Color accent = Color(0xFFB0C7FF);
 
@@ -45,15 +45,15 @@ class DColors {
   static const Color info = Color(0xFF1976D2);
 
   // Neutral Shades
-  static const Color black = Color.fromARGB(255, 0, 0, 0);
+  static const Color black = Color(0xFF000000);
   static const Color darkerGrey = Color(0xFF4F4F4F);
-  static const Color darkGrey = Color.fromARGB(255, 20, 20, 20);
+  static const Color darkGrey = Color(0xFF2E2E2E);
   static const Color grey = Color(0xFFE0E0E0);
   static const Color softGrey = Color(0xFFF4F4F4);
-  static const Color lightGrey = Color(0xFFF9F9F9);
+  static const Color lightGrey = Color(0xFFF0EDED);
   static const Color white = Color(0xFFFFFFFF);
 
-  //categorycolors
+  // Category colors
   static const List<Color> categoryColors = [
     Color(0xFFE17055),
     Color(0xFF0984E3),
