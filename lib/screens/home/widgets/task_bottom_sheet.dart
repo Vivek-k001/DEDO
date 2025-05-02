@@ -1,5 +1,6 @@
 import 'package:dedo/bloc/task/task_bloc.dart';
 import 'package:dedo/models/task_model.dart';
+import 'package:dedo/screens/task_form/edit_task.dart';
 import 'package:dedo/utils/constants/sizes.dart';
 import 'package:dedo/utils/helper_functions.dart';
 import 'package:dedo/widgets/button.dart';
@@ -59,7 +60,12 @@ Future<dynamic> taskOptionsBottomSheet(BuildContext context, TaskModel task) {
               SizedBox(height: DSizes.spaceBtwSections),
 
               DButton(
-                onTap: () {},
+                onTap: () {
+                  DHelperFunctions.navigateToScreen(
+                    context,
+                    EditTaskScreen(task: task),
+                  );
+                },
                 icon: Icons.edit,
                 btnTitle: "Edit Task",
                 width: double.infinity,

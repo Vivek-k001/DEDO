@@ -112,6 +112,7 @@ class DTextFormField extends StatelessWidget {
                     color: isDark ? DColors.grey : DColors.darkerGrey,
                   ),
                 ),
+
                 suffixIcon:
                     suffixWidget ??
                     (suffixIcon != null

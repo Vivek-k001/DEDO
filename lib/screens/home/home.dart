@@ -67,172 +67,162 @@ class _HomePageState extends State<HomePage> {
             );
           }
         },
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: DSizes.md),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                /// Search bar
-                DContainer(
-                  padding: EdgeInsets.zero,
-                  backgroundColor:
-                      DHelperFunctions.isDarkMode(context)
-                          ? DColors.black
-                          : DColors.white,
-                  child: DTextFormField(
-                    hintText: "Search tasks...",
-                    prefixIcon: Icons.search,
-                    title: "",
-                    suffixIcon: Icons.clear,
-                    onIconPressed: () {
-                      _searchController.clear();
-                      setState(() => setState(() => searchQuery = ''));
-                    },
-                    onChanged: (value) => setState(() => searchQuery = value),
-                  ),
-                ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: DSizes.md),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /// Search bar
+              DTextFormField(
+                controller: _searchController,
+                hintText: "Search tasks...",
+                prefixIcon: Icons.search,
+                title: "",
+                suffixIcon: Icons.clear,
+                onIconPressed: () {
+                  _searchController.clear();
+                  setState(() => searchQuery = '');
+                },
+                onChanged: (value) => setState(() => searchQuery = value),
+              ),
 
-                /// Date Timeline
-                DContainer(
-                  child: DatePicker(
-                    DateTime.now(),
-                    height: 90,
-                    width: 60,
-                    initialSelectedDate: _selectedDate,
-                    selectionColor: DColors.primary,
-                    selectedTextColor: DColors.dark,
-                    dateTextStyle: Theme.of(context).textTheme.titleMedium!
-                        .copyWith(fontWeight: FontWeight.bold),
-                    dayTextStyle: Theme.of(context).textTheme.bodySmall!,
-                    monthTextStyle: Theme.of(context).textTheme.bodyMedium!,
-                    onDateChange: (date) {
-                      setState(() => _selectedDate = date);
-                      context.read<TaskBloc>().add(LoadTasks());
-                    },
-                  ),
-                ),
-
-                const SizedBox(height: DSizes.sm + DSizes.xs),
-
-                /// Category Row
-                BlocBuilder<CategoryBloc, CategoryState>(
-                  builder: (context, state) {
-                    if (state is CategoryLoading) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (state is CategoryLoaded ||
-                        state is CategorySuccess) {
-                      final categories =
-                          (state is CategoryLoaded)
-                              ? state.categories
-                              : (state as CategorySuccess).categories;
-
-                      if (categories.isEmpty) {
-                        return Padding(
-                          padding: const EdgeInsets.all(DSizes.sm),
-                          child: const Center(
-                            child: Text('No categories Found'),
-                          ),
-                        );
-                      }
-
-                      return DContainer(
-                        height: 90,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: categories.length,
-                          itemBuilder: (context, index) {
-                            final category = categories[index];
-
-                            return DCategoryChip(
-                              category: category,
-                              taskCount: 2,
-                            );
-                          },
-                        ),
-                      );
-                    } else if (state is CategoryError) {
-                      return Center(child: Text(state.message));
-                    } else {
-                      return const Center(child: Text('No categories found'));
-                    }
+              /// Date Timeline
+              DContainer(
+                child: DatePicker(
+                  DateTime.now(),
+                  height: 90,
+                  width: 60,
+                  initialSelectedDate: _selectedDate,
+                  selectionColor: DColors.primary,
+                  selectedTextColor: DColors.dark,
+                  dateTextStyle: Theme.of(context).textTheme.titleMedium!
+                      .copyWith(fontWeight: FontWeight.bold),
+                  dayTextStyle: Theme.of(context).textTheme.bodySmall!,
+                  monthTextStyle: Theme.of(context).textTheme.bodyMedium!,
+                  onDateChange: (date) {
+                    setState(() => _selectedDate = date);
+                    context.read<TaskBloc>().add(LoadTasks());
                   },
                 ),
+              ),
 
-                const SizedBox(height: DSizes.sm + DSizes.xs),
+              const SizedBox(height: DSizes.sm + DSizes.xs),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Tasks",
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
+              /// Category Row
+              BlocBuilder<CategoryBloc, CategoryState>(
+                builder: (context, state) {
+                  if (state is CategoryLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is CategoryLoaded ||
+                      state is CategorySuccess) {
+                    final categories =
+                        (state is CategoryLoaded)
+                            ? state.categories
+                            : (state as CategorySuccess).categories;
 
-                    Row(
-                      children: [
-                        PopupMenuButton<SortOption>(
-                          tooltip: "Sort Tasks",
-                          icon: const Icon(Icons.sort),
-                          onSelected: (SortOption sort) {
-                            setState(() {
-                              currentSort = sort;
-                            });
-                          },
-                          itemBuilder:
-                              (context) => [
-                                const PopupMenuItem(
-                                  value: SortOption.newest,
-                                  child: Text("Newest First"),
-                                ),
-                                const PopupMenuItem(
-                                  value: SortOption.oldest,
-                                  child: Text("Oldest First"),
-                                ),
-                                const PopupMenuItem(
-                                  value: SortOption.titleAsc,
-                                  child: Text("Title (A-Z)"),
-                                ),
-                                const PopupMenuItem(
-                                  value: SortOption.titleDesc,
-                                  child: Text("Title (Z-A)"),
-                                ),
-                              ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                    if (categories.isEmpty) {
+                      return Padding(
+                        padding: const EdgeInsets.all(DSizes.sm),
+                        child: const Center(child: Text('No categories Found')),
+                      );
+                    }
 
-                const SizedBox(height: DSizes.sm),
+                    return DContainer(
+                      height: 90,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: categories.length,
+                        itemBuilder: (context, index) {
+                          final category = categories[index];
 
-                /// Task status chip
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
+                          return DCategoryChip(
+                            category: category,
+                            taskCount: 2,
+                          );
+                        },
+                      ),
+                    );
+                  } else if (state is CategoryError) {
+                    return Center(child: Text(state.message));
+                  } else {
+                    return const Center(child: Text('No categories found'));
+                  }
+                },
+              ),
+
+              const SizedBox(height: DSizes.sm + DSizes.xs),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Tasks",
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+
+                  Row(
                     children: [
-                      _buildFilterChip("All", TaskFilter.all),
-                      const SizedBox(width: DSizes.xs),
-                      _buildFilterChip("Pending", TaskFilter.pending),
-                      const SizedBox(width: DSizes.xs),
-                      _buildFilterChip("Completed", TaskFilter.completed),
+                      PopupMenuButton<SortOption>(
+                        tooltip: "Sort Tasks",
+                        icon: const Icon(Icons.sort),
+                        onSelected: (SortOption sort) {
+                          setState(() {
+                            currentSort = sort;
+                          });
+                        },
+                        itemBuilder:
+                            (context) => [
+                              const PopupMenuItem(
+                                value: SortOption.newest,
+                                child: Text("Newest First"),
+                              ),
+                              const PopupMenuItem(
+                                value: SortOption.oldest,
+                                child: Text("Oldest First"),
+                              ),
+                              const PopupMenuItem(
+                                value: SortOption.titleAsc,
+                                child: Text("Title (A-Z)"),
+                              ),
+                              const PopupMenuItem(
+                                value: SortOption.titleDesc,
+                                child: Text("Title (Z-A)"),
+                              ),
+                            ],
+                      ),
                     ],
                   ),
-                ),
+                ],
+              ),
 
-                const SizedBox(height: DSizes.sm),
+              const SizedBox(height: DSizes.sm),
 
-                /// Task List
-                Expanded(
-                  child: DTaskList(
-                    selectedDate: _selectedDate,
-                    currentFilter: currentFilter,
-                    searchQuery: searchQuery,
-                    currentSort: currentSort,
-                  ),
+              /// Task status chip
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    _buildFilterChip("All", TaskFilter.all),
+                    const SizedBox(width: DSizes.xs),
+                    _buildFilterChip("Pending", TaskFilter.pending),
+                    const SizedBox(width: DSizes.xs),
+                    _buildFilterChip("Completed", TaskFilter.completed),
+                  ],
                 ),
-              ],
-            ),
+              ),
+
+              const SizedBox(height: DSizes.sm),
+
+              /// Task List
+              Expanded(
+                child: DTaskList(
+                  selectedDate: _selectedDate,
+                  currentFilter: currentFilter,
+                  searchQuery: searchQuery,
+                  currentSort: currentSort,
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -251,7 +241,7 @@ class _HomePageState extends State<HomePage> {
       },
       backgroundColor: isDark ? DColors.dark : DColors.light,
       selectedColor: DColors.primary,
-      checkmarkColor: DColors.black,
+      selectedTextColor: DColors.black,
     );
   }
 }

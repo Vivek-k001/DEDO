@@ -4,7 +4,9 @@ import 'package:dedo/utils/helper_functions.dart';
 import 'package:flutter/material.dart';
 
 class AddTaskHeader extends StatelessWidget {
-  const AddTaskHeader({super.key});
+  const AddTaskHeader({super.key, required this.isEditing});
+
+  final bool isEditing;
 
   @override
   Widget build(BuildContext context) {
@@ -17,16 +19,20 @@ class AddTaskHeader extends StatelessWidget {
             Icon(Icons.task_alt, size: 50, color: DColors.darkerGrey),
             const SizedBox(height: DSizes.spaceBtwItems),
             Text(
-              "Create New Task",
+              isEditing ? 'Edit Task' : 'Create New Task',
               style: Theme.of(
                 context,
               ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
           ],
         ),
+
         const SizedBox(height: DSizes.sm),
+
         Text(
-          "Fill in the details below to add a new task to your list",
+          isEditing
+              ? 'Update the task details below'
+              : "Fill in the details below to add a new task to your list",
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color:
                 DHelperFunctions.isDarkMode(context)
@@ -35,6 +41,7 @@ class AddTaskHeader extends StatelessWidget {
           ),
           textAlign: TextAlign.center,
         ),
+
         const SizedBox(height: DSizes.spaceBtwItems),
       ],
     );

@@ -66,15 +66,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 hintText: "Enter your title",
                 prefixIcon: Icons.title,
                 controller: _nameController,
-                suffixIcon:
-                    _nameController.text.isNotEmpty ? Icons.clear : null,
+                suffixIcon: Icons.clear,
                 onIconPressed: () {
                   _nameController.clear();
-                  setState(
-                    () => setState(
-                      () => _selectedColor = DColors.categoryColors.first,
-                    ),
-                  );
+                  setState(() => _selectedColor = DColors.categoryColors.first);
                 },
               ),
 

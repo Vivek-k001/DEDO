@@ -1,4 +1,4 @@
-import 'package:dedo/screens/add_task/add_task.dart';
+import 'package:dedo/screens/task_form/add_task.dart';
 import 'package:dedo/screens/home/home.dart';
 import 'package:dedo/screens/profile.dart';
 import 'package:dedo/utils/constants/colors.dart';
