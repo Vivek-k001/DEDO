@@ -1,6 +1,7 @@
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:dedo/bloc/category/category_bloc.dart';
 import 'package:dedo/bloc/task/task_bloc.dart';
+import 'package:dedo/screens/category/category_list_view.dart';
 import 'package:dedo/screens/home/widgets/categoy_chip.dart';
 import 'package:dedo/screens/home/widgets/home_appbar.dart';
 import 'package:dedo/screens/home/widgets/task_list.dart';
@@ -121,26 +122,69 @@ class _HomePageState extends State<HomePage> {
                             : (state as CategorySuccess).categories;
 
                     if (categories.isEmpty) {
-                      return Padding(
-                        padding: const EdgeInsets.all(DSizes.sm),
-                        child: const Center(child: Text('No categories Found')),
+                      return const Padding(
+                        padding: EdgeInsets.all(DSizes.sm),
+                        child: Center(child: Text('No categories Found')),
                       );
                     }
 
-                    return DContainer(
-                      height: 90,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: categories.length,
-                        itemBuilder: (context, index) {
-                          final category = categories[index];
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // 📊 STATS BAR
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: DSizes.sm,
+                            vertical: DSizes.xs,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Total Categories: ${categories.length}',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                              // You can replace 2 * categories.length with actual task count logic
+                              Text(
+                                'Total Tasks: ${categories.length * 2}',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            ],
+                          ),
+                        ),
 
-                          return DCategoryChip(
-                            category: category,
-                            taskCount: 2,
-                          );
-                        },
-                      ),
+                        // 🔲 CATEGORY LIST
+                        DContainer(
+                          height: 90,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: categories.length,
+                            itemBuilder: (context, index) {
+                              final category = categories[index];
+
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => CategoryListView(
+                                            category: category,
+                                          ),
+                                    ),
+                                  );
+                                },
+                                child: DCategoryChip(
+                                  category: category,
+                                  taskCount:
+                                      categories
+                                          .length, // Replace with actual task count if available
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     );
                   } else if (state is CategoryError) {
                     return Center(child: Text(state.message));
