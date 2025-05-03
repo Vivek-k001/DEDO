@@ -1,7 +1,6 @@
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:dedo/bloc/category/category_bloc.dart';
 import 'package:dedo/bloc/task/task_bloc.dart';
-import 'package:dedo/screens/category/category_list_view.dart';
 import 'package:dedo/screens/home/widgets/categoy_chip.dart';
 import 'package:dedo/screens/home/widgets/home_appbar.dart';
 import 'package:dedo/screens/home/widgets/task_list.dart';
@@ -47,7 +46,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: DHomeAppbar(),
-
       body: BlocListener<TaskBloc, TaskState>(
         listener: (context, state) {
           if (state is TaskSuccess) {
@@ -128,26 +126,39 @@ class _HomePageState extends State<HomePage> {
                       );
                     }
 
+                    /// Dummy logic — replace with your actual logic
+                    final int totalTasks =
+                        categories.length * 5; // Assuming 5 tasks per category
+                    final int completedTasks =
+                        categories.length *
+                        2; // Assuming 2 completed per category
+                    final double progress =
+                        totalTasks == 0 ? 0 : completedTasks / totalTasks;
+
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // 📊 STATS BAR
+                        // 📊 TASK PROGRESS BAR
                         Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: DSizes.sm,
-                            vertical: DSizes.xs,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          padding: const EdgeInsets.all(DSizes.sm),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Total Categories: ${categories.length}',
+                                'Task Completion: ${(progress * 100).toStringAsFixed(1)}%',
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
-                              // You can replace 2 * categories.length with actual task count logic
-                              Text(
-                                'Total Tasks: ${categories.length * 2}',
-                                style: Theme.of(context).textTheme.bodyMedium,
+                              const SizedBox(height: 4),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: LinearProgressIndicator(
+                                  value: progress,
+                                  minHeight: 10,
+                                  backgroundColor: Colors.grey.shade300,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.green,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -162,24 +173,12 @@ class _HomePageState extends State<HomePage> {
                             itemBuilder: (context, index) {
                               final category = categories[index];
 
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder:
-                                          (context) => CategoryListView(
-                                            category: category,
-                                          ),
-                                    ),
-                                  );
-                                },
-                                child: DCategoryChip(
-                                  category: category,
-                                  taskCount:
-                                      categories
-                                          .length, // Replace with actual task count if available
-                                ),
+                              return DCategoryChip(
+                                category: category,
+                                taskCount:
+                                    5, // Replace with actual total task count
+                                //completedCount:
+                                //2, // You can pass this for per-category bar too
                               );
                             },
                           ),

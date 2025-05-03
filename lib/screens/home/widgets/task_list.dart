@@ -12,7 +12,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:intl/intl.dart';
 
 class DTaskList extends StatelessWidget {
-  const DTaskList({
+  DTaskList({
     super.key,
     required this.selectedDate,
     required this.currentFilter,
@@ -36,7 +36,7 @@ class DTaskList extends StatelessWidget {
         } else if (state is TaskLoaded) {
           final tasks = state.tasks;
 
-          final filteredTasks = _filterAndSortTasks(tasks);
+          final filteredTasks = filterAndSortTasks(tasks);
 
           // Empty Task view
           if (filteredTasks.isEmpty) {
@@ -108,7 +108,7 @@ class DTaskList extends StatelessWidget {
     );
   }
 
-  List<TaskModel> _filterAndSortTasks(List<TaskModel> tasks) {
+  List<TaskModel> filterAndSortTasks(List<TaskModel> tasks) {
     // Date filtering
     final dateString = DateFormat('dd/MM/yyyy').format(selectedDate);
 
