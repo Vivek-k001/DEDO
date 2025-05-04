@@ -115,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                   } else if (state is CategoryLoaded ||
                       state is CategorySuccess) {
                     final categories =
-                        (state is CategoryLoaded)
+                        state is CategoryLoaded
                             ? state.categories
                             : (state as CategorySuccess).categories;
 
@@ -126,64 +126,49 @@ class _HomePageState extends State<HomePage> {
                       );
                     }
 
-                    /// Dummy logic — replace with your actual logic
-                    final int totalTasks =
-                        categories.length * 5; // Assuming 5 tasks per category
-                    final int completedTasks =
-                        categories.length *
-                        2; // Assuming 2 completed per category
+                    final int totalTasks = categories.length * 5;
+                    final int completedTasks = categories.length * 2;
                     final double progress =
                         totalTasks == 0 ? 0 : completedTasks / totalTasks;
 
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // 📊 TASK PROGRESS BAR
-                        Padding(
-                          padding: const EdgeInsets.all(DSizes.sm),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Task Completion: ${(progress * 100).toStringAsFixed(1)}%',
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                              const SizedBox(height: 4),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: LinearProgressIndicator(
-                                  value: progress,
-                                  minHeight: 10,
-                                  backgroundColor: Colors.grey.shade300,
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    Colors.green,
-                                  ),
-                                ),
-                              ),
-                            ],
+                    return DContainer(
+                      padding: const EdgeInsets.all(DSizes.sm),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Task Completion: ${(progress * 100).toStringAsFixed(1)}%',
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
-                        ),
-
-                        // 🔲 CATEGORY LIST
-                        DContainer(
-                          height: 90,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: categories.length,
-                            itemBuilder: (context, index) {
-                              final category = categories[index];
-
-                              return DCategoryChip(
-                                category: category,
-                                taskCount:
-                                    5, // Replace with actual total task count
-                                //completedCount:
-                                //2, // You can pass this for per-category bar too
-                              );
-                            },
+                          const SizedBox(height: 4),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: LinearProgressIndicator(
+                              value: progress,
+                              minHeight: 10,
+                              backgroundColor: Colors.grey.shade300,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.green,
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            height: 90,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: categories.length,
+                              itemBuilder: (context, index) {
+                                final category = categories[index];
+                                return DCategoryChip(
+                                  category: category,
+                                  taskCount: 5,
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                     );
                   } else if (state is CategoryError) {
                     return Center(child: Text(state.message));
