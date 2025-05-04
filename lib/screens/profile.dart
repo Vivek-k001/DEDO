@@ -29,45 +29,19 @@ class ProfileScreen extends StatelessWidget {
               CircleAvatar(
                 radius: 50,
                 backgroundImage: NetworkImage(
-                  "https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=386&q=80",
+                  "https://media.licdn.com/dms/image/v2/D4E35AQFDQPGzJcqHug/profile-framedphoto-shrink_400_400/profile-framedphoto-shrink_400_400/0/1732880984213?e=1746943200&v=beta&t=aBYT05KDeCbqwgzlvmHcfzaRK_Rl_aq5or9aleJqQcs",
                 ),
               ),
               SizedBox(height: 10),
               Text(
-                "Rachael Wagner",
+                "Jasir Mooliyathodi",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              Text("Junior Product Designer"),
+              Text("Flutter DEV"),
             ],
           ),
           const SizedBox(height: 25),
-          Row(
-            children: const [
-              Padding(
-                padding: EdgeInsets.only(right: 5),
-                child: Text(
-                  "Complete your profile",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              Text("(1/5)", style: TextStyle(color: Colors.blue)),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: List.generate(5, (index) {
-              return Expanded(
-                child: Container(
-                  height: 7,
-                  margin: EdgeInsets.only(right: index == 4 ? 0 : 6),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: index == 0 ? Colors.blue : Colors.black12,
-                  ),
-                ),
-              );
-            }),
-          ),
+
           const SizedBox(height: 10),
           SizedBox(
             height: 180,
