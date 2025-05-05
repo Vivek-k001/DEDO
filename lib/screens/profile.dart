@@ -1,29 +1,24 @@
-import 'package:flutter/cupertino.dart';
+import 'package:dedo/models/category_model.dart';
+import 'package:dedo/screens/home/widgets/buildstat_card.dart';
+import 'package:dedo/screens/home/widgets/categoy_chip.dart';
+import 'package:dedo/screens/home/widgets/notificationToggleTile.dart';
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.black,
         title: const Text("PROFILE"),
         centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.settings_rounded),
-          ),
-        ],
       ),
       body: ListView(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(16),
         children: [
-          // COLUMN THAT WILL CONTAIN THE PROFILE
           Column(
             children: const [
               CircleAvatar(
@@ -35,115 +30,165 @@ class ProfileScreen extends StatelessWidget {
               SizedBox(height: 10),
               Text(
                 "Jasir Mooliyathodi",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              Text("Flutter DEV"),
+              Text("Flutter Developer", style: TextStyle(color: Colors.grey)),
             ],
           ),
-          const SizedBox(height: 25),
+          const SizedBox(height: 30),
 
-          const SizedBox(height: 10),
-          SizedBox(
-            height: 180,
-            child: ListView.separated(
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                final card = profileCompletionCards[index];
-                return SizedBox(
-                  width: 160,
-                  child: Card(
-                    shadowColor: Colors.black12,
-                    child: Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Column(
-                        children: [
-                          Icon(card.icon, size: 30),
-                          const SizedBox(height: 10),
-                          Text(card.title, textAlign: TextAlign.center),
-                          const Spacer(),
-                          ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            child: Text(card.buttonText),
+          //Graph Card
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.white,
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 10,
+                  offset: Offset(0, 5),
+                ),
+              ],
+            ),
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "To-Do Completion Trend",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  height: 200,
+                  child: LineChart(
+                    LineChartData(
+                      backgroundColor: Colors.white,
+                      gridData: FlGridData(show: false),
+                      titlesData: FlTitlesData(
+                        bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            interval: 1,
+                            getTitlesWidget: (value, _) {
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Text(
+                                  "Day ${value.toInt()}",
+                                  style: const TextStyle(fontSize: 10),
+                                ),
+                              );
+                            },
                           ),
-                        ],
+                        ),
+                        leftTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            interval: 1,
+                            getTitlesWidget:
+                                (value, _) => Text(
+                                  value.toInt().toString(),
+                                  style: const TextStyle(fontSize: 10),
+                                ),
+                          ),
+                        ),
+                        rightTitles: AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        topTitles: AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
                       ),
+                      borderData: FlBorderData(
+                        show: true,
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      minX: 1,
+                      maxX: 6,
+                      minY: 0,
+                      maxY: 6,
+                      lineBarsData: [
+                        LineChartBarData(
+                          spots: const [
+                            FlSpot(1, 2),
+                            FlSpot(2, 3),
+                            FlSpot(3, 1),
+
+                            FlSpot(4, 4),
+                            FlSpot(5, 3),
+                            FlSpot(6, 5),
+                          ],
+                          isCurved: true,
+                          gradient: const LinearGradient(
+                            colors: [Color(0xff23b6e6), Color(0xff02d39a)],
+                          ),
+                          barWidth: 4,
+                          isStrokeCapRound: true,
+                          dotData: FlDotData(
+                            show: true,
+                            getDotPainter: (spot, percent, barData, index) {
+                              return FlDotCirclePainter(
+                                radius: 4,
+                                color: Colors.teal,
+                                strokeWidth: 1.5,
+                                strokeColor: Colors.white,
+                              );
+                            },
+                          ),
+
+                          belowBarData: BarAreaData(
+                            show: true,
+                            gradient: LinearGradient(
+                              colors: [
+                                const Color(0xff23b6e6).withOpacity(0.3),
+                                const Color(0xff02d39a).withOpacity(0.1),
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                );
-              },
-              separatorBuilder:
-                  (context, index) =>
-                      const Padding(padding: EdgeInsets.only(right: 5)),
-              itemCount: profileCompletionCards.length,
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 35),
-          ...List.generate(customListTiles.length, (index) {
-            final tile = customListTiles[index];
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 5),
-              child: Card(
-                elevation: 4,
-                shadowColor: Colors.black12,
-                child: ListTile(
-                  leading: Icon(tile.icon),
-                  title: Text(tile.title),
-                  trailing: const Icon(Icons.chevron_right),
-                ),
+          SizedBox(height: 20),
+          NotificationToggleTile(
+            initialValue: true, // or false, based on user settings
+            onChanged: (bool value) {
+              // Save to preferences, database, or state management
+              print('Notifications are now ${value ? 'enabled' : 'disabled'}');
+            },
+          ),
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              StatCard(
+                title: 'Done',
+                value: '120',
+                icon: Icons.check_circle,
+                color: Colors.green,
               ),
-            );
-          }),
+              StatCard(
+                title: 'Pending',
+                value: '25',
+                icon: Icons.access_time,
+                color: Colors.orange,
+              ),
+              StatCard(
+                title: 'Streak',
+                value: '7 days',
+                icon: Icons.local_fire_department,
+                color: Colors.red,
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
 }
-
-class ProfileCompletionCard {
-  final String title;
-  final String buttonText;
-  final IconData icon;
-  ProfileCompletionCard({
-    required this.title,
-    required this.buttonText,
-    required this.icon,
-  });
-}
-
-List<ProfileCompletionCard> profileCompletionCards = [
-  ProfileCompletionCard(
-    title: "Set Your Profile Details",
-    icon: CupertinoIcons.person_circle,
-    buttonText: "Continue",
-  ),
-  ProfileCompletionCard(
-    title: "Upload your resume",
-    icon: CupertinoIcons.doc,
-    buttonText: "Upload",
-  ),
-  ProfileCompletionCard(
-    title: "Add your skills",
-    icon: CupertinoIcons.square_list,
-    buttonText: "Add",
-  ),
-];
-
-class CustomListTile {
-  final IconData icon;
-  final String title;
-  CustomListTile({required this.icon, required this.title});
-}
-
-List<CustomListTile> customListTiles = [
-  CustomListTile(icon: Icons.insights, title: "Activity"),
-  CustomListTile(icon: Icons.location_on_outlined, title: "Location"),
-  CustomListTile(title: "Notifications", icon: CupertinoIcons.bell),
-  CustomListTile(title: "Logout", icon: CupertinoIcons.arrow_right_arrow_left),
-];

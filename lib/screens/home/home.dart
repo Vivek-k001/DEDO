@@ -1,6 +1,7 @@
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:dedo/bloc/category/category_bloc.dart';
 import 'package:dedo/bloc/task/task_bloc.dart';
+import 'package:dedo/screens/category/category_list_view.dart';
 import 'package:dedo/screens/home/widgets/categoy_chip.dart';
 import 'package:dedo/screens/home/widgets/home_appbar.dart';
 import 'package:dedo/screens/home/widgets/task_list.dart';
@@ -122,52 +123,33 @@ class _HomePageState extends State<HomePage> {
                     if (categories.isEmpty) {
                       return const Padding(
                         padding: EdgeInsets.all(DSizes.sm),
-                        child: Center(child: Text('No categories Found')),
+                        child: Center(child: Text('No categories found')),
                       );
                     }
 
-                    final int totalTasks = categories.length * 5;
-                    final int completedTasks = categories.length * 2;
-                    final double progress =
-                        totalTasks == 0 ? 0 : completedTasks / totalTasks;
+                    return SizedBox(
+                      height: 100,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: categories.length,
+                        itemBuilder: (context, index) {
+                          final category = categories[index];
 
-                    return DContainer(
-                      padding: const EdgeInsets.all(DSizes.sm),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Task Completion: ${(progress * 100).toStringAsFixed(1)}%',
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                          const SizedBox(height: 4),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: LinearProgressIndicator(
-                              value: progress,
-                              minHeight: 10,
-                              backgroundColor: Colors.grey.shade300,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.green,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          SizedBox(
-                            height: 90,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: categories.length,
-                              itemBuilder: (context, index) {
-                                final category = categories[index];
-                                return DCategoryChip(
-                                  category: category,
-                                  taskCount: 5,
-                                );
-                              },
-                            ),
-                          ),
-                        ],
+                          // Dummy task values —  can replace these with actual logic
+                          const int totalTasks = 5;
+                          const int completedTasks = 4;
+                          final double progress =
+                              totalTasks == 0 ? 0 : completedTasks / totalTasks;
+
+                          return DCategoryChip(
+                            category: category,
+                            taskCount: totalTasks,
+                            progress: progress,
+                            onTap: () {
+                              CategoryListView(category: category);
+                            },
+                          );
+                        },
                       ),
                     );
                   } else if (state is CategoryError) {

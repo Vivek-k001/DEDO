@@ -4,7 +4,7 @@ import 'package:dedo/bloc/theme/theme_bloc.dart';
 import 'package:dedo/db/db_helper.dart';
 import 'package:dedo/repositories/category_repository.dart';
 import 'package:dedo/repositories/task_repository.dart';
-import 'package:dedo/screens/main.dart';
+import 'package:dedo/screens/main_page.dart';
 import 'package:dedo/services/notification_helper.dart';
 import 'package:dedo/utils/constants/text.dart';
 import 'package:dedo/utils/theme/theme.dart';

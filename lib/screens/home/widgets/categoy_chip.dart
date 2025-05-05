@@ -6,12 +6,14 @@ import 'package:flutter/material.dart';
 class DCategoryChip extends StatelessWidget {
   final CategoryModel category;
   final int taskCount;
+  final double progress; // value between 0.0 and 1.0
   final VoidCallback? onTap;
 
   const DCategoryChip({
     super.key,
     required this.category,
     required this.taskCount,
+    required this.progress,
     this.onTap,
   });
 
@@ -25,13 +27,14 @@ class DCategoryChip extends StatelessWidget {
         backgroundColor: Color(category.color),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: Colors.black.withOpacity(0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
         ],
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               '$taskCount tasks',
@@ -45,6 +48,14 @@ class DCategoryChip extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
+            ),
+            const SizedBox(height: DSizes.xs),
+            LinearProgressIndicator(
+              value: progress,
+              minHeight: 6,
+              backgroundColor: Colors.black12,
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+              borderRadius: BorderRadius.circular(4),
             ),
           ],
         ),
