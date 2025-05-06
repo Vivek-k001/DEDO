@@ -135,19 +135,34 @@ class _HomePageState extends State<HomePage> {
                         itemBuilder: (context, index) {
                           final category = categories[index];
 
-                          // Dummy task values —  can replace these with actual logic
                           const int totalTasks = 5;
                           const int completedTasks = 4;
                           final double progress =
                               totalTasks == 0 ? 0 : completedTasks / totalTasks;
 
-                          return DCategoryChip(
-                            category: category,
-                            taskCount: totalTasks,
-                            progress: progress,
-                            onTap: () {
-                              CategoryListView(category: category);
-                            },
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                            ),
+                            child: SizedBox(
+                              width: 150, // Ensure width
+                              child: DCategoryChip(
+                                category: category,
+                                taskCount: totalTasks,
+                                progress: progress,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (_) => CategoryListView(
+                                            category: category,
+                                          ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
                           );
                         },
                       ),

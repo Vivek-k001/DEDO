@@ -1,6 +1,4 @@
-import 'package:dedo/models/category_model.dart';
 import 'package:dedo/screens/home/widgets/buildstat_card.dart';
-import 'package:dedo/screens/home/widgets/categoy_chip.dart';
 import 'package:dedo/screens/home/widgets/notificationToggleTile.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
