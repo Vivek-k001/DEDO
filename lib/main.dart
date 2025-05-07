@@ -24,7 +24,7 @@ void main() async {
   final taskRepo = TaskRepository(dbHelper);
 
   final notificationHelper = NotificationHelper();
-
+  await notificationHelper.init();
   runApp(
     MultiBlocProvider(
       providers: [
