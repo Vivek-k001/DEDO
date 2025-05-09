@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> {
               /// Date Timeline
               DContainer(
                 child: DatePicker(
-                  DateTime.now(),
+                  DateTime.now().subtract(Duration(days: 1000)),
                   height: 90,
                   width: 60,
                   initialSelectedDate: _selectedDate,
@@ -135,8 +135,9 @@ class _HomePageState extends State<HomePage> {
                         itemBuilder: (context, index) {
                           final category = categories[index];
 
-                          const int totalTasks = 5;
-                          const int completedTasks = 4;
+                          final totalTasks = category.toMap().length;
+
+                          int completedTasks = 4;
                           final double progress =
                               totalTasks == 0 ? 0 : completedTasks / totalTasks;
 
