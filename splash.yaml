@@ -1,5 +1,4 @@
 flutter_native_splash:
-<<<<<<< HEAD
   color: "#FFFFFF"
   color_dark: "#000000"
   image: assets/logos/app_splash_logo.png
@@ -12,17 +11,3 @@ flutter_native_splash:
     image_dark: assets/logos/app_splash_logo.png
 
   web: false
-=======
-  color: "#F6F6F6"
-  color_dark: "#272727"
-  image: assets/logos/splash-white-logo.jpg
-  image_dark: assets/logos/splash-white-logo.jpg
-
-  android_12:
-    color: "#F6F6F6"
-    color_dark: "#272727"
-    image: assets/logos/splash-white-logo.jpg
-    image_dark: assets/logos/splash-white-logo.jpg
-
-  web: false
->>>>>>> 65b05861cc69881293ed88eeeb876d472818ce22

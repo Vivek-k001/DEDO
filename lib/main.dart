@@ -32,7 +32,6 @@ void main() async {
   final categoryRepo = CategoryRepository(dbHelper);
   final taskRepo = TaskRepository(dbHelper);
 
-<<<<<<< HEAD
   // Initialize notification service
   final notificationService = NotificationService();
   await notificationService.init();
@@ -44,9 +43,6 @@ void main() async {
   final taskNotificationHelper = TaskNotificationHelper(notificationService);
 
   // Run the Flutter app with multiple Bloc providers for global state management
-=======
-  final notificationHelper = NotificationHelper();
->>>>>>> 65b05861cc69881293ed88eeeb876d472818ce22
   runApp(
     MultiBlocProvider(
       providers: [

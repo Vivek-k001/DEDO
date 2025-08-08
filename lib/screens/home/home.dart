@@ -129,7 +129,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 onChanged: (value) => setState(() => searchQuery = value),
               ),
 
-<<<<<<< HEAD
               // Horizontal date selector for filtering tasks by selected date
               DDateTimeline(onDateChange: _handleDateChange),
               const SizedBox(height: DSizes.md),
@@ -138,106 +137,12 @@ class _HomeScreenState extends State<HomeScreen> {
               Text(
                 "Categories",
                 style: Theme.of(context).textTheme.headlineSmall,
-=======
-              /// Date Timeline
-              DContainer(
-                child: DatePicker(
-                  DateTime.now().subtract(Duration(days: 1000)),
-                  height: 90,
-                  width: 60,
-                  initialSelectedDate: _selectedDate,
-                  selectionColor: DColors.primary,
-                  selectedTextColor: DColors.dark,
-                  dateTextStyle: Theme.of(context).textTheme.titleMedium!
-                      .copyWith(fontWeight: FontWeight.bold),
-                  dayTextStyle: Theme.of(context).textTheme.bodySmall!,
-                  monthTextStyle: Theme.of(context).textTheme.bodyMedium!,
-                  onDateChange: (date) {
-                    setState(() => _selectedDate = date);
-                    context.read<TaskBloc>().add(LoadTasks());
-                  },
-                ),
->>>>>>> 65b05861cc69881293ed88eeeb876d472818ce22
               ),
               const SizedBox(height: DSizes.sm),
 
-<<<<<<< HEAD
               // Category list section displaying all categories with task counts
               DCategoryListSection(),
               const SizedBox(height: DSizes.sm),
-=======
-              const SizedBox(height: DSizes.sm + DSizes.xs),
-
-              /// Category Row
-              BlocBuilder<CategoryBloc, CategoryState>(
-                builder: (context, state) {
-                  if (state is CategoryLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state is CategoryLoaded ||
-                      state is CategorySuccess) {
-                    final categories =
-                        state is CategoryLoaded
-                            ? state.categories
-                            : (state as CategorySuccess).categories;
-
-                    if (categories.isEmpty) {
-                      return const Padding(
-                        padding: EdgeInsets.all(DSizes.sm),
-                        child: Center(child: Text('No categories found')),
-                      );
-                    }
-
-                    return SizedBox(
-                      height: 100,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: categories.length,
-                        itemBuilder: (context, index) {
-                          final category = categories[index];
-
-                          final totalTasks = category.toMap().length;
-
-                          int completedTasks = 4;
-                          final double progress =
-                              totalTasks == 0 ? 0 : completedTasks / totalTasks;
-
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0,
-                            ),
-                            child: SizedBox(
-                              width: 150, // Ensure width
-                              child: DCategoryChip(
-                                category: category,
-                                taskCount: totalTasks,
-                                progress: progress,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder:
-                                          (_) => CategoryListView(
-                                            category: category,
-                                          ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  } else if (state is CategoryError) {
-                    return Center(child: Text(state.message));
-                  } else {
-                    return const Center(child: Text('No categories found'));
-                  }
-                },
-              ),
-
-              const SizedBox(height: DSizes.sm + DSizes.xs),
->>>>>>> 65b05861cc69881293ed88eeeb876d472818ce22
 
               // Header row for task list with sorting popup menu
               Row(

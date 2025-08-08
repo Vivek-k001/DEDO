@@ -47,7 +47,6 @@
 		<true/>
 		<key>UIStatusBarHidden</key>
 		<false/>
-<<<<<<< HEAD
 		<key>UIBackgroundModes</key>
 		<array>
 			<string>fetch</string>
@@ -58,7 +57,5 @@
 		<string>Need calendar access to schedule reminders</string>
 		<key>NSRemindersUsageDescription</key>
 		<string>Need reminders access to schedule notifications</string>
-=======
->>>>>>> 65b05861cc69881293ed88eeeb876d472818ce22
 	</dict>
 </plist>
