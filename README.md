@@ -15,11 +15,11 @@ Follow these steps to get started with the Dedo app:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Nihal-Mohammed-V/dedo.git
+   git clone https://github.com/Vivek-k001/DEDO.git
    ```
 2. Navigate to the project directory:
    ```bash
-   cd dedo
+   cd DEDO
    ```
 3. Install dependencies:
    ```bash
