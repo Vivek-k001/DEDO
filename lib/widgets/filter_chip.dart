@@ -2,14 +2,15 @@ import 'package:dedo/utils/constants/colors.dart';
 import 'package:dedo/utils/helper_functions.dart';
 import 'package:flutter/material.dart';
 
+/// A custom filter chip widget that supports dark mode and custom colors.
 class DFilterChip extends StatelessWidget {
-  final String label;
-  final bool isSelected;
-  final ValueChanged<bool> onSelected;
-  final Color backgroundColor;
-  final Color selectedColor;
-  final Color? checkmarkColor;
-  final Color selectedTextColor;
+  final String label; // Text label of the chip
+  final bool isSelected; // Whether the chip is selected or not
+  final ValueChanged<bool> onSelected; // Callback when selection toggles
+  final Color backgroundColor; // Background color when not selected
+  final Color selectedColor; // Background color when selected
+  final Color? checkmarkColor; // Color of the checkmark (if shown)
+  final Color selectedTextColor; // Text color when selected
 
   const DFilterChip({
     super.key,
@@ -29,17 +30,16 @@ class DFilterChip extends StatelessWidget {
     return FilterChip(
       label: Text(label),
       labelStyle: TextStyle(
-        color:
-            isSelected
-                ? selectedTextColor
-                : (isDark ? DColors.light : DColors.dark),
+        color: isSelected
+            ? selectedTextColor // Use selected text color if selected
+            : (isDark ? DColors.light : DColors.dark), // Otherwise adjust for dark/light mode
       ),
-      selected: isSelected,
-      onSelected: onSelected,
-      backgroundColor: backgroundColor,
-      selectedColor: selectedColor,
-      checkmarkColor: checkmarkColor,
-      showCheckmark: false,
+      selected: isSelected, // Whether chip is selected
+      onSelected: onSelected, // Selection toggle callback
+      backgroundColor: backgroundColor, // Background color when unselected
+      selectedColor: selectedColor, // Background color when selected
+      checkmarkColor: checkmarkColor, // Checkmark color (optional)
+      showCheckmark: false, // Do not show the checkmark icon
     );
   }
 }

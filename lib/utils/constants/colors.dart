@@ -4,15 +4,20 @@ class DColors {
   DColors._();
 
   // App Theme Colors
-  static const Color primary = Color(0xFF00FFFF);
+  static const Color primary = Color(0xFF8C97EF);
   static const Color secondary = Color(0xFFFFE24B);
   static const Color accent = Color(0xFFB0C7FF);
+  static const primaryColor = Color(0xFF00F2FF);
 
   // Gradient Colors
   static const Gradient linearGradient = LinearGradient(
     begin: Alignment(0.0, 0.0),
     end: Alignment(0.707, -0.707),
-    colors: [Color(0xFFFF9A9E), Color(0xFFFAD0C4), Color(0xFFFAD0C4)],
+    colors: [
+      Color.fromARGB(255, 154, 109, 238),
+      Color.fromARGB(255, 93, 232, 241),
+      Color.fromARGB(255, 212, 97, 247),
+    ],
   );
 
   // Text Colors
@@ -21,7 +26,7 @@ class DColors {
   static const Color textWhite = Colors.white;
 
   // Background Colors
-  static const Color light = Color(0xFFF6F6F6);
+  static const Color light = Color.fromARGB(255, 232, 239, 255);
   static const Color dark = Color(0xFF272727);
   static const Color primaryBackground = Color(0xFFF3F5FF);
 
@@ -54,12 +59,12 @@ class DColors {
   static const Color white = Color(0xFFFFFFFF);
 
   // Category colors
-  static const List<Color> categoryColors = [
-    Color(0xFFE17055),
-    Color(0xFF0984E3),
-    Color(0xFF00B894),
-    Color(0xFFFDCB6E),
-    Color(0xFF6C5CE7),
-    Color(0xFFFD79A8),
+  static List<Color> categoryColors = [
+    Color(0xFFFFCDD2),
+    Color(0xFFBBDEFB),
+    Color(0xFFC8E6C9),
+    Color(0xFFFFF9C4),
+    Color(0xFFE1BEE7),
+    Color(0xFFF8BBD0),
   ];
 }

@@ -1,55 +1,89 @@
-import 'package:date_picker_timeline/date_picker_widget.dart';
+import 'dart:async';
 import 'package:dedo/bloc/category/category_bloc.dart';
 import 'package:dedo/bloc/task/task_bloc.dart';
-import 'package:dedo/screens/category/category_list_view.dart';
-import 'package:dedo/screens/home/widgets/categoy_chip.dart';
+import 'package:dedo/screens/home/widgets/category_list_section.dart';
+import 'package:dedo/screens/home/widgets/date_timeline.dart';
 import 'package:dedo/screens/home/widgets/home_appbar.dart';
 import 'package:dedo/screens/home/widgets/task_list.dart';
 import 'package:dedo/utils/constants/colors.dart';
 import 'package:dedo/utils/constants/enum.dart';
 import 'package:dedo/utils/constants/sizes.dart';
 import 'package:dedo/utils/helper_functions.dart';
-import 'package:dedo/widgets/container.dart';
 import 'package:dedo/widgets/filter_chip.dart';
 import 'package:dedo/widgets/text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+/// HomePage is the main screen displaying tasks and categories.
+/// It manages filtering, sorting, and search functionalities,
+/// while interacting with TaskBloc and CategoryBloc for state management.
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeScreenState extends State<HomeScreen> {
+  // Tracks the currently selected date to filter tasks
   DateTime _selectedDate = DateTime.now();
 
+  // Timer used to debounce date changes to avoid rapid reloading
+  Timer? _debounceTimer;
+  final Duration _debounceDelay = const Duration(milliseconds: 500);
+
+  // Current filter applied to task list (e.g., all, pending, completed)
   TaskFilter currentFilter = TaskFilter.all;
+
+  // Current sorting option applied to the task list
   SortOption currentSort = SortOption.newest;
 
+  // Current text entered in the search bar
   String searchQuery = '';
+
+  // Controller for the search input to manage text programmatically
   final _searchController = TextEditingController();
 
   @override
   void initState() {
-    context.read<TaskBloc>().add(LoadTasks());
     super.initState();
+    // Initial loading of tasks and categories when the screen is created
+    context.read<TaskBloc>().add(LoadTasks());
+    context.read<CategoryBloc>().add(LoadCategories());
   }
 
   @override
   void dispose() {
+    // Properly cancel the debounce timer if active and dispose text controller
+    _debounceTimer?.cancel();
     _searchController.dispose();
     super.dispose();
+  }
+
+  /// Handles date changes from the timeline widget.
+  /// Uses debounce to delay action and reduce unnecessary state rebuilds and data fetching.
+  void _handleDateChange(DateTime date) {
+    // Cancel previous debounce timer to reset delay
+    _debounceTimer?.cancel();
+
+    // Set a new debounce timer to update selected date and reload tasks after delay
+    _debounceTimer = Timer(_debounceDelay, () {
+      setState(() => _selectedDate = date);
+      // Notify TaskBloc to reload tasks for the new date filter
+      context.read<TaskBloc>().add(LoadTasks());
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: DHomeAppbar(),
+
+      // Listen to TaskBloc state changes to show feedback messages (success or error)
       body: BlocListener<TaskBloc, TaskState>(
         listener: (context, state) {
           if (state is TaskSuccess) {
+            // Show green success snackbar and refresh task list
             DHelperFunctions.showSnackBar(
               title: "Success",
               message: state.message,
@@ -57,7 +91,11 @@ class _HomePageState extends State<HomePage> {
               context: context,
               bgColor: Colors.green,
             );
-          } else if (state is TaskError) {
+            context.read<TaskBloc>().add(LoadTasks());
+          }
+
+          if (state is TaskError) {
+            // Show red error snackbar with relevant message
             DHelperFunctions.showSnackBar(
               title: "Error",
               message: state.message,
@@ -67,18 +105,23 @@ class _HomePageState extends State<HomePage> {
             );
           }
         },
-        child: Padding(
+
+        child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: DSizes.md),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /// Search bar
+              const SizedBox(height: DSizes.sm),
+
+              // Search input for filtering tasks by text query.
               DTextFormField(
                 controller: _searchController,
                 hintText: "Search tasks...",
                 prefixIcon: Icons.search,
+                showShadow: true,
                 title: "",
-                suffixIcon: Icons.clear,
+                suffixIcon:
+                    _searchController.text.isNotEmpty ? Icons.clear : null,
                 onIconPressed: () {
                   _searchController.clear();
                   setState(() => searchQuery = '');
@@ -86,97 +129,22 @@ class _HomePageState extends State<HomePage> {
                 onChanged: (value) => setState(() => searchQuery = value),
               ),
 
-              /// Date Timeline
-              DContainer(
-                child: DatePicker(
-                  DateTime.now(),
-                  height: 90,
-                  width: 60,
-                  initialSelectedDate: _selectedDate,
-                  selectionColor: DColors.primary,
-                  selectedTextColor: DColors.dark,
-                  dateTextStyle: Theme.of(context).textTheme.titleMedium!
-                      .copyWith(fontWeight: FontWeight.bold),
-                  dayTextStyle: Theme.of(context).textTheme.bodySmall!,
-                  monthTextStyle: Theme.of(context).textTheme.bodyMedium!,
-                  onDateChange: (date) {
-                    setState(() => _selectedDate = date);
-                    context.read<TaskBloc>().add(LoadTasks());
-                  },
-                ),
+              // Horizontal date selector for filtering tasks by selected date
+              DDateTimeline(onDateChange: _handleDateChange),
+              const SizedBox(height: DSizes.md),
+
+              // Section header for categories
+              Text(
+                "Categories",
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
+              const SizedBox(height: DSizes.sm),
 
-              const SizedBox(height: DSizes.sm + DSizes.xs),
+              // Category list section displaying all categories with task counts
+              DCategoryListSection(),
+              const SizedBox(height: DSizes.sm),
 
-              /// Category Row
-              BlocBuilder<CategoryBloc, CategoryState>(
-                builder: (context, state) {
-                  if (state is CategoryLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state is CategoryLoaded ||
-                      state is CategorySuccess) {
-                    final categories =
-                        state is CategoryLoaded
-                            ? state.categories
-                            : (state as CategorySuccess).categories;
-
-                    if (categories.isEmpty) {
-                      return const Padding(
-                        padding: EdgeInsets.all(DSizes.sm),
-                        child: Center(child: Text('No categories found')),
-                      );
-                    }
-
-                    return SizedBox(
-                      height: 100,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: categories.length,
-                        itemBuilder: (context, index) {
-                          final category = categories[index];
-
-                          const int totalTasks = 5;
-                          const int completedTasks = 4;
-                          final double progress =
-                              totalTasks == 0 ? 0 : completedTasks / totalTasks;
-
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0,
-                            ),
-                            child: SizedBox(
-                              width: 150, // Ensure width
-                              child: DCategoryChip(
-                                category: category,
-                                taskCount: totalTasks,
-                                progress: progress,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder:
-                                          (_) => CategoryListView(
-                                            category: category,
-                                          ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  } else if (state is CategoryError) {
-                    return Center(child: Text(state.message));
-                  } else {
-                    return const Center(child: Text('No categories found'));
-                  }
-                },
-              ),
-
-              const SizedBox(height: DSizes.sm + DSizes.xs),
-
+              // Header row for task list with sorting popup menu
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -185,68 +153,58 @@ class _HomePageState extends State<HomePage> {
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
 
-                  Row(
-                    children: [
-                      PopupMenuButton<SortOption>(
-                        tooltip: "Sort Tasks",
-                        icon: const Icon(Icons.sort),
-                        onSelected: (SortOption sort) {
-                          setState(() {
-                            currentSort = sort;
-                          });
-                        },
-                        itemBuilder:
-                            (context) => [
-                              const PopupMenuItem(
-                                value: SortOption.newest,
-                                child: Text("Newest First"),
-                              ),
-                              const PopupMenuItem(
-                                value: SortOption.oldest,
-                                child: Text("Oldest First"),
-                              ),
-                              const PopupMenuItem(
-                                value: SortOption.titleAsc,
-                                child: Text("Title (A-Z)"),
-                              ),
-                              const PopupMenuItem(
-                                value: SortOption.titleDesc,
-                                child: Text("Title (Z-A)"),
-                              ),
-                            ],
-                      ),
-                    ],
+                  // Popup menu for selecting sorting options
+                  PopupMenuButton<SortOption>(
+                    tooltip: "Sort Tasks",
+                    icon: const Icon(Icons.sort),
+                    onSelected: (SortOption sort) {
+                      // Update sort state and refresh list order
+                      setState(() => currentSort = sort);
+                    },
+                    itemBuilder:
+                        (context) => const [
+                          PopupMenuItem(
+                            value: SortOption.newest,
+                            child: Text("Newest First"),
+                          ),
+                          PopupMenuItem(
+                            value: SortOption.oldest,
+                            child: Text("Oldest First"),
+                          ),
+                          PopupMenuItem(
+                            value: SortOption.titleAsc,
+                            child: Text("Title (A-Z)"),
+                          ),
+                          PopupMenuItem(
+                            value: SortOption.titleDesc,
+                            child: Text("Title (Z-A)"),
+                          ),
+                        ],
                   ),
                 ],
               ),
-
               const SizedBox(height: DSizes.sm),
 
-              /// Task status chip
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    _buildFilterChip("All", TaskFilter.all),
-                    const SizedBox(width: DSizes.xs),
-                    _buildFilterChip("Pending", TaskFilter.pending),
-                    const SizedBox(width: DSizes.xs),
-                    _buildFilterChip("Completed", TaskFilter.completed),
-                  ],
-                ),
+              // Filter chips row for quick task filtering by status
+              Row(
+                children: [
+                  _buildFilterChip("All", TaskFilter.all),
+                  const SizedBox(width: DSizes.xs),
+                  _buildFilterChip("Pending", TaskFilter.pending),
+                  const SizedBox(width: DSizes.xs),
+                  _buildFilterChip("Completed", TaskFilter.completed),
+                ],
               ),
-
               const SizedBox(height: DSizes.sm),
 
-              /// Task List
-              Expanded(
-                child: DTaskList(
-                  selectedDate: _selectedDate,
-                  currentFilter: currentFilter,
-                  searchQuery: searchQuery,
-                  currentSort: currentSort,
-                ),
+              // Main task list widget with all active filters and sorting applied
+              DTaskList(
+                selectedDate: _selectedDate,
+                currentFilter: currentFilter,
+                searchQuery: searchQuery,
+                currentSort: currentSort,
               ),
+              const SizedBox(height: DSizes.md),
             ],
           ),
         ),
@@ -254,7 +212,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Widget for filter chip
+  /// Builds a filter chip widget used for toggling task filters.
+  /// Applies current selection style and updates state on tap.
   Widget _buildFilterChip(String label, TaskFilter filter) {
     final isDark = DHelperFunctions.isDarkMode(context);
 
@@ -262,6 +221,7 @@ class _HomePageState extends State<HomePage> {
       label: label,
       isSelected: currentFilter == filter,
       onSelected: (selected) {
+        // Update current filter and refresh task list accordingly
         setState(() => currentFilter = filter);
       },
       backgroundColor: isDark ? DColors.dark : DColors.light,

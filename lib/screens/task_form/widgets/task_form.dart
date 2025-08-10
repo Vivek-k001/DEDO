@@ -2,7 +2,8 @@ import 'package:dedo/bloc/category/category_bloc.dart';
 import 'package:dedo/bloc/task/task_bloc.dart';
 import 'package:dedo/models/category_model.dart';
 import 'package:dedo/models/task_model.dart';
-import 'package:dedo/screens/task_form/widgets/add_task_header.dart';
+import 'package:dedo/screens/category/category.dart';
+import 'package:dedo/screens/task_form/widgets/task_header.dart';
 import 'package:dedo/utils/constants/sizes.dart';
 import 'package:dedo/utils/helper_functions.dart';
 import 'package:dedo/widgets/button.dart';
@@ -16,8 +17,8 @@ import 'package:intl/intl.dart';
 class DTaskForm extends StatefulWidget {
   const DTaskForm({super.key, this.task, required this.isEditing});
 
-  final TaskModel? task;
-  final bool isEditing;
+  final TaskModel? task; // Existing task to edit (if any)
+  final bool isEditing; // Flag to indicate if form is editing or creating
 
   @override
   State<DTaskForm> createState() => _TaskFormState();
@@ -26,39 +27,51 @@ class DTaskForm extends StatefulWidget {
 class _TaskFormState extends State<DTaskForm> {
   final _formKey = GlobalKey<FormState>();
 
+  // Controllers for text fields
   final _titleController = TextEditingController();
   final _noteController = TextEditingController();
 
-  CategoryModel? _selectedCategory;
+  CategoryModel? _selectedCategory; // Currently selected category
 
+  // Initial date formatted as dd/MM/yyyy (default to today)
   String _selectedDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
 
+  // Start and end time formatted as hh:mm a
   String startTime = DateFormat('hh:mm a').format(DateTime.now());
-
   String endTime = DateFormat(
     'hh:mm a',
-  ).format(DateTime.now().add(Duration(hours: 3)));
+  ).format(DateTime.now().add(Duration(hours: 3))); // default end time 3h later
 
-  int _selectedRemind = 5;
-  List<int> remindList = [5, 10, 15, 20, 30, 60];
+  int _selectedRemind = 5; // Reminder time in minutes
+  List<int> remindList = [
+    5,
+    10,
+    15,
+    20,
+    30,
+    60,
+  ]; // Options for reminder dropdown
 
-  String _selectedRepeat = 'None';
-  List<String> repeatList = ["None", "Daily", "Weakly", "Monthly"];
-
-  int _selectedColorIndex = 0;
-
+  // Available colors to pick from
   final List<Color> _colorOptions = [
-    Colors.red,
-    Colors.yellow,
-    Colors.blue,
-    Colors.green,
-    Colors.purple,
+    Color(0xFFFFCDD2),
+    Color(0xFFBBDEFB),
+    Color(0xFFC8E6C9),
+    Color(0xFFFFF9C4),
+    Color(0xFFE1BEE7),
+    Color(0xFFF8BBD0),
   ];
+
+  Color _selectedColor = Color(0xFFFFCDD2); // Currently selected color
 
   @override
   void initState() {
+    super.initState();
+
+    // Load categories from CategoryBloc when form initializes
     context.read<CategoryBloc>().add(LoadCategories());
 
+    // If editing an existing task, pre-fill the form fields with task data
     if (widget.isEditing && widget.task != null) {
       final task = widget.task!;
 
@@ -68,15 +81,21 @@ class _TaskFormState extends State<DTaskForm> {
       startTime = task.startTime;
       endTime = task.endTime;
       _selectedRemind = task.remind;
-      _selectedRepeat = task.repeat;
-      _selectedColorIndex = task.colorIndex;
-    }
+      _selectedColor = Color(task.color);
 
-    super.initState();
+      // Try to set the selected category from loaded categories
+      final categoryState = context.read<CategoryBloc>().state;
+      if (categoryState is CategoryLoaded) {
+        _selectedCategory = categoryState.categories.firstWhere(
+          (category) => category.id == task.categoryId,
+        );
+      }
+    }
   }
 
   @override
   void dispose() {
+    // Dispose controllers to free resources
     _titleController.dispose();
     _noteController.dispose();
     super.dispose();
@@ -88,9 +107,15 @@ class _TaskFormState extends State<DTaskForm> {
 
     return BlocListener<TaskBloc, TaskState>(
       listener: (context, state) {
+        // Listen for success or error states from TaskBloc after submission
         if (state is TaskSuccess) {
-          Navigator.pop(context);
-        } else if (state is TaskError) {
+          if (isEditing) {
+            Navigator.pop(context); // pop once if editing
+          }
+          Navigator.pop(context); // pop form screen after success
+        }
+        if (state is TaskError) {
+          // Show error SnackBar if task submission failed
           DHelperFunctions.showSnackBar(
             title: "Error",
             message: state.message,
@@ -101,15 +126,18 @@ class _TaskFormState extends State<DTaskForm> {
         }
       },
       child: SingleChildScrollView(
+        // Enable scrolling if form content overflows screen
         child: Padding(
           padding: const EdgeInsets.all(DSizes.md),
           child: Form(
-            key: _formKey,
+            key: _formKey, // Form key to validate inputs if needed
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AddTaskHeader(isEditing: isEditing),
-
+                TaskHeader(
+                  isEditing: isEditing,
+                ), // Header widget showing form title
+                // Title input field
                 DTextFormField(
                   title: "Title",
                   hintText: "Enter your title",
@@ -117,6 +145,7 @@ class _TaskFormState extends State<DTaskForm> {
                   controller: _titleController,
                 ),
 
+                // Note input field (multi-line)
                 DTextFormField(
                   title: "Note",
                   hintText: "Enter your note",
@@ -125,6 +154,7 @@ class _TaskFormState extends State<DTaskForm> {
                   maxlines: 2,
                 ),
 
+                // Date picker field (read-only, with calendar icon)
                 DTextFormField(
                   title: "Date",
                   hintText: _selectedDate,
@@ -132,13 +162,16 @@ class _TaskFormState extends State<DTaskForm> {
                   readOnly: true,
                   suffixIcon: Icons.calendar_today,
                   onIconPressed: () async {
-                    await _selectDateFromPicker(context);
+                    await _selectDateFromPicker(context); // open date picker
                   },
                   onTap: () async {
-                    await _selectDateFromPicker(context);
+                    await _selectDateFromPicker(
+                      context,
+                    ); // open date picker on tap too
                   },
                 ),
 
+                // Row for Start Time and End Time pickers side by side
                 Row(
                   children: [
                     Expanded(
@@ -148,7 +181,10 @@ class _TaskFormState extends State<DTaskForm> {
                         title: "Start Time",
                         readOnly: true,
                         onTap: () async {
-                          await _selectTimeFromPicker(context, true);
+                          await _selectTimeFromPicker(
+                            context,
+                            true,
+                          ); // select start time
                         },
                       ),
                     ),
@@ -162,13 +198,17 @@ class _TaskFormState extends State<DTaskForm> {
                         title: "End Time",
                         readOnly: true,
                         onTap: () async {
-                          await _selectTimeFromPicker(context, false);
+                          await _selectTimeFromPicker(
+                            context,
+                            false,
+                          ); // select end time
                         },
                       ),
                     ),
                   ],
                 ),
 
+                // Reminder dropdown inside a read-only text field
                 DTextFormField(
                   hintText: "$_selectedRemind minutes before",
                   prefixIcon: Icons.notifications_active,
@@ -178,7 +218,9 @@ class _TaskFormState extends State<DTaskForm> {
                     value: _selectedRemind.toString(),
                     onChanged: (String? newValue) {
                       setState(() {
-                        _selectedRemind = int.parse(newValue!);
+                        _selectedRemind = int.parse(
+                          newValue!,
+                        ); // update selected reminder
                       });
                     },
                     items:
@@ -194,76 +236,110 @@ class _TaskFormState extends State<DTaskForm> {
                   ),
                 ),
 
-                DTextFormField(
-                  hintText: _selectedRepeat,
-                  prefixIcon: Icons.repeat,
-                  title: "Repeat",
-                  readOnly: true,
-                  suffixWidget: DDropdown(
-                    value: _selectedRepeat.toString(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedRepeat = newValue!;
-                      });
-                    },
-                    items:
-                        repeatList.map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: Theme.of(context).textTheme.bodySmall,
+                // Category selector using BlocBuilder and BlocListener
+                BlocListener<CategoryBloc, CategoryState>(
+                  listener: (context, state) {
+                    // When categories are successfully added/updated, select first if none chosen
+                    if (state is CategorySuccess) {
+                      if (_selectedCategory == null &&
+                          state.categories.isNotEmpty) {
+                        setState(() {
+                          _selectedCategory = state.categories.first;
+                        });
+                      }
+                    }
+                  },
+                  child: BlocBuilder<CategoryBloc, CategoryState>(
+                    builder: (context, state) {
+                      if (state is CategoryLoading) {
+                        return CircularProgressIndicator(); // show loading spinner
+                      } else if (state is CategoryLoaded) {
+                        if (state.categories.isEmpty) {
+                          // Show Add Category button if no categories exist
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: DSizes.sm + 2,
+                            ),
+                            child: Center(
+                              child: DButton(
+                                btnTitle: 'Add Category',
+                                width: 180,
+                                height: 50,
+                                onTap: () async {
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => CategoryScreen(),
+                                    ),
+                                  );
+
+                                  if (mounted) {
+                                    // Reload categories after returning from add screen
+                                    if (context.mounted) {
+                                      context.read<CategoryBloc>().add(
+                                        LoadCategories(),
+                                      );
+                                    }
+                                  }
+                                },
+                              ),
                             ),
                           );
-                        }).toList(),
+                        }
+
+                        // Dropdown for selecting category from loaded list
+                        return DTextFormField(
+                          hintText:
+                              _selectedCategory?.name ?? "Select Category",
+                          prefixIcon: Icons.category,
+                          title: "Category",
+                          readOnly: true,
+                          suffixWidget: DDropdown<CategoryModel>(
+                            value: _selectedCategory,
+                            onChanged: (CategoryModel? newValue) {
+                              setState(() {
+                                _selectedCategory =
+                                    newValue; // update selected category
+                              });
+                            },
+                            items:
+                                state.categories
+                                    .map<DropdownMenuItem<CategoryModel>>((
+                                      CategoryModel category,
+                                    ) {
+                                      return DropdownMenuItem<CategoryModel>(
+                                        value: category,
+                                        child: Row(
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 12,
+                                              backgroundColor: Color(
+                                                category.color,
+                                              ),
+                                            ),
+                                            SizedBox(width: DSizes.md),
+                                            Text(category.name),
+                                          ],
+                                        ),
+                                      );
+                                    })
+                                    .toList(),
+                          ),
+                        );
+                      } else if (state is CategoryError) {
+                        return Text(
+                          'Error: ${state.message}',
+                        ); // show error if category load failed
+                      } else {
+                        return const Text(
+                          'No categories found.',
+                        ); // fallback message
+                      }
+                    },
                   ),
                 ),
 
-                BlocBuilder<CategoryBloc, CategoryState>(
-                  builder: (context, state) {
-                    if (state is CategoryLoading) {
-                      return CircularProgressIndicator();
-                    } else if (state is CategoryLoaded) {
-                      return DTextFormField(
-                        hintText: _selectedCategory?.name ?? "Add Category",
-                        prefixIcon: Icons.category,
-                        title: "Category",
-                        readOnly: true,
-                        suffixWidget: DDropdown<CategoryModel>(
-                          value: _selectedCategory,
-                          onChanged: (CategoryModel? newValue) {
-                            setState(() {
-                              _selectedCategory = newValue;
-                            });
-                          },
-                          items:
-                              state.categories.map<
-                                DropdownMenuItem<CategoryModel>
-                              >((CategoryModel category) {
-                                return DropdownMenuItem<CategoryModel>(
-                                  value: category,
-                                  child: Row(
-                                    children: [
-                                      CircleAvatar(
-                                        radius: 12,
-                                        backgroundColor: Color(category.color),
-                                      ),
-                                      SizedBox(width: DSizes.md),
-                                      Text(category.name),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                        ),
-                      );
-                    } else if (state is CategoryError) {
-                      return Text('Error: ${state.message}');
-                    } else {
-                      return const Text('No categories found.');
-                    }
-                  },
-                ),
-
+                // Color selector section with small colored circles user can tap to select
                 Padding(
                   padding: const EdgeInsets.only(top: DSizes.sm),
                   child: Column(
@@ -271,7 +347,12 @@ class _TaskFormState extends State<DTaskForm> {
                     children: [
                       Text(
                         'Color',
-                        style: Theme.of(context).textTheme.titleSmall,
+                        style: Theme.of(
+                          context,
+                        ).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
+                        ),
                       ),
 
                       const SizedBox(height: DSizes.sm),
@@ -284,7 +365,8 @@ class _TaskFormState extends State<DTaskForm> {
                           return GestureDetector(
                             onTap: () {
                               setState(() {
-                                _selectedColorIndex = index;
+                                _selectedColor =
+                                    color; // change selected color on tap
                               });
                             },
                             child: Padding(
@@ -293,10 +375,11 @@ class _TaskFormState extends State<DTaskForm> {
                                 radius: 14,
                                 backgroundColor: color,
                                 child:
-                                    _selectedColorIndex == index
+                                    _selectedColor.toARGB32() ==
+                                            color.toARGB32()
                                         ? Icon(
                                           Icons.done,
-                                          color: Colors.white,
+                                          color: Colors.black,
                                           size: DSizes.iconSm,
                                         )
                                         : null,
@@ -311,6 +394,7 @@ class _TaskFormState extends State<DTaskForm> {
 
                 const SizedBox(height: DSizes.spaceBtwSections),
 
+                // Submit button with loading indicator and text depending on editing/creating state
                 BlocBuilder<TaskBloc, TaskState>(
                   builder: (context, state) {
                     final isLoading = state is TaskLoading;
@@ -326,7 +410,10 @@ class _TaskFormState extends State<DTaskForm> {
                                 : 'Create Task',
                         width: 180,
                         height: 50,
-                        onTap: isLoading ? null : _validateAndSubmitTask,
+                        onTap:
+                            isLoading
+                                ? null
+                                : _validateAndSubmitTask, // disable while loading
                       ),
                     );
                   },
@@ -341,6 +428,7 @@ class _TaskFormState extends State<DTaskForm> {
     );
   }
 
+  // Show time picker dialog and update start or end time accordingly
   Future<void> _selectTimeFromPicker(
     BuildContext context,
     bool isStartTime,
@@ -351,7 +439,7 @@ class _TaskFormState extends State<DTaskForm> {
     );
 
     if (pickedTime != null) {
-      // ignore: use_build_context_synchronously
+      // Format time string in hh:mm a format (e.g., 08:30 PM)
       final formattedTime = pickedTime.format(context);
       setState(() {
         if (isStartTime) {
@@ -363,6 +451,7 @@ class _TaskFormState extends State<DTaskForm> {
     }
   }
 
+  // Show date picker dialog and update _selectedDate accordingly
   Future<void> _selectDateFromPicker(BuildContext context) async {
     DateTime? pickerDate = await showDatePicker(
       context: context,
@@ -377,11 +466,13 @@ class _TaskFormState extends State<DTaskForm> {
     });
   }
 
+  // Validate form input and submit new or updated task to TaskBloc
   void _validateAndSubmitTask() {
     final title = _titleController.text.trim();
     final note = _noteController.text.trim();
 
     if (title.isEmpty || note.isEmpty) {
+      // Show error if title or note is empty
       DHelperFunctions.showSnackBar(
         title: "Error",
         message: 'Please fill out all fields.',
@@ -393,6 +484,7 @@ class _TaskFormState extends State<DTaskForm> {
     }
 
     if (_selectedCategory == null) {
+      // Show error if category not selected
       DHelperFunctions.showSnackBar(
         title: "Error",
         message: 'Please select a category',
@@ -403,9 +495,11 @@ class _TaskFormState extends State<DTaskForm> {
       return;
     }
 
+    // Parse start and end times for comparison
     final start = DateFormat('hh:mm a').parse(startTime);
     final end = DateFormat('hh:mm a').parse(endTime);
     if (end.isBefore(start)) {
+      // Show error if end time is earlier than start time
       DHelperFunctions.showSnackBar(
         title: "Error",
         message: 'End time must be after start time',
@@ -416,6 +510,7 @@ class _TaskFormState extends State<DTaskForm> {
       return;
     }
 
+    // Construct TaskModel to submit
     final task = TaskModel(
       id: widget.isEditing ? widget.task?.id : null,
       note: note,
@@ -424,12 +519,19 @@ class _TaskFormState extends State<DTaskForm> {
       startTime: startTime,
       endTime: endTime,
       remind: _selectedRemind,
-      repeat: _selectedRepeat,
-      colorIndex: _selectedColorIndex,
+      color: _selectedColor.toARGB32(),
       categoryId: _selectedCategory!.id,
-      isCompleted: widget.isEditing ? widget.task?.isCompleted ?? false : false,
+      isCompleted:
+          widget.isEditing ? (widget.task?.isCompleted ?? false) : false,
+      createdAt:
+          widget.isEditing
+              ? widget.task?.createdAt
+              : DateTime.now().toIso8601String(),
+      updatedAt: DateTime.now().toIso8601String(),
+      completedAt: widget.isEditing ? widget.task?.completedAt : null,
     );
 
+    // Dispatch add or update event to TaskBloc
     if (widget.isEditing) {
       context.read<TaskBloc>().add(UpdateTask(task));
     } else {

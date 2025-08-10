@@ -5,31 +5,38 @@ import 'package:dedo/utils/constants/colors.dart';
 import 'package:dedo/utils/theme/appbar_theme.dart';
 
 class DAppTheme {
+  // Private constructor to prevent instantiation
   DAppTheme._();
 
-  // Light Theme
+  // Light Theme configuration
   static final ThemeData lightTheme = ThemeData(
-    useMaterial3: true,
-    fontFamily: 'Poppins',
-    brightness: Brightness.light,
-    primaryColor: DColors.primary,
-    scaffoldBackgroundColor: DColors.white,
-    disabledColor: DColors.lightGrey,
-    appBarTheme: DAppbarTheme.lightAppbarTheme,
-    textTheme: DTextTheme.lightTextTheme,
-    iconTheme: IconThemeData(color: DColors.textPrimary, size: DSizes.iconMd),
+    useMaterial3: true, // Use Material Design 3
+    fontFamily: 'Poppins', // Set default font family
+    brightness: Brightness.light, // Light mode brightness
+    primaryColor: DColors.primary, // Primary color for the app
+    scaffoldBackgroundColor: DColors.white, // Background color for Scaffold
+    disabledColor: DColors.lightGrey, // Color used for disabled elements
+    appBarTheme: DAppbarTheme.lightAppbarTheme, // Custom AppBar theme for light mode
+    textTheme: DTextTheme.lightTextTheme, // Custom text theme for light mode
+    iconTheme: IconThemeData(
+      color: DColors.textPrimary, // Default icon color
+      size: DSizes.iconMd, // Default icon size
+    ),
   );
 
-  // Dark Theme
+  // Dark Theme configuration
   static final ThemeData darkTheme = ThemeData(
-    useMaterial3: true,
-    fontFamily: 'Poppins',
-    brightness: Brightness.dark,
-    primaryColor: DColors.primary,
-    scaffoldBackgroundColor: DColors.black,
-    disabledColor: DColors.darkGrey,
-    appBarTheme: DAppbarTheme.darkAppbarTheme,
-    textTheme: DTextTheme.darkTextTheme,
-    iconTheme: IconThemeData(color: DColors.textWhite, size: DSizes.iconMd),
+    useMaterial3: true, // Use Material Design 3
+    fontFamily: 'Poppins', // Set default font family
+    brightness: Brightness.dark, // Dark mode brightness
+    primaryColor: DColors.primary, // Primary color for the app
+    scaffoldBackgroundColor: DColors.black, // Background color for Scaffold
+    disabledColor: DColors.darkGrey, // Color used for disabled elements
+    appBarTheme: DAppbarTheme.darkAppbarTheme, // Custom AppBar theme for dark mode
+    textTheme: DTextTheme.darkTextTheme, // Custom text theme for dark mode
+    iconTheme: IconThemeData(
+      color: DColors.textWhite, // Default icon color for dark mode
+      size: DSizes.iconMd, // Default icon size
+    ),
   );
 }

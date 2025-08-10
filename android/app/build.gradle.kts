@@ -7,8 +7,9 @@ plugins {
 
 android {
     namespace = "com.example.dedo"
-    compileSdk = 35
-    ndkVersion = "27.0.12077973"
+    compileSdk = flutter.compileSdkVersion
+    ndkVersion = "27.1.12297006"
+
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

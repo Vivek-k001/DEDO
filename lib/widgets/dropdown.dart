@@ -1,14 +1,15 @@
 import 'package:dedo/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
+/// A generic dropdown widget with customizable styling and behavior.
 class DDropdown<T> extends StatelessWidget {
-  final T? value;
-  final List<DropdownMenuItem<T>> items;
-  final ValueChanged<T?> onChanged;
-  final double iconSize;
-  final Color? iconColor;
-  final EdgeInsetsGeometry padding;
-  final bool isExpanded;
+  final T? value; // Currently selected value
+  final List<DropdownMenuItem<T>> items; // List of dropdown options
+  final ValueChanged<T?> onChanged; // Callback when selection changes
+  final double iconSize; // Size of dropdown arrow icon
+  final Color? iconColor; // Color of dropdown arrow icon
+  final EdgeInsetsGeometry padding; // Padding around the dropdown
+  final bool isExpanded; // Whether dropdown width expands to fill parent
 
   const DDropdown({
     super.key,
@@ -24,19 +25,23 @@ class DDropdown<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: padding,
+      padding: padding, // Add padding around dropdown
       child: DropdownButtonHideUnderline(
         child: DropdownButton<T>(
-          value: value,
-          items: items,
-          onChanged: onChanged,
-          icon: Icon(Icons.arrow_drop_down, size: iconSize, color: iconColor),
+          value: value, // Currently selected item
+          items: items, // List of dropdown items
+          onChanged: onChanged, // Selection change callback
+          icon: Icon(
+            Icons.arrow_drop_down,
+            size: iconSize,
+            color: iconColor,
+          ), // Dropdown arrow icon with size and color
           iconSize: iconSize,
-          isExpanded: isExpanded,
-          style: Theme.of(context).textTheme.bodyMedium,
-          elevation: 0,
-          borderRadius: BorderRadius.circular(8),
-          dropdownColor: Theme.of(context).cardColor,
+          isExpanded: isExpanded, // Expand to fill width if true
+          style: Theme.of(context).textTheme.bodyMedium, // Text style of items
+          elevation: 0, // Dropdown menu elevation (shadow)
+          borderRadius: BorderRadius.circular(8), // Rounded corners for dropdown menu
+          dropdownColor: Theme.of(context).cardColor, // Background color of dropdown menu
         ),
       ),
     );

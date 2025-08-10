@@ -1,70 +1,74 @@
 name: dedo
 description: "A new Flutter project."
-publish_to: "none"
+publish_to: "none" # This app is not published to pub.dev
 
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
-# In Android, build-name is used as versionName while build-number used as versionCode.
-# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
+# Version and build number of your app.
+# Format: major.minor.patch+buildNumber
 version: 1.0.0+1
 
 environment:
+  # Dart SDK version constraint your project supports
   sdk: ^3.7.2
 
-# Dependencies
+# Dependencies your app requires to run
 dependencies:
-  cupertino_icons: ^1.0.8
-  date_picker_timeline: ^1.2.6
-  equatable: ^2.0.7
-  fl_chart: ^0.71.0
+  cupertino_icons: 1.0.8
+  easy_date_timeline: 2.0.9
+  equatable: 2.0.7
+  fl_chart: 0.71.0
   flutter:
     sdk: flutter
-  flutter_bloc: ^9.1.0
-  flutter_local_notifications: ^19.1.0
-  flutter_staggered_animations: ^1.1.1
-  flutter_timezone: ^4.1.0
-  font_awesome_flutter: ^10.8.0
-  get_storage: ^2.1.1
-  google_fonts: ^6.2.1
-  intl: ^0.19.0
-  path: ^1.9.1
-  permission_handler: ^12.0.0+1
-  sqflite: ^2.4.2
-  sqflite_common_ffi: ^2.3.5
-  timezone: ^0.10.1
+  flutter_bloc: 9.1.0
+  flutter_local_notifications: 19.1.0
+  flutter_native_splash: 2.4.6
+  flutter_staggered_animations: 1.1.1
+  flutter_timezone: 4.1.0
+  font_awesome_flutter: 10.8.0
+  get_storage: 2.1.1
+  google_fonts: 6.2.1
+  intl: 0.20.2
+  path: 1.9.1
+  permission_handler: 12.0.0+1
+  sqflite: 2.4.2
+  timezone: 0.10.1
+  shimmer: ^3.0.0
 
+# Dependencies used only during development/testing
 dev_dependencies:
-  flutter_lints: ^5.0.0
+  flutter_lints: ^5.0.0 # Recommended Flutter lints
   flutter_test:
-    sdk: flutter
+    sdk: flutter # Flutter testing framework
+  flutter_launcher_icons: ^0.14.4
 
-# The following section is specific to Flutter packages.
+flutter_launcher_icons:
+  android: true # Generate icons for Android
+  ios: true # Generate icons for iOS
+  image_path: "assets/logos/app_icon.png" # Path to the app icon image
+
 flutter:
-  uses-material-design: true
+  uses-material-design: true # Enable Material Icons
 
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
-  # --------------- LOCAL FONTS ------------------ #
+  # Assets included in the app bundle
+  assets:
+    - assets/images/ # Folder for app images
+    - assets/logos/ # Folder for app logos
+
+  # Custom fonts bundled with the app
   fonts:
-    - family: Poppins
+    - family: Poppins # Font family name used in app
       fonts:
         - asset: assets/fonts/poppins/Poppins-Light.ttf
-          weight: 300
+          weight: 300 # Light weight
         - asset: assets/fonts/poppins/Poppins-Regular.ttf
-          weight: 400
+          weight: 400 # Regular weight
         - asset: assets/fonts/poppins/Poppins-Italic.ttf
-          style: italic
+          style: italic # Italic style
         - asset: assets/fonts/poppins/Poppins-Medium.ttf
-          weight: 500
+          weight: 500 # Medium weight
         - asset: assets/fonts/poppins/Poppins-MediumItalic.ttf
           weight: 500
-          style: italic
+          style: italic # Medium Italic
         - asset: assets/fonts/poppins/Poppins-SemiBold.ttf
-          weight: 600
+          weight: 600 # SemiBold weight
         - asset: assets/fonts/poppins/Poppins-Bold.ttf
-          weight: 800
+          weight: 800 # Bold weight

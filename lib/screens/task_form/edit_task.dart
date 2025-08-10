@@ -4,6 +4,7 @@ import 'package:dedo/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 
 class EditTaskScreen extends StatelessWidget {
+  // The task object to be edited, passed in from previous screen
   final TaskModel task;
 
   const EditTaskScreen({super.key, required this.task});
@@ -11,11 +12,10 @@ class EditTaskScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: DAppBar(
-        showBackArrow: true,
-        title: Text("Edit Task", style: Theme.of(context).textTheme.titleLarge),
-      ),
+      // Custom app bar with back arrow and title "Edit Task"
+      appBar: DAppBar(showBackArrow: true),
 
+      // Body contains the task form widget with the task to edit and isEditing set to true
       body: DTaskForm(task: task, isEditing: true),
     );
   }

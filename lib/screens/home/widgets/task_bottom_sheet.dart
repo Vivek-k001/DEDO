@@ -1,108 +1,201 @@
-import 'package:dedo/bloc/task/task_bloc.dart';
-import 'package:dedo/models/task_model.dart';
-import 'package:dedo/screens/task_form/edit_task.dart';
-import 'package:dedo/utils/constants/sizes.dart';
-import 'package:dedo/utils/helper_functions.dart';
-import 'package:dedo/widgets/button.dart';
+import 'dart:ui';
 import 'package:dedo/widgets/container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dedo/bloc/task/task_bloc.dart';
+import 'package:dedo/models/task_model.dart';
+import 'package:dedo/screens/task_form/edit_task.dart';
+import 'package:dedo/utils/helper_functions.dart';
 
-Future<dynamic> taskOptionsBottomSheet(BuildContext context, TaskModel task) {
+// Function to show the bottom sheet with task options
+Future<void> taskOptionsBottomSheet(BuildContext context, TaskModel task) {
   return showModalBottomSheet(
     context: context,
-    builder: (BuildContext context) {
-      return BlocListener<TaskBloc, TaskState>(
-        listener: (context, state) {
-          if (state is TaskSuccess) {
-            DHelperFunctions.showSnackBar(
-              title: "Success",
-              message: state.message,
-              icon: Icons.check_circle,
-              context: context,
-              bgColor: Colors.green,
-            );
-          } else if (state is TaskError) {
-            DHelperFunctions.showSnackBar(
-              title: "Error",
-              message: state.message,
-              icon: Icons.error,
-              context: context,
-              bgColor: Colors.red,
-            );
-          }
-        },
-        child: DContainer(
-          padding: const EdgeInsets.all(DSizes.md),
-          // height: DHelperFunctions.screenHeight(context) * 0.50,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(DSizes.sm),
-            topRight: Radius.circular(DSizes.sm),
+    backgroundColor: Colors.transparent,
+    barrierColor: Colors.transparent,
+    isScrollControlled: true,
+    builder: (_) {
+      return Stack(
+        children: [
+          // Background blur and dim layer behind the sheet
+          BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: double.infinity,
+              color: Colors.grey.withValues(alpha: 0.5),
+            ),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              DButton(
-                onTap: () {
-                  context.read<TaskBloc>().add(
-                    ToggleTaskCompletion(task.id!, task.isCompleted),
-                  );
-                  Navigator.pop(context);
-                },
-                icon: task.isCompleted ? Icons.pending_actions : Icons.check,
-                btnTitle:
-                    task.isCompleted ? "Mark as Pending" : "Mark as Completed",
-                width: double.infinity,
-                height: 55,
-                btnColor: Colors.blue,
+
+          // Glassmorphic Bottom Sheet container aligned at the bottom
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(25), // Rounded top corners
               ),
+              child: DContainer(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                backgroundColor: Colors.white.withValues(alpha: 0.2),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(25),
+                ),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Button to toggle task completion status
+                    _glassButton(
+                      context: context,
+                      icon:
+                          task.isCompleted
+                              ? Icons.pending_actions
+                              : Icons.check,
+                      text:
+                          task.isCompleted
+                              ? 'Mark as Pending'
+                              : 'Mark as Completed',
+                      onTap: () {
+                        context.read<TaskBloc>().add(
+                          ToggleTaskCompletion(task.id!, task.isCompleted),
+                        );
+                        Navigator.pop(context);
+                      },
+                    ),
 
-              SizedBox(height: DSizes.spaceBtwSections),
+                    _glassButton(
+                      context: context,
+                      icon: Icons.edit,
+                      text: 'Edit Task',
+                      onTap: () {
+                        DHelperFunctions.navigateToScreen(
+                          context,
+                          EditTaskScreen(task: task),
+                        );
+                      },
+                    ),
 
-              DButton(
-                onTap: () {
-                  DHelperFunctions.navigateToScreen(
-                    context,
-                    EditTaskScreen(task: task),
-                  );
-                },
-                icon: Icons.edit,
-                btnTitle: "Edit Task",
-                width: double.infinity,
-                height: 55,
-                btnColor: Colors.green,
+                    // Assuming you have this inside a widget build method
+                    _glassButton(
+                      context: context,
+                      icon: Icons.delete,
+                      text: "Delete Task",
+                      textColor: Colors.red,
+                      iconColor: Colors.red,
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext dialogContext) {
+                            return AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              title: const Text(
+                                'Confirm Delete',
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
+                              content: const Text(
+                                'Are you sure you want to delete this category?',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              actionsPadding: const EdgeInsets.only(
+                                right: 8,
+                                bottom: 8,
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(dialogContext).pop();
+                                  },
+                                  child: const Text(
+                                    'Cancel',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    // Perform delete
+                                    context.read<TaskBloc>().add(
+                                      DeleteTask(taskId: task.id!),
+                                    );
+                                    //
+                                    // Close dialog and bottom sheet/page
+                                    Navigator.of(
+                                      dialogContext,
+                                    ).pop(); // Close dialog
+                                    Navigator.of(
+                                      context,
+                                    ).pop(); // Close the parent sheet/page
+                                  },
+                                  child: const Text(
+                                    'Delete',
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    ),
+
+                    const SizedBox(height: 4),
+
+                    _glassButton(
+                      context: context,
+                      icon: Icons.close,
+                      text: 'Close',
+                      onTap: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
               ),
-
-              SizedBox(height: DSizes.spaceBtwSections),
-
-              DButton(
-                onTap: () {
-                  context.read<TaskBloc>().add(DeleteTask(task.id!));
-                  Navigator.pop(context);
-                },
-                icon: Icons.delete,
-                btnTitle: "Delete Task",
-                width: double.infinity,
-                height: 55,
-                btnColor: Colors.red,
-              ),
-
-              SizedBox(height: DSizes.spaceBtwSections),
-
-              DButton(
-                icon: Icons.close,
-                onTap: () => Navigator.pop(context),
-                btnTitle: "Close",
-                width: double.infinity,
-                height: 55,
-                btnColor: Colors.white,
-                textColor: Colors.black,
-                showBorder: true,
-              ),
-            ],
+            ),
           ),
-        ),
+        ],
       );
     },
+  );
+}
+
+Widget _glassButton({
+  required BuildContext context,
+  required IconData icon,
+  required String text,
+  required VoidCallback onTap,
+  Color textColor = Colors.black,
+  Color iconColor = Colors.black,
+  EdgeInsetsGeometry? padding,
+  margin,
+}) {
+  return InkWell(
+    onTap: onTap,
+    child: Container(
+      padding:
+          padding ?? const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+      margin: margin ?? const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: iconColor),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Text(text, style: TextStyle(fontSize: 16, color: textColor)),
+          ),
+        ],
+      ),
+    ),
   );
 }

@@ -8,10 +8,9 @@ class AddTaskScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: DAppBar(
-        showBackArrow: true,
-        title: Text("Add Task", style: Theme.of(context).textTheme.titleLarge),
-      ),
+      // Custom app bar with back arrow and title
+      appBar: DAppBar(showBackArrow: true),
+      // Body contains the task form widget with isEditing false (i.e. creating a new task)
       body: const DTaskForm(isEditing: false),
     );
   }
