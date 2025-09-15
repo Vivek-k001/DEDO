@@ -1,40 +1,74 @@
-# Dedo - A Flutter To-Do App
+# DEDO - A Flutter To-Do App  
 
-Dedo is a simple and intuitive to-do app built with Flutter to help you organize your tasks efficiently..
+Dedo is a simple and intuitive to-do app built with **Flutter** to help you organize your tasks efficiently.  
+It combines **task management, categories, real-time notifications, and activity tracking** in a clean modern UI.  
 
-## Features
+---
 
-- Add, edit, and delete tasks koooi.
-- Mark tasks as completed.
-- Categorize tasks for better organization.
-- User-friendly interface with a clean design.
+## 🌟 Features  
 
-## Getting Started
+- Add, edit, and delete tasks.  
+- Mark tasks as completed.  
+- Categorize tasks for better organization.  
+- User-friendly interface with a clean design.  
+- Graphs & statistics for activity tracking.  
+- Light/Dark theme support.  
+- Real-time notifications.  
 
-Follow these steps to get started with the Dedo app:
+---
 
-1. Clone the repository:
+## 📸 Snapshopts  
+
+### 🪪 App Logo  
+![Logo](images/d1.jpg)  
+
+### 📖 Introduction  
+![Intro](images/d2.jpg)  
+
+### ✍️ Enter Name & Start  
+![Enter Name](images/d3.jpg)  
+
+### 📂 Organize Tasks  
+![Organize Tasks](images/d4.jpg)  
+
+### 🔘 Button Alignments & Usage  
+![Button Alignments](images/d5.jpg)  
+
+### ➕ Create a Task  
+![Create Task](images/d6.jpg)  
+
+### 🏷️ Add Categories  
+![Categories](images/d7.jpg)  
+
+### 🎨 Transparent UI Design  
+![UI Design](images/d8.jpg)  
+
+### 📊 Graphs & Activity Tracking (Real-time)  
+![Graphs](images/d9.jpg)  
+
+### 🌙 App Theme & UI  
+![Themes](images/d10.jpg)  
+
+### 🔔 Real-Time Notifications  
+![Notifications](images/d11.jpg)  
+
+---
+
+## 📂 Project Setup  
+
+1. Clone the repo:  
    ```bash
    git clone https://github.com/Vivek-k001/DEDO.git
-   ```
-2. Navigate to the project directory:
-   ```bash
    cd DEDO
-   ```
-3. Install dependencies:
+2. Installl dependencies:  
    ```bash
    flutter pub get
-   ```
-4. Run the app:
-   ```bash
-   flutter run
-   ```
+   flutter pub get
 
-## Resources
+👨‍💻 OWNERS
 
-If you're new to Flutter, here are some resources to help you get started:
+vivek-k001
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Muhammed Jasir M 
 
-For more information on Flutter development, visit the [official documentation](https://docs.flutter.dev/).
+Nihal Mohammed V 
