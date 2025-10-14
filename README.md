@@ -8,8 +8,7 @@ It combines **task management, categories, real-time notifications, and activity
 ## 🌟 Features  
 
 
-- Add, edit, and delete tasks....  
-=======
+- Add, edit, and delete tasks.
 - Add, edit, delete & view tasks.
 - Mark tasks as completed.  
 - Categorize tasks for better organization.  
