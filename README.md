@@ -1,7 +1,7 @@
 # DEDO - A Flutter To-Do App  
 
 Dedo is a simple and intuitive to-do app built with **Flutter** to help you organize your tasks efficiently.  
-It combines **task management, categories, real-time notifications, and activity tracking** in a clean modern UI...
+It combines **task management, categories, real-time notifications, and activity tracking** in a clean modern UI.
 
 ---
 
