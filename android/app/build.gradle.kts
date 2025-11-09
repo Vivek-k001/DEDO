@@ -26,7 +26,7 @@ android {
         applicationId = "com.example.dedo"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = 21 
+        minSdk = flutter.minSdkVersion 
         targetSdk = 33 
         versionCode = 1 
         versionName = "1.0"

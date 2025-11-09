@@ -103,7 +103,7 @@ class AboutSection extends StatelessWidget {
           child: IgnorePointer(
             child: Shimmer.fromColors(
               baseColor: Colors.transparent,
-              highlightColor: Colors.white.withOpacity(0.3),
+              highlightColor: Colors.white.withOpacity(0.7),
               period: const Duration(seconds: 10),
               direction: ShimmerDirection.ltr,
               child: Container(
