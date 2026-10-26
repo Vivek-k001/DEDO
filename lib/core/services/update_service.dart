@@ -75,16 +75,25 @@ class UpdateService {
         final releaseNotes = (data['body'] as String? ?? 'Bug fixes and performance improvements.').trim();
         final releasePage = data['html_url'] as String?;
 
-        // Look for .apk asset in the release
+        // Look for .apk asset in the release:
+        // 1. Prefer arm64-v8a (~28MB) for modern Android phones
+        // 2. Fall back to universal or first available .apk (~58MB)
         String? apkUrl;
         final assets = data['assets'] as List<dynamic>?;
         if (assets != null && assets.isNotEmpty) {
-          for (final asset in assets) {
-            final name = (asset['name'] as String? ?? '').toLowerCase();
-            if (name.endsWith('.apk')) {
-              apkUrl = asset['browser_download_url'] as String?;
-              break;
-            }
+          final apkAssets = assets.where((a) {
+            final name = (a['name'] as String? ?? '').toLowerCase();
+            return name.endsWith('.apk');
+          }).toList();
+
+          if (apkAssets.isNotEmpty) {
+            final arm64Asset = apkAssets.firstWhere(
+              (a) => (a['name'] as String? ?? '').toLowerCase().contains('arm64'),
+              orElse: () => null,
+            );
+
+            final selectedAsset = arm64Asset ?? apkAssets.first;
+            apkUrl = selectedAsset['browser_download_url'] as String?;
           }
         }
 
