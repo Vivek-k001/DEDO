@@ -10,8 +10,7 @@ import '../../../providers/task_provider.dart';
 import '../../../core/widgets/glass_toast.dart';
 import 'telegram_context_menu.dart';
 
-/// Liquid Glass style swipe-to-action task card with liquid spring physics,
-/// physical resistance swipe gestures, haptic ticks, long-press preview, and inset rounded geometry.
+// Task list item card
 class TaskCard extends ConsumerStatefulWidget {
   final Task task;
   final VoidCallback onTap;

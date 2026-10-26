@@ -12,16 +12,7 @@ class LiquidNavItem {
   const LiquidNavItem({required this.icon, required this.label});
 }
 
-/// Authentic Liquid Glass Bottom Navigation Bar.
-///
-/// Crafted strictly to Apple's Liquid Glass aesthetics:
-/// - Pure crystalline glass material with real-time backdrop blur.
-/// - Authentic monochromatic specular highlights (pure white top crescent sheen & bottom floor reflection).
-/// - Zero artificial chromatic/rainbow aberration.
-/// - Direct real-time finger coordinate tracking across tabs with zero touch latency.
-/// - Organic fluid stretching during drag velocity & spring rebound.
-/// - Crisp haptic feedback at tab boundaries & commit actions.
-/// - Seamless dark and light theme adaptation with Cupertino typography & icons.
+// Custom navigation bar
 class LiquidGlassNavBar extends StatefulWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;
@@ -413,8 +404,7 @@ class _LiquidGlassNavBarState extends State<LiquidGlassNavBar>
   }
 }
 
-/// The authentic Liquid Glass optical bubble.
-/// Monochromatic, crystalline specular highlights with zero artificial rainbow colors.
+// Floating glass highlight bubble
 class _LiquidGlassBubble extends StatelessWidget {
   final bool isDark;
   final double radius;
@@ -604,8 +594,7 @@ class _NavItemContent extends StatelessWidget {
   }
 }
 
-/// Authentic Apple iOS Damped Spring Curve.
-/// Models physical mass & damping (damping ratio ~ 0.76) for natural organic settling.
+// Spring curve animation
 class _AppleFluidSpringCurve extends Curve {
   const _AppleFluidSpringCurve();
 

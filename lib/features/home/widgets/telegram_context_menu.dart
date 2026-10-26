@@ -8,7 +8,7 @@ import '../../../models/task.dart';
 import '../../../providers/focus_provider.dart';
 import '../../focus/focus_control_center_modal.dart';
 
-/// Telegram iOS style context menu & preview with authentic spring dynamics (damping ~0.7).
+// Context menu preview
 void showIosTelegramContextMenu({
   required BuildContext context,
   required Task task,

@@ -540,7 +540,7 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
     );
   }
 
-  /// Telegram / iOS spring preview & actions overlay for a Category item
+  // Show actions overlay for category
   void _showCategoryContextMenu({
     required BuildContext context,
     required Category category,
@@ -1141,10 +1141,7 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
   }
 }
 
-/// An interactive iOS/Telegram card item with:
-/// - Swipe-to-delete / Swipe-to-edit spring gestures
-/// - Long-press Telegram context menu preview
-/// - Smooth progress bar & task counters
+// Category item card
 class _CategoryItemCard extends StatefulWidget {
   final Category category;
   final Color color;

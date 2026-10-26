@@ -240,7 +240,7 @@ class _ToastWidgetState extends State<_ToastWidget>
   }
 }
 
-/// A physics-based spring curve that replicates Apple's CASpringAnimation
+// Spring curve animation
 class SpringCurve extends Curve {
   final double damping;
   final double mass;

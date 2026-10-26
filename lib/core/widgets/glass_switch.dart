@@ -199,8 +199,7 @@ class _GlassSwitchState extends State<GlassSwitch> {
   }
 }
 
-/// Authentic Liquid Glass specular knob matching the navbar sliding pill.
-/// Features backdrop blur, top/bottom specular crescent reflections, and physical depth.
+// Switch slider knob
 class _LiquidGlassKnob extends StatelessWidget {
   final bool isDark;
   final double radius;
@@ -318,8 +317,7 @@ class _LiquidGlassKnob extends StatelessWidget {
   }
 }
 
-/// Authentic Apple iOS Fluid Jelly/Liquid Spring Curve.
-/// Simulates high-velocity overshoot followed by two micro-jiggles before rest.
+// Bouncy switch curve
 class _LiquidElasticCurve extends Curve {
   const _LiquidElasticCurve();
 
