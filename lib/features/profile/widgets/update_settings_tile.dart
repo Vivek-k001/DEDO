@@ -400,16 +400,7 @@ class _UpdateSettingsTileState extends State<UpdateSettingsTile>
                   ],
                 ),
                 const SizedBox(height: 8),
-                Text(
-                  info.releaseNotes,
-                  style: TextStyle(
-                    fontSize: 12.5,
-                    height: 1.5,
-                    color: isDark
-                        ? Colors.white.withValues(alpha: 0.75)
-                        : Colors.black.withValues(alpha: 0.7),
-                  ),
-                ),
+                _buildFormattedNotes(info.releaseNotes, isDark),
               ],
             ),
           ),
@@ -517,6 +508,63 @@ class _UpdateSettingsTileState extends State<UpdateSettingsTile>
             ),
         ],
       ),
+    );
+  }
+
+  Widget _buildFormattedNotes(String notes, bool isDark) {
+    final baseColor = isDark
+        ? Colors.white.withValues(alpha: 0.8)
+        : Colors.black.withValues(alpha: 0.75);
+    final boldColor = isDark
+        ? Colors.white
+        : const Color(0xFF1A0A2E);
+
+    final spans = <TextSpan>[];
+    final regex = RegExp(r'\*\*(.*?)\*\*');
+    int lastIndex = 0;
+
+    for (final match in regex.allMatches(notes)) {
+      if (match.start > lastIndex) {
+        spans.add(
+          TextSpan(
+            text: notes.substring(lastIndex, match.start),
+            style: TextStyle(
+              fontSize: 12.5,
+              height: 1.5,
+              color: baseColor,
+            ),
+          ),
+        );
+      }
+      spans.add(
+        TextSpan(
+          text: match.group(1),
+          style: TextStyle(
+            fontSize: 12.5,
+            height: 1.5,
+            fontWeight: FontWeight.w700,
+            color: boldColor,
+          ),
+        ),
+      );
+      lastIndex = match.end;
+    }
+
+    if (lastIndex < notes.length) {
+      spans.add(
+        TextSpan(
+          text: notes.substring(lastIndex),
+          style: TextStyle(
+            fontSize: 12.5,
+            height: 1.5,
+            color: baseColor,
+          ),
+        ),
+      );
+    }
+
+    return RichText(
+      text: TextSpan(children: spans),
     );
   }
 }

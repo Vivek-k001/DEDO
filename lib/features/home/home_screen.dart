@@ -22,6 +22,8 @@ import '../../core/widgets/bottom_nav_bar.dart';
 
 import '../../services/hive_service.dart';
 import '../profile/widgets/birthday_picker_modal.dart';
+import 'widgets/stacked_sticky_icon.dart';
+import '../notes/sticky_grid_overlay.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -327,16 +329,32 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'DEDO',
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.w800,
-                            color: widget.isDark
-                                ? Colors.white
-                                : const Color(0xFF1A0A2E),
-                            letterSpacing: -0.5,
-                          ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'DEDO',
+                              style: TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.w800,
+                                color: widget.isDark
+                                    ? Colors.white
+                                    : const Color(0xFF1A0A2E),
+                                letterSpacing: -0.5,
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            StackedStickyIcon(
+                              isDark: widget.isDark,
+                              onTap: () {
+                                HapticFeedback.mediumImpact();
+                                StickyGridOverlay.show(
+                                  context,
+                                  isDark: widget.isDark,
+                                );
+                              },
+                            ),
+                          ],
                         ),
                         Text(
                           _greeting(profile?.username),
