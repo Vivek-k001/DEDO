@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/glass_theme.dart';
 import '../../../models/task.dart';
 import '../../../providers/focus_provider.dart';
-import '../../focus/focus_control_center_modal.dart';
+import '../../focus/focus_mode_modal.dart';
 
 // Context menu preview
 void showIosTelegramContextMenu({

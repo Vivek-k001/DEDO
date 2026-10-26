@@ -7,8 +7,8 @@ import '../../../core/theme/glass_theme.dart';
 import '../../../models/task.dart';
 import '../../../providers/category_provider.dart';
 import '../../../providers/task_provider.dart';
-import '../../../core/widgets/glass_toast.dart';
-import 'telegram_context_menu.dart';
+import '../../../core/widgets/custom_toast.dart';
+import 'task_context_menu.dart';
 
 // Task list item card
 class TaskCard extends ConsumerStatefulWidget {

@@ -11,17 +11,17 @@ import '../../providers/task_provider.dart';
 import '../../providers/category_provider.dart';
 import '../../providers/profile_provider.dart';
 import '../../providers/focus_provider.dart';
-import '../focus/focus_control_center_modal.dart';
+import '../focus/focus_mode_modal.dart';
 import '../task/create_task_screen.dart';
 import '../category/category_screen.dart';
 import '../profile/profile_screen.dart';
 import 'widgets/date_strip.dart';
 import 'widgets/category_chips.dart';
 import 'widgets/task_card.dart';
-import '../../core/widgets/liquid_glass_nav_bar.dart';
+import '../../core/widgets/bottom_nav_bar.dart';
 
 import '../../services/hive_service.dart';
-import '../profile/widgets/birthday_celebration_modal.dart';
+import '../profile/widgets/birthday_picker_modal.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});

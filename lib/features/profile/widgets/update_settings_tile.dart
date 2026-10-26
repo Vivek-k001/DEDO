@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import '../../../core/theme/glass_theme.dart';
 import '../../../core/widgets/glass_container.dart';
-import '../../../core/widgets/glass_toast.dart';
+import '../../../core/widgets/custom_toast.dart';
 import '../../../core/services/update_service.dart';
 
 class UpdateSettingsTile extends StatefulWidget {

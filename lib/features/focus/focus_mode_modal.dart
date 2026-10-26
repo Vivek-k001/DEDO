@@ -3,11 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/widgets/glass_toast.dart';
+import '../../core/widgets/custom_toast.dart';
 import '../../providers/category_provider.dart';
 import '../../providers/focus_provider.dart';
 import '../../providers/task_provider.dart';
-import 'widgets/squircle_tick_painter.dart';
+import 'widgets/timer_dial_painter.dart';
 
 class FocusControlCenterModal extends ConsumerWidget {
   const FocusControlCenterModal({super.key});
