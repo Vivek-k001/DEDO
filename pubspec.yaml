@@ -1,74 +1,62 @@
-name: dedo
-description: "A new Flutter project."
-publish_to: "none" # This app is not published to pub.dev
+name: todo
+description: "DEDO - A premium Liquid Glass TODO app"
+publish_to: 'none'
 
-# Version and build number of your app.
-# Format: major.minor.patch+buildNumber
 version: 1.0.0+1
 
 environment:
-  # Dart SDK version constraint your project supports
-  sdk: ^3.7.2
+  sdk: ^3.5.0
 
-# Dependencies your app requires to run
 dependencies:
-  cupertino_icons: 1.0.8
-  easy_date_timeline: 2.0.9
-  equatable: 2.0.7
-  fl_chart: 0.71.0
   flutter:
     sdk: flutter
-  flutter_bloc: 9.1.0
-  flutter_local_notifications: 19.1.0
-  flutter_native_splash: 2.4.6
-  flutter_staggered_animations: 1.1.1
-  flutter_timezone: 4.1.0
-  font_awesome_flutter: 10.8.0
-  get_storage: 2.1.1
-  google_fonts: 6.2.1
-  intl: ^0.20.2
-  path: 1.9.1
-  permission_handler: 12.0.0+1
-  sqflite: 2.4.2
-  timezone: 0.10.1
+
+  cupertino_icons: ^1.0.8
+
+  # State management
+  flutter_riverpod: ^2.5.1
+
+  # Local storage
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # Notifications
+  flutter_local_notifications: ^17.2.2
+  timezone: ^0.9.4
+
+  # Charts
+  fl_chart: ^0.69.0
+
+  # Fonts
+  google_fonts: ^6.2.1
+
+  # Shimmer
   shimmer: ^3.0.0
 
-# Dependencies used only during development/testing
-dev_dependencies:
-  flutter_lints: ^5.0.0 # Recommended Flutter lints
-  flutter_test:
-    sdk: flutter # Flutter testing framework
-  flutter_launcher_icons: ^0.14.4
+  # Date/time
+  intl: ^0.19.0
 
-flutter_launcher_icons:
-  android: true # Generate icons for Android
-  ios: true # Generate icons for iOS
-  image_path: "assets/logos/app_icon.png" # Path to the app icon image
+  # UUID
+  uuid: ^4.4.0
+
+  # Permissions
+  permission_handler: ^11.3.1
+  flutter_svg: ^2.3.0
+
+  # App Updates & In-App Installation
+  package_info_plus: ^8.1.2
+  http: ^1.2.2
+  url_launcher: ^6.3.1
+  open_filex: ^4.5.0
+  path_provider: ^2.1.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
 
 flutter:
-  uses-material-design: true # Enable Material Icons
-
-  # Assets included in the app bundle
+  uses-material-design: true
   assets:
-    - assets/images/ # Folder for app images
-    - assets/logos/ # Folder for app logos
-
-  # Custom fonts bundled with the app
-  fonts:
-    - family: Poppins # Font family name used in app
-      fonts:
-        - asset: assets/fonts/poppins/Poppins-Light.ttf
-          weight: 300 # Light weight
-        - asset: assets/fonts/poppins/Poppins-Regular.ttf
-          weight: 400 # Regular weight
-        - asset: assets/fonts/poppins/Poppins-Italic.ttf
-          style: italic # Italic style
-        - asset: assets/fonts/poppins/Poppins-Medium.ttf
-          weight: 500 # Medium weight
-        - asset: assets/fonts/poppins/Poppins-MediumItalic.ttf
-          weight: 500
-          style: italic # Medium Italic
-        - asset: assets/fonts/poppins/Poppins-SemiBold.ttf
-          weight: 600 # SemiBold weight
-        - asset: assets/fonts/poppins/Poppins-Bold.ttf
-          weight: 800 # Bold weight
+    - assets/icons/
+    - assets/images/

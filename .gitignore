@@ -11,6 +11,7 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
+*.apk
 
 # IntelliJ related
 *.iml
@@ -27,11 +28,11 @@ migrate_working_dir/
 **/doc/api/
 **/ios/Flutter/.last_build_id
 .dart_tool/
-.flutter-plugins
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
 /build/
+/coverage/
 
 # Symbolication related
 app.*.symbols
@@ -43,3 +44,4 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/scratch/

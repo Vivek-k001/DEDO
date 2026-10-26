@@ -1,68 +1,112 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_storage/get_storage.dart';
-
-import 'package:dedo/app.dart';
-import 'package:dedo/bloc/category/category_bloc.dart';
-import 'package:dedo/bloc/task/task_bloc.dart';
-import 'package:dedo/bloc/theme/theme_bloc.dart';
-import 'package:dedo/db/db_helper.dart';
-import 'package:dedo/repositories/category_repository.dart';
-import 'package:dedo/repositories/task_repository.dart';
-import 'package:dedo/screens/username/username.dart';
-import 'package:dedo/services/notification_helper.dart';
-import 'package:dedo/services/notification_service.dart';
-import 'package:dedo/services/permission_handler.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'core/theme/app_theme.dart';
+import 'features/onboarding/onboarding_screen.dart';
+import 'features/home/home_screen.dart';
+import 'providers/theme_provider.dart';
+import 'services/hive_service.dart';
+import 'services/notification_service.dart';
 
 void main() async {
-  // Ensure Flutter bindings are initialized before using any plugins or async operations
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize persistent storage for simple key-value data
-  await GetStorage.init();
-  final box = GetStorage();
+  // True edge-to-edge: UI flows behind the transparent status bar seamlessly,
+  // while keeping time, battery, and icons clearly visible without artificial spacers
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.light,
+    statusBarBrightness: Brightness.dark,
+    systemNavigationBarColor: Colors.transparent,
+    systemNavigationBarIconBrightness: Brightness.light,
+  ));
 
-  // Check if a username is already stored to decide the initial screen
-  final hasUsername = box.hasData('username');
+  // Preferred orientations
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
-  // Initialize database helper singleton instance
-  final dbHelper = DBHelper.instance;
+  // Warm GoogleFonts cache before rendering first frame so there's no FOIT/glitch
+  GoogleFonts.config.allowRuntimeFetching = true;
+  await GoogleFonts.pendingFonts([
+    GoogleFonts.inter(),
+  ]);
 
-  // Create repository instances that interact with database
-  final categoryRepo = CategoryRepository(dbHelper);
-  final taskRepo = TaskRepository(dbHelper);
+  // Initialize Hive
+  await HiveService.init();
 
-  // Initialize notification service
-  final notificationService = NotificationService();
-  await notificationService.init();
+  // Initialize Notifications
+  await NotificationService.init();
+  await NotificationService.requestPermission();
 
-  // Request user permissions for notifications
-  await AppPermissions.requestNotificationPermissions();
-
-  // Create helper to manage task notifications using the notification service
-  final taskNotificationHelper = TaskNotificationHelper(notificationService);
-
-  // Run the Flutter app with multiple Bloc providers for global state management
   runApp(
-    MultiBlocProvider(
-      providers: [
-        // ThemeBloc to handle theme switching state
-        BlocProvider(create: (context) => ThemeBloc()),
-
-        // TaskBloc to manage task-related state and send notifications
-        BlocProvider(
-          create: (context) => TaskBloc(taskRepo, taskNotificationHelper),
-        ),
-
-        // CategoryBloc to manage category-related state
-        BlocProvider(create: (context) => CategoryBloc(categoryRepo)),
-      ],
-
-      // Use MaterialApp with initial screen depending on whether username exists
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: hasUsername ? const MyApp() : const UsernameScreen(),
-      ),
+    const ProviderScope(
+      child: DedoApp(),
     ),
   );
+}
+
+class DedoApp extends ConsumerStatefulWidget {
+  const DedoApp({super.key});
+
+  @override
+  ConsumerState<DedoApp> createState() => _DedoAppState();
+}
+
+class _DedoAppState extends ConsumerState<DedoApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final brightness =
+          WidgetsBinding.instance.platformDispatcher.platformBrightness;
+      ref.read(themeProvider.notifier).syncWithPlatformBrightness(brightness);
+    });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangePlatformBrightness() {
+    super.didChangePlatformBrightness();
+    final brightness =
+        WidgetsBinding.instance.platformDispatcher.platformBrightness;
+    ref.read(themeProvider.notifier).syncWithPlatformBrightness(brightness);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final themeMode = ref.watch(themeProvider);
+    final isDark = themeMode == ThemeMode.dark;
+    final profile = HiveService.getProfile();
+    final hasProfile = profile != null && profile.username.isNotEmpty;
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarIconBrightness:
+            isDark ? Brightness.light : Brightness.dark,
+      ),
+      child: MaterialApp(
+        title: 'DEDO',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.light(),
+        darkTheme: AppTheme.dark(),
+        themeMode: themeMode,
+        themeAnimationDuration: Duration.zero,
+        home: hasProfile ? const HomeScreen() : const OnboardingScreen(),
+      ),
+    );
+  }
 }
