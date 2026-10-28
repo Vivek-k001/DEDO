@@ -68,4 +68,25 @@ class StickyNoteNotifier extends StateNotifier<List<StickyNote>> {
     await HiveService.stickyNotes.delete(id);
     state = state.where((n) => n.id != id).toList();
   }
+
+  Future<void> reorderNotes(int oldIndex, int newIndex) async {
+    if (oldIndex < 0 ||
+        oldIndex >= state.length ||
+        newIndex < 0 ||
+        newIndex >= state.length ||
+        oldIndex == newIndex) {
+      return;
+    }
+    final updated = List<StickyNote>.from(state);
+    final movedItem = updated.removeAt(oldIndex);
+    updated.insert(newIndex, movedItem);
+    state = updated;
+
+    // Persist new order into Hive
+    final box = HiveService.stickyNotes;
+    await box.clear();
+    for (final note in updated) {
+      await box.put(note.id, note);
+    }
+  }
 }

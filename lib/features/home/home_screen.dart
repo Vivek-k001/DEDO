@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/glass_theme.dart';
 import '../../core/widgets/glass_background.dart';
-import '../../core/widgets/glass_container.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/task_provider.dart';
 import '../../providers/category_provider.dart';
@@ -24,6 +23,8 @@ import '../../services/hive_service.dart';
 import '../profile/widgets/birthday_picker_modal.dart';
 import 'widgets/stacked_sticky_icon.dart';
 import '../notes/sticky_grid_overlay.dart';
+import '../../core/widgets/circular_glass_button.dart';
+import '../../core/widgets/fluent_liquid_glass_button.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -175,39 +176,44 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 ),
               ),
             ),
-          ],
-        ),
-      ),
-      floatingActionButton: AnimatedScale(
-        scale: _navIndex == 0 ? 1.0 : 0.0,
-        duration: const Duration(milliseconds: 240),
-        curve: Curves.easeOutBack,
-        child: AnimatedOpacity(
-          opacity: _navIndex == 0 ? 1.0 : 0.0,
-          duration: const Duration(milliseconds: 180),
-          child: Padding(
-            padding: EdgeInsets.only(
+
+            // ─── Static Liquid Glass + (Create Task) Button ───
+            Positioned(
+              right: 20,
               bottom: (MediaQuery.of(context).padding.bottom > 0
                       ? MediaQuery.of(context).padding.bottom
                       : 14) +
-                  62 +
-                  16,
-              right: 6,
+                  68 +
+                  14,
+              child: AnimatedScale(
+                scale: _navIndex == 0 ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOutBack,
+                child: AnimatedOpacity(
+                  opacity: _navIndex == 0 ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 160),
+                  child: IgnorePointer(
+                    ignoring: _navIndex != 0,
+                    child: FluentLiquidGlassButton(
+                      size: 62,
+                      isDark: isDark,
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (_) => const CreateTaskScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
             ),
-            child: _GlassFab(
-              isDark: isDark,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                      builder: (_) => const CreateTaskScreen()),
-                );
-              },
-            ),
-          ),
+          ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: LiquidGlassNavBar(
         isDark: isDark,
         currentIndex: _navIndex,
@@ -370,39 +376,28 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
                     ),
                   ),
                 ),
-                // Theme toggle
-                _TopBarButton(
-                  icon: widget.isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
-                  onTap: widget.onThemeToggle,
-                  isDark: widget.isDark,
-                ),
-                const SizedBox(width: 10),
-                // Focus Mode / Squircle Control Center Launcher
-                _TopBarButton(
+                // Focus Mode Launcher
+                CircularGlassButton(
+                  size: 44,
                   icon: focusState.isRunning
                       ? CupertinoIcons.flame_fill
                       : CupertinoIcons.timer,
-                  onTap: widget.onFocusTap,
-                  isDark: widget.isDark,
-                  customColor: focusState.isRunning ? const Color(0xFF0A84FF) : null,
+                  iconColor: focusState.isRunning ? const Color(0xFF0A84FF) : null,
                   badgeText: focusState.isRunning
                       ? '${focusState.remainingSeconds ~/ 60}m'
                       : null,
-                ),
-                const SizedBox(width: 10),
-                // + Create Task
-                _TopBarButton(
-                  icon: CupertinoIcons.plus,
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (_) => const CreateTaskScreen()),
-                    );
-                  },
                   isDark: widget.isDark,
-                  isAccent: true,
+                  onTap: widget.onFocusTap,
+                ),
+                const SizedBox(width: 12),
+                // Theme toggle
+                CircularGlassButton(
+                  size: 44,
+                  icon: widget.isDark
+                      ? CupertinoIcons.sun_max_fill
+                      : CupertinoIcons.moon_fill,
+                  isDark: widget.isDark,
+                  onTap: widget.onThemeToggle,
                 ),
               ],
             ),
@@ -537,219 +532,6 @@ class _TaskList extends StatelessWidget {
       itemBuilder: (_, i) => TaskCard(
         task: tasks[i],
         onTap: () => onTap(tasks[i]),
-      ),
-    );
-  }
-}
-
-// ─── Helpers ───────────────────────────────────────────────────────────────────
-
-class _TopBarButton extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onTap;
-  final bool isDark;
-  final bool isAccent;
-  final Color? customColor;
-  final String? badgeText;
-
-  const _TopBarButton({
-    required this.icon,
-    required this.onTap,
-    required this.isDark,
-    this.isAccent = false,
-    this.customColor,
-    this.badgeText,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.lightImpact();
-        onTap();
-      },
-      child: GlassContainer(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        borderRadius: GlassTheme.radiusMedium,
-        fillOpacity: isAccent
-            ? (isDark ? 0.24 : 0.28)
-            : (customColor != null ? 0.22 : (isDark ? 0.08 : 0.14)),
-        tintColor: isAccent
-            ? GlassTheme.accentPrimary
-            : customColor,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              size: 20,
-              color: customColor ??
-                  (isAccent
-                      ? (isDark ? const Color(0xFF64B5F6) : GlassTheme.accentPrimary)
-                      : (isDark ? Colors.white.withValues(alpha: 0.85) : const Color(0xFF1A0A2E))),
-            ),
-            if (badgeText != null) ...[
-              const SizedBox(width: 4),
-              Text(
-                badgeText!,
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w800,
-                  color: customColor ?? (isDark ? Colors.white : Colors.black87),
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _GlassFab extends StatefulWidget {
-  final bool isDark;
-  final VoidCallback onTap;
-
-  const _GlassFab({required this.isDark, required this.onTap});
-
-  @override
-  State<_GlassFab> createState() => _GlassFabState();
-}
-
-class _GlassFabState extends State<_GlassFab> {
-  bool _isPressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = widget.isDark;
-
-    return GestureDetector(
-      onTapDown: (_) => setState(() => _isPressed = true),
-      onTapUp: (_) => setState(() => _isPressed = false),
-      onTapCancel: () => setState(() => _isPressed = false),
-      onTap: () {
-        HapticFeedback.mediumImpact();
-        widget.onTap();
-      },
-      child: AnimatedScale(
-        scale: _isPressed ? 0.90 : 1.0,
-        duration: const Duration(milliseconds: 140),
-        curve: Curves.easeOutCubic,
-        child: Container(
-          width: 58,
-          height: 58,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: GlassTheme.accentPrimary.withValues(alpha: isDark ? 0.40 : 0.32),
-                blurRadius: 18,
-                offset: const Offset(0, 6),
-              ),
-              BoxShadow(
-                color: isDark
-                    ? Colors.black.withValues(alpha: 0.40)
-                    : Colors.black.withValues(alpha: 0.08),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: ClipOval(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  // 1. Translucent Liquid Glass Body with Accent Gradient
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: isDark
-                            ? [
-                                GlassTheme.accentPrimary.withValues(alpha: 0.70),
-                                GlassTheme.accentSecondary.withValues(alpha: 0.45),
-                                Colors.black.withValues(alpha: 0.35),
-                              ]
-                            : [
-                                GlassTheme.accentPrimary.withValues(alpha: 0.85),
-                                GlassTheme.accentSecondary.withValues(alpha: 0.70),
-                                Colors.white.withValues(alpha: 0.40),
-                              ],
-                        stops: const [0.0, 0.6, 1.0],
-                      ),
-                    ),
-                  ),
-
-                  // 2. Pure Monochromatic Specular Top Sheen
-                  Positioned(
-                    top: 2,
-                    left: 10,
-                    right: 10,
-                    height: 2.5,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.white.withValues(alpha: 0.0),
-                            Colors.white.withValues(alpha: isDark ? 0.85 : 0.95),
-                            Colors.white.withValues(alpha: 0.0),
-                          ],
-                          stops: const [0.0, 0.5, 1.0],
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // 3. Pure Monochromatic Specular Bottom Floor Reflection
-                  Positioned(
-                    bottom: 2,
-                    left: 12,
-                    right: 12,
-                    height: 1.8,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.white.withValues(alpha: 0.0),
-                            Colors.white.withValues(alpha: isDark ? 0.35 : 0.50),
-                            Colors.white.withValues(alpha: 0.0),
-                          ],
-                          stops: const [0.0, 0.5, 1.0],
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // 4. Perimeter Glass Border
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: isDark ? 0.35 : 0.65),
-                        width: 1.0,
-                      ),
-                    ),
-                  ),
-
-                  // 5. Centered Plus Icon
-                  const Center(
-                    child: Icon(
-                      CupertinoIcons.plus,
-                      color: Colors.white,
-                      size: 28,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
       ),
     );
   }

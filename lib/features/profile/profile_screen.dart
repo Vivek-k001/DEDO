@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../core/theme/glass_theme.dart';
 import '../../core/widgets/glass_container.dart';
+import '../../core/widgets/circular_glass_button.dart';
 import '../../core/widgets/glass_text_field.dart';
 import '../../core/widgets/glass_switch.dart';
 import '../../core/widgets/custom_toast.dart';
@@ -352,19 +353,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     ),
                   ),
                   if (!_editingName)
-                    GestureDetector(
+                    CircularGlassButton(
+                      size: 36,
+                      icon: Icons.edit_rounded,
+                      iconSize: 17,
+                      isDark: isDark,
                       onTap: () => setState(() => _editingName = true),
-                      child: GlassContainer(
-                        padding: const EdgeInsets.all(8),
-                        borderRadius: GlassTheme.radiusMedium,
-                        child: Icon(
-                          Icons.edit_rounded,
-                          size: 18,
-                          color: isDark
-                              ? Colors.white.withValues(alpha: 0.7)
-                              : Colors.black.withValues(alpha: 0.5),
-                        ),
-                      ),
                     ),
                 ],
               ),
@@ -792,12 +786,12 @@ class _AboutRow extends StatelessWidget {
             ),
           ),
           if (onTap != null)
-            Icon(
-              CupertinoIcons.doc_on_doc,
-              size: 13,
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.4)
-                  : Colors.black.withValues(alpha: 0.35),
+            CircularGlassButton(
+              size: 30,
+              icon: CupertinoIcons.doc_on_doc_fill,
+              iconSize: 13,
+              isDark: isDark,
+              onTap: onTap!,
             ),
         ],
       ),

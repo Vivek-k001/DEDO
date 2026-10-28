@@ -275,7 +275,7 @@ class _TaskCardState extends ConsumerState<TaskCard>
                 ),
                 child: Row(
                   children: [
-                    // Task Custom Color Accent (Rounded glowing pill)
+                    // Task Custom Color Accent (Clean rounded accent bar)
                     Container(
                       width: 3.5,
                       height: 28,
@@ -284,15 +284,6 @@ class _TaskCardState extends ConsumerState<TaskCard>
                             ? taskColor.withValues(alpha: 0.35)
                             : taskColor,
                         borderRadius: BorderRadius.circular(2),
-                        boxShadow: task.isCompleted
-                            ? null
-                            : [
-                                BoxShadow(
-                                  color: taskColor.withValues(alpha: 0.45),
-                                  blurRadius: 6,
-                                  offset: const Offset(0, 1),
-                                ),
-                              ],
                       ),
                     ),
                     const SizedBox(width: 12),

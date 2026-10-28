@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../../core/theme/glass_theme.dart';
 import '../../core/widgets/glass_background.dart';
+import '../../core/widgets/circular_glass_button.dart';
 import '../../models/category.dart';
 import '../../providers/category_provider.dart';
 import '../../providers/task_provider.dart';
@@ -105,20 +106,15 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                         // Title Bar
                         Row(
                           children: [
-                            Container(
-                              width: 36,
-                              height: 36,
-                              decoration: BoxDecoration(
-                                color: selectedColor.withValues(alpha: 0.18),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                isEdit
-                                    ? Icons.edit_rounded
-                                    : CupertinoIcons.add,
-                                color: selectedColor,
-                                size: 19,
-                              ),
+                            CircularGlassButton(
+                              size: 38,
+                              icon: isEdit
+                                  ? Icons.edit_rounded
+                                  : CupertinoIcons.add,
+                              iconSize: 18,
+                              iconColor: selectedColor,
+                              isDark: isDark,
+                              onTap: () {},
                             ),
                             const SizedBox(width: 12),
                             Expanded(
@@ -146,23 +142,12 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                                 ],
                               ),
                             ),
-                            CupertinoButton(
-                              padding: EdgeInsets.zero,
-                              onPressed: () => Navigator.pop(modalCtx),
-                              child: Container(
-                                padding: const EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                  color: isDark
-                                      ? Colors.white.withValues(alpha: 0.08)
-                                      : Colors.black.withValues(alpha: 0.05),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  CupertinoIcons.xmark,
-                                  size: 15,
-                                  color: subtextColor,
-                                ),
-                              ),
+                            CircularGlassButton(
+                              size: 32,
+                              icon: CupertinoIcons.xmark,
+                              iconSize: 14,
+                              isDark: isDark,
+                              onTap: () => Navigator.pop(modalCtx),
                             ),
                           ],
                         ),
@@ -255,8 +240,9 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                                   boxShadow: isPicked
                                       ? [
                                           BoxShadow(
-                                            color: c.withValues(alpha: 0.5),
-                                            blurRadius: 10,
+                                            color: Colors.black.withValues(
+                                                alpha: isDark ? 0.35 : 0.14),
+                                            blurRadius: 8,
                                             offset: const Offset(0, 3),
                                           ),
                                         ]
@@ -279,35 +265,32 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                         Row(
                           children: [
                             Expanded(
-                              child: CupertinoButton(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 14),
-                                color: isDark
-                                    ? const Color(0xFF2C2C2E)
-                                    : const Color(0xFFE5E5EA),
-                                borderRadius: BorderRadius.circular(14),
-                                onPressed: () {
+                              child: LiquidGlassPillButton(
+                                onTap: () {
                                   HapticFeedback.lightImpact();
                                   Navigator.pop(modalCtx);
                                 },
-                                child: Text(
-                                  'Cancel',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: textColor,
+                                isDark: isDark,
+                                borderRadius: 16,
+                                padding: const EdgeInsets.symmetric(vertical: 14),
+                                child: Center(
+                                  child: Text(
+                                    'Cancel',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                      color: isDark
+                                          ? Colors.white.withValues(alpha: 0.85)
+                                          : const Color(0xFF111111),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
-                              child: CupertinoButton(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 14),
-                                color: selectedColor,
-                                borderRadius: BorderRadius.circular(14),
-                                onPressed: () async {
+                              child: LiquidGlassPillButton(
+                                onTap: () async {
                                   final name = nameCtrl.text.trim();
                                   if (name.isEmpty) {
                                     HapticFeedback.heavyImpact();
@@ -339,12 +322,19 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                                     Navigator.pop(modalCtx);
                                   }
                                 },
-                                child: Text(
-                                  isEdit ? 'Save Changes' : 'Create Category',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white,
+                                isDark: isDark,
+                                isSelected: true,
+                                selectedColor: selectedColor,
+                                borderRadius: 16,
+                                padding: const EdgeInsets.symmetric(vertical: 14),
+                                child: Center(
+                                  child: Text(
+                                    isEdit ? 'Save Changes' : 'Create Category',
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -477,24 +467,22 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                               children: [
                                 // Cancel button
                                 Expanded(
-                                  child: CupertinoButton(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 13),
-                                    color: isDark
-                                        ? const Color(0xFF2C2C2E)
-                                        : const Color(0xFFE5E5EA),
-                                    borderRadius: BorderRadius.circular(14),
-                                    onPressed: () {
+                                  child: LiquidGlassPillButton(
+                                    onTap: () {
                                       HapticFeedback.lightImpact();
                                       Navigator.pop(ctx);
                                     },
-                                    child: Text(
-                                      'Cancel',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600,
-                                        color:
-                                            isDark ? Colors.white : Colors.black,
+                                    isDark: isDark,
+                                    borderRadius: 14,
+                                    padding: const EdgeInsets.symmetric(vertical: 13),
+                                    child: Center(
+                                      child: Text(
+                                        'Cancel',
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                          color: isDark ? Colors.white : Colors.black,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -502,24 +490,27 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                                 const SizedBox(width: 12),
                                 // Delete button
                                 Expanded(
-                                  child: CupertinoButton(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 13),
-                                    color: GlassTheme.accentDanger,
-                                    borderRadius: BorderRadius.circular(14),
-                                    onPressed: () {
+                                  child: LiquidGlassPillButton(
+                                    onTap: () {
                                       HapticFeedback.heavyImpact();
                                       ref
                                           .read(categoryProvider.notifier)
                                           .deleteCategory(category.id);
                                       Navigator.pop(ctx);
                                     },
-                                    child: const Text(
-                                      'Delete',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.white,
+                                    isDark: isDark,
+                                    isSelected: true,
+                                    selectedColor: GlassTheme.accentDanger,
+                                    borderRadius: 14,
+                                    padding: const EdgeInsets.symmetric(vertical: 13),
+                                    child: const Center(
+                                      child: Text(
+                                        'Delete',
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -896,25 +887,31 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                           ),
                         ),
                       ),
-                      // Telegram / iOS style pill action button to add category
-                      CupertinoButton(
+                      // Liquid Glass pill action button to add category
+                      LiquidGlassPillButton(
+                        onTap: () => _openCategoryEditorModal(),
+                        isDark: isDark,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 8),
-                        color: GlassTheme.accentPrimary,
-                        borderRadius: BorderRadius.circular(20),
-                        onPressed: () => _openCategoryEditorModal(),
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(CupertinoIcons.add,
-                                size: 16, color: Colors.white),
-                            SizedBox(width: 6),
+                            Icon(
+                              CupertinoIcons.add,
+                              size: 16,
+                              color: isDark
+                                  ? Colors.white.withValues(alpha: 0.95)
+                                  : const Color(0xFF111111),
+                            ),
+                            const SizedBox(width: 6),
                             Text(
                               'Add',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700,
-                                color: Colors.white,
+                                color: isDark
+                                    ? Colors.white.withValues(alpha: 0.95)
+                                    : const Color(0xFF111111),
                               ),
                             ),
                           ],
@@ -959,10 +956,11 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                             borderRadius: BorderRadius.circular(16),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFF007AFF)
-                                    .withValues(alpha: 0.35),
-                                blurRadius: 12,
-                                offset: const Offset(0, 4),
+                                color: isDark
+                                    ? Colors.black.withValues(alpha: 0.30)
+                                    : Colors.black.withValues(alpha: 0.08),
+                                blurRadius: 10,
+                                offset: const Offset(0, 3),
                               ),
                             ],
                           ),
