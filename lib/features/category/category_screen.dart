@@ -7,6 +7,7 @@ import 'package:uuid/uuid.dart';
 import '../../core/theme/glass_theme.dart';
 import '../../core/widgets/glass_background.dart';
 import '../../core/widgets/circular_glass_button.dart';
+import '../../core/widgets/ios_glass_blue_button.dart';
 import '../../models/category.dart';
 import '../../providers/category_provider.dart';
 import '../../providers/task_provider.dart';
@@ -289,7 +290,7 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                             ),
                             const SizedBox(width: 12),
                             Expanded(
-                              child: LiquidGlassPillButton(
+                              child: IosGlassBlueButton(
                                 onTap: () async {
                                   final name = nameCtrl.text.trim();
                                   if (name.isEmpty) {
@@ -323,18 +324,31 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                                   }
                                 },
                                 isDark: isDark,
-                                isSelected: true,
-                                selectedColor: selectedColor,
                                 borderRadius: 16,
-                                padding: const EdgeInsets.symmetric(vertical: 14),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 14),
                                 child: Center(
-                                  child: Text(
-                                    isEdit ? 'Save Changes' : 'Create Category',
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.white,
-                                    ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        isEdit
+                                            ? CupertinoIcons.checkmark_alt
+                                            : CupertinoIcons.add,
+                                        size: 17,
+                                        color: Colors.white,
+                                      ),
+                                      const SizedBox(width: 6),
+                                      Text(
+                                        isEdit ? 'Save Changes' : 'Create Category',
+                                        style: const TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white,
+                                          letterSpacing: -0.3,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -887,31 +901,29 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                           ),
                         ),
                       ),
-                      // Liquid Glass pill action button to add category
-                      LiquidGlassPillButton(
+                      // iOS normal blue glass button with white glass outline
+                      IosGlassBlueButton(
                         onTap: () => _openCategoryEditorModal(),
                         isDark: isDark,
+                        borderRadius: 18,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
-                        child: Row(
+                            horizontal: 14, vertical: 8),
+                        child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
                               CupertinoIcons.add,
-                              size: 16,
-                              color: isDark
-                                  ? Colors.white.withValues(alpha: 0.95)
-                                  : const Color(0xFF111111),
+                              size: 15,
+                              color: Colors.white,
                             ),
-                            const SizedBox(width: 6),
+                            SizedBox(width: 5),
                             Text(
                               'Add',
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 13,
                                 fontWeight: FontWeight.w700,
-                                color: isDark
-                                    ? Colors.white.withValues(alpha: 0.95)
-                                    : const Color(0xFF111111),
+                                color: Colors.white,
+                                letterSpacing: -0.2,
                               ),
                             ),
                           ],
@@ -1065,6 +1077,34 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                         style: TextStyle(
                           fontSize: 13,
                           color: subtextColor,
+                        ),
+                      ),
+                      const SizedBox(height: 18),
+                      IosGlassBlueButton(
+                        onTap: () => _openCategoryEditorModal(),
+                        isDark: isDark,
+                        borderRadius: 16,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 22, vertical: 12),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              CupertinoIcons.add,
+                              size: 16,
+                              color: Colors.white,
+                            ),
+                            SizedBox(width: 6),
+                            Text(
+                              'Create Category',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                                letterSpacing: -0.3,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
