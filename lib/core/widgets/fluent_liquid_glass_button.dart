@@ -22,6 +22,7 @@ class FluentLiquidGlassButton extends StatefulWidget {
   final bool isDark;
   final VoidCallback onTap;
   final IconData icon;
+  final Color? iconColor;
 
   const FluentLiquidGlassButton({
     super.key,
@@ -29,6 +30,7 @@ class FluentLiquidGlassButton extends StatefulWidget {
     required this.isDark,
     required this.onTap,
     this.icon = CupertinoIcons.plus,
+    this.iconColor,
   });
 
   @override
@@ -70,7 +72,7 @@ class _FluentLiquidGlassButtonState extends State<FluentLiquidGlassButton>
           child: Stack(
             alignment: Alignment.center,
             children: [
-              // ── Layer 1: Ambient Drop Shadow (spec: drop shadow 30-40, black 18-20%) ──
+              // ── Layer 1: Ambient Drop Shadow ──
               Container(
                 width: size,
                 height: size,
@@ -78,14 +80,9 @@ class _FluentLiquidGlassButtonState extends State<FluentLiquidGlassButton>
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.18),
-                      blurRadius: 28,
-                      offset: const Offset(0, 10),
-                    ),
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: isDark ? 0.20 : 0.06),
-                      blurRadius: 6,
-                      offset: const Offset(0, 2),
+                      color: Colors.black.withValues(alpha: isDark ? 0.12 : 0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 3),
                     ),
                   ],
                 ),
@@ -124,7 +121,7 @@ class _FluentLiquidGlassButtonState extends State<FluentLiquidGlassButton>
               Icon(
                 widget.icon,
                 size: size * 0.46, // ~28.5px for 62px button
-                color: isDark ? Colors.white : const Color(0xFF111111),
+                color: widget.iconColor ?? (isDark ? Colors.white : const Color(0xFF111111)),
               ),
             ],
           ),

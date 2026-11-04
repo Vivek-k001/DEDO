@@ -21,6 +21,7 @@ class IosGlassBlueButton extends StatefulWidget {
   final double? width;
   final double? height;
   final bool isLoading;
+  final bool useGradient;
 
   const IosGlassBlueButton({
     super.key,
@@ -33,6 +34,7 @@ class IosGlassBlueButton extends StatefulWidget {
     this.width,
     this.height,
     this.isLoading = false,
+    this.useGradient = true,
   });
 
   @override
@@ -108,14 +110,17 @@ class _IosGlassBlueButtonState extends State<IosGlassBlueButton> {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: rrect,
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            baseColor,
-                            endColor,
-                          ],
-                        ),
+                        color: widget.useGradient ? null : baseColor,
+                        gradient: widget.useGradient
+                            ? LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  baseColor,
+                                  endColor,
+                                ],
+                              )
+                            : null,
                       ),
                     ),
                   ),

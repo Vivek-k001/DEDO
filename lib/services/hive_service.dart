@@ -3,6 +3,8 @@ import '../models/task.dart';
 import '../models/category.dart';
 import '../models/user_profile.dart';
 import '../models/sticky_note.dart';
+import '../models/track_list.dart';
+import '../models/track_item.dart';
 
 class HiveService {
   static const String _taskBox = 'tasks';
@@ -10,6 +12,7 @@ class HiveService {
   static const String _profileBox = 'profile';
   static const String _settingsBox = 'settings';
   static const String _stickyNotesBox = 'sticky_notes';
+  static const String _trackListsBox = 'track_lists';
 
   static Future<void> init() async {
     await Hive.initFlutter();
@@ -19,6 +22,8 @@ class HiveService {
     Hive.registerAdapter(CategoryAdapter());
     Hive.registerAdapter(UserProfileAdapter());
     Hive.registerAdapter(StickyNoteAdapter());
+    Hive.registerAdapter(TrackListAdapter());
+    Hive.registerAdapter(TrackItemAdapter());
 
     // Open boxes
     await Hive.openBox<Task>(_taskBox);
@@ -26,6 +31,7 @@ class HiveService {
     await Hive.openBox<UserProfile>(_profileBox);
     await Hive.openBox(_settingsBox);
     await Hive.openBox<StickyNote>(_stickyNotesBox);
+    await Hive.openBox<TrackList>(_trackListsBox);
   }
 
   static Box<Task> get tasks => Hive.box<Task>(_taskBox);
@@ -33,6 +39,7 @@ class HiveService {
   static Box<UserProfile> get profiles => Hive.box<UserProfile>(_profileBox);
   static Box get settings => Hive.box(_settingsBox);
   static Box<StickyNote> get stickyNotes => Hive.box<StickyNote>(_stickyNotesBox);
+  static Box<TrackList> get trackLists => Hive.box<TrackList>(_trackListsBox);
 
   // ─── Profile helpers ──────────────────────────────────────────────────────
   static UserProfile? getProfile() {

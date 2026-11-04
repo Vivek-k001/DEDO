@@ -25,6 +25,7 @@ import 'widgets/stacked_sticky_icon.dart';
 import '../notes/sticky_grid_overlay.dart';
 import '../../core/widgets/circular_glass_button.dart';
 import '../../core/widgets/fluent_liquid_glass_button.dart';
+import '../tracklist/track_list_dashboard_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -129,52 +130,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 const CategoryScreen(isRootTab: true),
                 const ProfileScreen(),
               ],
-            ),
-
-            // ─── Linear Backdrop Blur Under & Below Floating Navbar ───
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              height: 120,
-              child: IgnorePointer(
-                child: ClipRect(
-                  child: ShaderMask(
-                    shaderCallback: (bounds) {
-                      return const LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.black87,
-                          Colors.black,
-                        ],
-                        stops: [0.0, 0.45, 1.0],
-                      ).createShader(bounds);
-                    },
-                    blendMode: BlendMode.dstIn,
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.transparent,
-                              (isDark ? Colors.black : Colors.white)
-                                  .withValues(alpha: isDark ? 0.35 : 0.45),
-                              (isDark ? Colors.black : Colors.white)
-                                  .withValues(alpha: isDark ? 0.70 : 0.80),
-                            ],
-                            stops: const [0.0, 0.5, 1.0],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
             ),
 
             // ─── Static Liquid Glass + (Create Task) Button ───
@@ -376,6 +331,23 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
                     ),
                   ),
                 ),
+                // TrackList Launcher
+                CircularGlassButton(
+                  size: 44,
+                  icon: CupertinoIcons.square_list,
+                  iconSize: 20,
+                  isDark: widget.isDark,
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (_) => const TrackListDashboardScreen(),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(width: 10),
                 // Focus Mode Launcher
                 CircularGlassButton(
                   size: 44,
@@ -389,7 +361,7 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
                   isDark: widget.isDark,
                   onTap: widget.onFocusTap,
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 10),
                 // Theme toggle
                 CircularGlassButton(
                   size: 44,

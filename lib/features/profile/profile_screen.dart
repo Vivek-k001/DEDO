@@ -18,6 +18,7 @@ import '../../models/user_profile.dart';
 import 'widgets/stat_card.dart';
 import 'widgets/weekly_chart.dart';
 import 'widgets/update_settings_tile.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -673,24 +674,62 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       _AboutRow(
                           icon: Icons.code_rounded,
                           label: 'Developer',
-                          value: 'VNJ Softworks',
+                          value: 'VKR Softworks',
                           isDark: isDark),
                       const SizedBox(height: 10),
                       _AboutRow(
                           icon: Icons.email_rounded,
                           label: 'Email',
-                          value: 'vnjsoftworks@gmail.com',
+                          value: 'vkrsoftworks@gmail.com',
                           isDark: isDark,
                           onTap: () {
                             Clipboard.setData(
-                                const ClipboardData(text: 'vnjsoftworks@gmail.com'));
+                                const ClipboardData(text: 'vkrsoftworks@gmail.com'));
                             HapticFeedback.lightImpact();
                             GlassToast.show(
                               context,
-                              message: 'Copied vnjsoftworks@gmail.com',
+                              message: 'Copied vkrsoftworks@gmail.com',
                               icon: CupertinoIcons.doc_on_doc_fill,
                               iconColor: const Color(0xFF007AFF),
                             );
+                          }),
+                      const SizedBox(height: 10),
+                      _AboutRow(
+                          icon: CupertinoIcons.globe,
+                          label: 'Website',
+                          value: 'See official website',
+                          actionIcon: CupertinoIcons.arrow_up_right,
+                          isDark: isDark,
+                          onTap: () async {
+                            HapticFeedback.lightImpact();
+                            final uri = Uri.parse('https://vkr-softworks.web.app/');
+                            try {
+                              await launchUrl(
+                                uri,
+                                mode: LaunchMode.externalApplication,
+                              );
+                            } catch (_) {
+                              try {
+                                await launchUrl(
+                                  uri,
+                                  mode: LaunchMode.platformDefault,
+                                );
+                              } catch (_) {
+                                Clipboard.setData(
+                                  const ClipboardData(
+                                    text: 'https://vkr-softworks.web.app/',
+                                  ),
+                                );
+                                if (context.mounted) {
+                                  GlassToast.show(
+                                    context,
+                                    message: 'Copied website link',
+                                    icon: CupertinoIcons.doc_on_doc_fill,
+                                    iconColor: const Color(0xFF007AFF),
+                                  );
+                                }
+                              }
+                            }
                           }),
                     ],
                   ),
@@ -741,6 +780,7 @@ class _AboutRow extends StatelessWidget {
   final String value;
   final bool isDark;
   final VoidCallback? onTap;
+  final IconData? actionIcon;
 
   const _AboutRow({
     required this.icon,
@@ -748,6 +788,7 @@ class _AboutRow extends StatelessWidget {
     required this.value,
     required this.isDark,
     this.onTap,
+    this.actionIcon,
   });
 
   @override
@@ -788,7 +829,7 @@ class _AboutRow extends StatelessWidget {
           if (onTap != null)
             CircularGlassButton(
               size: 30,
-              icon: CupertinoIcons.doc_on_doc_fill,
+              icon: actionIcon ?? CupertinoIcons.doc_on_doc_fill,
               iconSize: 13,
               isDark: isDark,
               onTap: onTap!,
